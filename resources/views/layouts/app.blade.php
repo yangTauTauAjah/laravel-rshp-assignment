@@ -40,7 +40,7 @@
 <?php
 session_start();
 ?>
-<body class="bg-white">
+<body class="bg-white flex flex-col h-screen">
     
     @include('components.nav')
     @include('components.flash_message')
