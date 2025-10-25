@@ -30,6 +30,7 @@ class RoleController extends Controller
      */
     public function addRole(Request $request)
     {
+
         $request->validate([
             'user_id' => 'required|exists:user,iduser',
             'role_id' => 'required|exists:role,idrole',
@@ -97,14 +98,13 @@ class RoleController extends Controller
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Peran berhasil dihapus');
-    }
-
-    /**
+    }    /**
      * Get user roles data for AJAX request
      */
     public function getUserRoles($userId)
     {
         $user = User::with(['roleUsers.role'])->findOrFail($userId);
+        $allRoles = Role::all();
         
         return response()->json([
             'user' => [
@@ -118,6 +118,12 @@ class RoleController extends Controller
                     'idrole' => $roleUser->idrole,
                     'nama_role' => $roleUser->role->nama_role,
                     'status' => $roleUser->status,
+                ];
+            }),
+            'allRoles' => $allRoles->map(function ($role) {
+                return [
+                    'idrole' => $role->idrole,
+                    'nama_role' => $role->nama_role,
                 ];
             }),
         ]);

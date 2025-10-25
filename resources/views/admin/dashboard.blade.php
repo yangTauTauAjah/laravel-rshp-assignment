@@ -93,10 +93,9 @@
         <div class="mb-6">
             <h3 class="text-2xl font-bold text-rshp-dark-gray mb-4">Modul Manajemen Data</h3>
             <p class="text-gray-600 mb-6">Pilih modul yang ingin Anda kelola</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- User Management Card -->
+        </div>        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- User Management Card - Administrator only -->
+            @if(Auth::user()->isAdministrator())
             <a href="{{ route('users.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-rshp-blue transition-all duration-300 group">
                 <div class="p-6">
@@ -118,8 +117,8 @@
                     <p class="text-gray-600 text-sm">Manajemen pengguna sistem, tambah user baru, edit, dan hapus data user</p>
                 </div>
             </a>
-
-            <!-- Role Management Card -->
+            @endif            <!-- Role Management Card - Administrator only -->
+            @if(Auth::user()->isAdministrator())
             <a href="{{ route('admin.roles.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-purple-500 transition-all duration-300 group">
                 <div class="p-6">
@@ -141,8 +140,8 @@
                     <p class="text-gray-600 text-sm">Manajemen role user, atur hak akses dan permission pengguna sistem</p>
                 </div>
             </a>
-
-            <!-- Pemilik Management Card -->
+            @endif            <!-- Pemilik Management Card - Administrator, Dokter, Resepsionis -->
+            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isResepsionis())
             <a href="{{ route('admin.pemilik.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-rshp-green transition-all duration-300 group">
                 <div class="p-6">
@@ -164,8 +163,8 @@
                     <p class="text-gray-600 text-sm">Manajemen data pemilik hewan, registrasi pemilik baru dengan dual method</p>
                 </div>
             </a>
-
-            <!-- Pet Management Card -->
+            @endif            <!-- Pet Management Card - Administrator, Dokter, Resepsionis -->
+            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isResepsionis())
             <a href="{{ route('admin.pet.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-yellow-500 transition-all duration-300 group">
                 <div class="p-6">
@@ -187,8 +186,8 @@
                     <p class="text-gray-600 text-sm">Manajemen data hewan peliharaan, registrasi pasien hewan baru</p>
                 </div>
             </a>
-
-            <!-- Jenis & Ras Hewan Card -->
+            @endif            <!-- Jenis & Ras Hewan Card - Administrator, Dokter, Resepsionis -->
+            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isResepsionis())
             <a href="{{ route('jenis-hewan.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-orange-500 transition-all duration-300 group">
                 <div class="p-6">
@@ -210,8 +209,8 @@
                     <p class="text-gray-600 text-sm">Manajemen jenis dan ras hewan, kelola klasifikasi hewan peliharaan</p>
                 </div>
             </a>
-
-            <!-- Tindakan Terapi Card -->
+            @endif            <!-- Tindakan Terapi Card - Administrator, Dokter, Resepsionis -->
+            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isResepsionis())
             <a href="{{ route('admin.tindakan-terapi.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition-all duration-300 group">
                 <div class="p-6">
@@ -233,6 +232,7 @@
                     <p class="text-gray-600 text-sm">Manajemen kategori, kategori klinis, dan kode tindakan terapi</p>
                 </div>
             </a>
+            @endif
         </div>
 
         <!-- Additional Info Section -->
@@ -245,8 +245,15 @@
                 <div>
                     <h4 class="text-lg font-bold text-rshp-blue mb-2">Informasi Dashboard</h4>
                     <p class="text-gray-700 text-sm leading-relaxed">
-                        Gunakan menu navigasi di atas untuk mengakses berbagai modul manajemen data. Setiap modul memiliki fitur CRUD lengkap
-                        dengan validasi data dan konfirmasi aksi. Pastikan Anda memiliki hak akses yang sesuai sebelum melakukan perubahan data.
+                        Gunakan menu navigasi di atas untuk mengakses berbagai modul manajemen data. Hak akses Anda: 
+                        <strong>{{ Auth::user()->roles->pluck('nama_role')->join(', ') }}</strong>.
+                        @if(Auth::user()->isAdministrator())
+                            Anda memiliki akses penuh ke semua modul dengan fitur CRUD lengkap.
+                        @elseif(Auth::user()->isResepsionis())
+                            Anda dapat melakukan CRUD pada modul Jenis Hewan, Pet, Pemilik, dan Tindakan Terapi.
+                        @elseif(Auth::user()->isDokter())
+                            Anda dapat melihat data tetapi tidak dapat melakukan perubahan.
+                        @endif
                     </p>
                 </div>
             </div>

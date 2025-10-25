@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('content')
-  <!-- Page Header -->
-  <x-admin-header title="Manajemen Tindakan Terapi" subtitle="Kelola Kategori, Kategori Klinis, dan Kode Tindakan Terapi"
+@section('content')  <!-- Page Header -->  <x-admin-header title="Manajemen Tindakan Terapi" subtitle="Kelola Kategori, Kategori Klinis, dan Kode Tindakan Terapi"
     :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
 
+    @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
     <x-slot:actionButton>
       <button onclick="openAddKodeTindakanModal()"
         class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
@@ -14,6 +13,7 @@
         Tambah Kode Tindakan
       </button>
     </x-slot:actionButton>
+    @endif
   </x-admin-header>
 
   <div class="mx-auto my-6 max-w-7xl w-full flex-1">
@@ -53,8 +53,8 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {{ $kodeTindakan->kategoriKlinis->nama_kategori_klinis ?? '-' }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                </td>                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                   <button onclick="editKodeTindakan({{ $kodeTindakan->idkode_tindakan_terapi }})"
                     class="text-yellow-600 hover:text-yellow-900 mr-3">
                     <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,6 +63,8 @@
                       </path>
                     </svg>
                   </button>
+                  @endif
+                  @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                   <form action="{{ route('admin.kode-tindakan.destroy', $kodeTindakan->idkode_tindakan_terapi) }}"
                     method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus kode tindakan ini?')">
                     @csrf
@@ -75,6 +77,7 @@
                       </svg>
                     </button>
                   </form>
+                  @endif
                 </td>
               </tr>
             @empty
@@ -90,10 +93,10 @@
     </div>
     <!-- Three Column Layout for Categories -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Kategori Section -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <!-- Kategori Section -->      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="px-6 py-4 bg-rshp-blue text-white flex justify-between items-center">
           <h2 class="text-lg font-semibold">Kategori</h2>
+          @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
           <button onclick="openAddKategoriModal()"
             class="bg-white text-rshp-blue px-3 py-1 rounded hover:bg-gray-100 transition-colors text-sm font-medium">
             <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,13 +104,14 @@
             </svg>
             Tambah
           </button>
+          @endif
         </div>
         <div class="p-4">
-          @forelse($kategoris as $kategori)
-            <div
+          @forelse($kategoris as $kategori)            <div
               class="flex justify-between items-center p-3 mb-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
               <span class="text-gray-700 font-medium">{{ $kategori->nama_kategori }}</span>
               <div class="flex space-x-2">
+                @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                 <button
                   onclick="openEditKategoriModal({{ $kategori->idkategori }}, '{{ addslashes($kategori->nama_kategori) }}')"
                   class="text-yellow-600 hover:text-yellow-700">
@@ -117,6 +121,8 @@
                     </path>
                   </svg>
                 </button>
+                @endif
+                @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                 <form action="{{ route('admin.kategori.destroy', $kategori->idkategori) }}" method="POST"
                   onsubmit="return confirm('Yakin ingin menghapus kategori ini?')" class="inline">
                   @csrf
@@ -129,6 +135,7 @@
                     </svg>
                   </button>
                 </form>
+                @endif
               </div>
             </div>
           @empty
@@ -139,10 +146,10 @@
         </div>
       </div>
 
-      <!-- Kategori Klinis Section -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <!-- Kategori Klinis Section -->      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="px-6 py-4 bg-rshp-green text-white flex justify-between items-center">
           <h2 class="text-lg font-semibold">Kategori Klinis</h2>
+          @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
           <button onclick="openAddKategoriKlinisModal()"
             class="bg-white text-rshp-green px-3 py-1 rounded hover:bg-gray-100 transition-colors text-sm font-medium">
             <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,13 +157,14 @@
             </svg>
             Tambah
           </button>
+          @endif
         </div>
         <div class="p-4">
           @forelse($kategoriKlinises as $kategoriKlinis)
             <div
-              class="flex justify-between items-center p-3 mb-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-              <span class="text-gray-700 font-medium">{{ $kategoriKlinis->nama_kategori_klinis }}</span>
+              class="flex justify-between items-center p-3 mb-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">              <span class="text-gray-700 font-medium">{{ $kategoriKlinis->nama_kategori_klinis }}</span>
               <div class="flex space-x-2">
+                @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                 <button
                   onclick="openEditKategoriKlinisModal({{ $kategoriKlinis->idkategori_klinis }}, '{{ addslashes($kategoriKlinis->nama_kategori_klinis) }}')"
                   class="text-yellow-600 hover:text-yellow-700">
@@ -166,6 +174,8 @@
                     </path>
                   </svg>
                 </button>
+                @endif
+                @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                 <form action="{{ route('admin.kategori-klinis.destroy', $kategoriKlinis->idkategori_klinis) }}"
                   method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori klinis ini?')" class="inline">
                   @csrf
@@ -178,6 +188,7 @@
                     </svg>
                   </button>
                 </form>
+                @endif
               </div>
             </div>
           @empty

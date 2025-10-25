@@ -119,22 +119,29 @@ class TindakanTerapiController extends Controller
     // ===== KODE TINDAKAN TERAPI METHODS =====
     public function storeKodeTindakan(Request $request)
     {
-        $request->validate([
-            'kode' => 'required|string|max:50|unique:kode_tindakan_terapi,kode',
-            'deskripsi_tindakan_terapi' => 'required|string',
-            'idkategori' => 'required|exists:kategori,idkategori',
-            'idkategori_klinis' => 'required|exists:kategori_klinis,idkategori_klinis'
-        ]);
+        try {
+            $request->validate([
+                'kode' => 'required|string|max:5|unique:kode_tindakan_terapi,kode',
+                'deskripsi_tindakan_terapi' => 'required|string',
+                'idkategori' => 'required|exists:kategori,idkategori',
+                'idkategori_klinis' => 'required|exists:kategori_klinis,idkategori_klinis'
+            ], [
+                'kode.max' => 'Kode tindakan maksimal 5 karakter.'
+            ]);
 
-        KodeTindakanTerapi::create([
-            'kode' => $request->kode,
-            'deskripsi_tindakan_terapi' => $request->deskripsi_tindakan_terapi,
-            'idkategori' => $request->idkategori,
-            'idkategori_klinis' => $request->idkategori_klinis
-        ]);
+            KodeTindakanTerapi::create([
+                'kode' => $request->kode,
+                'deskripsi_tindakan_terapi' => $request->deskripsi_tindakan_terapi,
+                'idkategori' => $request->idkategori,
+                'idkategori_klinis' => $request->idkategori_klinis
+            ]);
 
-        return redirect()->route('admin.tindakan-terapi.index')
-            ->with('success', 'Kode Tindakan Terapi berhasil ditambahkan');
+            return redirect()->route('admin.tindakan-terapi.index')
+                ->with('success', 'Kode Tindakan Terapi berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.tindakan-terapi.index')
+                ->with('error', 'Gagal menambahkan data: ' . $e->getMessage());
+        }
     }
 
     public function editKodeTindakan($id)

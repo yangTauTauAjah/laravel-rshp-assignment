@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('content')
-    <!-- Page Header -->
-    <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
+@section('content')    <!-- Page Header -->    <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
         :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
 
+        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
             <button onclick="openAddPemilikModal()"
                 class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
@@ -14,6 +13,7 @@
                 Tambah Pemilik Hewan
             </button>
         </x-slot:actionButton>
+        @endif
     </x-admin-header>
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">
@@ -93,10 +93,9 @@
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         {{ $pemilik->pets->count() }} hewan
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    </span>                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="editPemilik({{ $pemilik->idpemilik }})"
                                             class="text-rshp-blue hover:text-blue-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,6 +104,8 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        @endif
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button
                                             onclick="deletePemilik({{ $pemilik->idpemilik }}, '{{ $pemilik->user->nama }}', {{ $pemilik->pets->count() }})"
                                             class="text-red-600 hover:text-red-900">
@@ -114,6 +115,7 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

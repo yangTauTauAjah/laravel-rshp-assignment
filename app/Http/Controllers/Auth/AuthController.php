@@ -183,4 +183,131 @@ class AuthController extends Controller
         return redirect()->route('home')
             ->with('success', 'Logout berhasil. Terima kasih telah menggunakan layanan kami.');
     }
+
+    // /**
+    //  * Check if authenticated user has a specific role
+    //  * 
+    //  * @param string $roleName
+    //  * @return bool
+    //  */
+    // public function hasRole($roleName)
+    // {
+    //     if (!Auth::check()) {
+    //         return false;
+    //     }
+
+    //     return Auth::user()->hasRole($roleName);
+    // }
+
+    // /**
+    //  * Check if authenticated user has any of the specified roles
+    //  * 
+    //  * @param array|string $roles
+    //  * @return bool
+    //  */
+    // public function hasAnyRole($roles)
+    // {
+    //     if (!Auth::check()) {
+    //         return false;
+    //     }
+
+    //     return Auth::user()->hasAnyRole($roles);
+    // }
+
+    // /**
+    //  * Check if authenticated user has all specified roles
+    //  * 
+    //  * @param array $roles
+    //  * @return bool
+    //  */
+    // public function hasAllRoles(array $roles)
+    // {
+    //     if (!Auth::check()) {
+    //         return false;
+    //     }
+
+    //     foreach ($roles as $role) {
+    //         if (!Auth::user()->hasRole($role)) {
+    //             return false;
+    //         }
+    //     }
+
+    //     return true;
+    // }
+
+    // /**
+    //  * Get all active roles for authenticated user
+    //  * 
+    //  * @return \Illuminate\Database\Eloquent\Collection
+    //  */
+    // public function getUserRoles()
+    // {
+    //     if (!Auth::check()) {
+    //         return collect([]);
+    //     }
+
+    //     return Auth::user()->roles()->get();
+    // }
+
+    // /**
+    //  * Check if user can access admin panel
+    //  * 
+    //  * @return bool
+    //  */
+    // public function canAccessAdmin()
+    // {
+    //     return $this->hasAnyRole(['Admin', 'Superadmin', 'Dokter']);
+    // }
+
+    // /**
+    //  * Check if user is superadmin
+    //  * 
+    //  * @return bool
+    //  */
+    // public function isSuperAdmin()
+    // {
+    //     return $this->hasRole('Superadmin');
+    // }
+
+    // /**
+    //  * Check if user is admin
+    //  * 
+    //  * @return bool
+    //  */
+    // public function isAdmin()
+    // {
+    //     return $this->hasAnyRole(['Admin', 'Superadmin']);
+    // }
+
+    // /**
+    //  * Check if user is a doctor
+    //  * 
+    //  * @return bool
+    //  */
+    // public function isDoctor()
+    // {
+    //     return $this->hasRole('Dokter');
+    // }
+
+    // /**
+    //  * Check if user is a pet owner
+    //  * 
+    //  * @return bool
+    //  */
+    // public function isPetOwner()
+    // {
+    //     return $this->hasRole('Pemilik Hewan');
+    // }
+
+    // /**
+    //  * Deny access with error message
+    //  * 
+    //  * @param string $message
+    //  * @return \Illuminate\Http\RedirectResponse
+    //  */
+    // protected function denyAccess($message = 'Anda tidak memiliki akses ke halaman ini.')
+    // {
+    //     return redirect()->route('home')
+    //         ->with('error', $message);
+    // }
 }

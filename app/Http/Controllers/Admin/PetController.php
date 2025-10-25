@@ -30,12 +30,11 @@ class PetController extends Controller
 
     /**
      * Store a newly created pet
-     */
-    public function store(Request $request)
+     */    public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required|string|max:100',
-            'tanggal_lahir' => 'nullable|date',
+            'tanggal_lahir' => 'nullable|date|before:today',
             'warna_tanda' => 'nullable|string|max:45',
             'jenis_kelamin' => 'required|in:M,F',
             'idpemilik' => 'required|exists:pemilik,idpemilik',
@@ -57,14 +56,13 @@ class PetController extends Controller
 
     /**
      * Update the specified pet
-     */
-    public function update(Request $request, $id)
+     */    public function update(Request $request, $id)
     {
         $pet = Pet::findOrFail($id);
 
         $request->validate([
             'nama' => 'required|string|max:100',
-            'tanggal_lahir' => 'nullable|date',
+            'tanggal_lahir' => 'nullable|date|before:today',
             'warna_tanda' => 'nullable|string|max:45',
             'jenis_kelamin' => 'required|in:M,F',
             'idpemilik' => 'required|exists:pemilik,idpemilik',

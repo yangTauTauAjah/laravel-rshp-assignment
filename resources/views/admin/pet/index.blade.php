@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('content')
-    <!-- Page Header -->
-    <x-admin-header title="Kelola Data Hewan Peliharaan" subtitle="Manajemen data hewan peliharaan pasien"
+@section('content')    <!-- Page Header -->    <x-admin-header title="Kelola Data Hewan Peliharaan" subtitle="Manajemen data hewan peliharaan pasien"
         :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
 
+        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
             <button onclick="openAddPetModal()"
                 class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
@@ -14,6 +13,7 @@
                 Tambah Hewan Peliharaan
             </button>
         </x-slot:actionButton>
+        @endif
     </x-admin-header>
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">
@@ -103,9 +103,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $pet->pemilik->user->nama }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="editPet({{ $pet->idpet }})"
                                             class="text-rshp-blue hover:text-blue-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,6 +114,8 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        @endif
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="deletePet({{ $pet->idpet }}, '{{ $pet->nama }}')"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,6 +124,7 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

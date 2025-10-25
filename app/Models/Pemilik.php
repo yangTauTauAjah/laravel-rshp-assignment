@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Pemilik extends Model
 {
     protected $table = 'pemilik';
-    protected $primaryKey = 'idpemilik';    protected $fillable = [
+    protected $primaryKey = 'idpemilik';
+    public $incrementing = false; // Primary key is not auto-incrementing
+    protected $keyType = 'int'; // Primary key type is integer
+    
+    protected $fillable = [
+        'idpemilik',
         'iduser',
         'no_wa',
         'alamat'

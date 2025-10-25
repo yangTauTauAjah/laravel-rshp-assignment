@@ -24,7 +24,7 @@ class PemilikController extends Controller
         
         return view('admin.pemilik.index', compact('pemilikList', 'availableUsers'));
     }
-
+    
     /**
      * Store a newly created pemilik
      */
@@ -47,8 +47,13 @@ class PemilikController extends Controller
 
             DB::beginTransaction();
             try {
+                // Get the next idpemilik
+                $lastPemilik = Pemilik::orderBy('idpemilik', 'desc')->first();
+                $nextIdPemilik = $lastPemilik ? $lastPemilik->idpemilik + 1 : 1;
+
                 // Create pemilik record for existing user
                 Pemilik::create([
+                    'idpemilik' => $nextIdPemilik,
                     'iduser' => $request->existing_user_id,
                     'no_wa' => $request->no_wa,
                     'alamat' => $request->alamat,
@@ -82,8 +87,13 @@ class PemilikController extends Controller
                     'password' => Hash::make($request->password),
                 ]);
 
+                // Get the next idpemilik
+                $lastPemilik = Pemilik::orderBy('idpemilik', 'desc')->first();
+                $nextIdPemilik = $lastPemilik ? $lastPemilik->idpemilik + 1 : 1;
+
                 // Create pemilik record
                 Pemilik::create([
+                    'idpemilik' => $nextIdPemilik,
                     'iduser' => $user->iduser,
                     'no_wa' => $request->no_wa,
                     'alamat' => $request->alamat,
@@ -168,7 +178,7 @@ class PemilikController extends Controller
             $pemilik->delete();
             
             // Then delete the associated user
-            $user->delete();
+            // $user->delete();
 
             DB::commit();
 
