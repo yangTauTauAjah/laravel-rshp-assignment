@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Site\SiteController;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JenisHewanController;
 use App\Http\Controllers\Admin\UserController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\PemilikController;
 use App\Http\Controllers\Admin\TindakanTerapiController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,25 +22,18 @@ Route::get('/layanan', [SiteController::class, 'layanan'])->name('layanan');
 Route::get('/kontak', [SiteController::class, 'kontak'])->name('kontak');
 Route::get('/struktur-organisasi', [SiteController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
 
-// Authentication Routes
-Route::prefix('auth')->group(function () {
-    // Login Routes
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-    
-    // Register Routes
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-    
-    // Password Reset Routes
-    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-    
-    // Logout Route
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
+// Dashboard redirect after login - redirect to admin dashboard
+Route::get('/dashboard', function () {
+    return redirect()->route('admin.dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+// Breeze Profile Routes
+// we don't need this atm
+/* Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+}); */
 
 // Admin Routes - Protected by role middleware (Administrator, Dokter, Resepsionis, Perawat)
 Route::middleware(['auth', 'role:Administrator,Dokter,Resepsionis,Perawat'])->prefix('admin')->group(function () {
@@ -123,3 +116,6 @@ Route::middleware(['auth', 'role:Administrator,Dokter,Resepsionis,Perawat'])->pr
         Route::delete('/kode-tindakan/{id}', [TindakanTerapiController::class, 'destroyKodeTindakan'])->name('admin.kode-tindakan.destroy');
     });
 });
+
+// Include Breeze authentication routes
+require __DIR__.'/auth.php';

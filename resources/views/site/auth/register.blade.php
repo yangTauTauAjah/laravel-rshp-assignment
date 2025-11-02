@@ -20,7 +20,7 @@
             </p>
         </div>
 
-        <form class="mt-8 space-y-6" action="{{ route('register.post') }}" method="POST">
+        <form class="mt-8 space-y-6" action="{{ route('register') }}" method="POST">
             @csrf
             <div class="space-y-4">
                 <!-- Name Field -->
@@ -53,20 +53,6 @@
                     @enderror
                 </div>
 
-                <!-- Phone Field -->
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Telepon</label>
-                    <input id="phone" 
-                           name="phone" 
-                           type="tel" 
-                           class="mt-1 appearance-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-rshp-blue focus:border-rshp-blue sm:text-sm @error('phone') border-red-500 @enderror" 
-                           placeholder="08123456789"
-                           value="{{ old('phone') }}">
-                    @error('phone')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 <!-- Password Field -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Password *</label>
@@ -75,7 +61,7 @@
                            type="password" 
                            required 
                            class="mt-1 appearance-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-rshp-blue focus:border-rshp-blue sm:text-sm @error('password') border-red-500 @enderror" 
-                           placeholder="Minimal 6 karakter">
+                           placeholder="Minimal 8 karakter">
                     @error('password')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -91,21 +77,6 @@
                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-rshp-blue focus:border-rshp-blue sm:text-sm" 
                            placeholder="Ulangi password">
                 </div>
-            </div>
-
-            <!-- Terms and Conditions -->
-            <div class="flex items-start">
-                <input id="terms" 
-                       name="terms" 
-                       type="checkbox" 
-                       required
-                       class="mt-1 h-4 w-4 text-rshp-blue focus:ring-rshp-blue border-gray-300 rounded">
-                <label for="terms" class="ml-3 text-sm text-gray-600">
-                    Saya setuju dengan 
-                    <a href="#" class="text-rshp-blue hover:text-rshp-dark-blue font-medium">Syarat dan Ketentuan</a> 
-                    serta 
-                    <a href="#" class="text-rshp-blue hover:text-rshp-dark-blue font-medium">Kebijakan Privasi</a> *
-                </label>
             </div>
 
             <div>

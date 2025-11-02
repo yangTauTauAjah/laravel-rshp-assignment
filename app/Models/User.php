@@ -28,6 +28,22 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get the user's name attribute (for Breeze compatibility)
+     */
+    public function getNameAttribute()
+    {
+        return $this->nama;
+    }
+
+    /**
+     * Set the user's name attribute (for Breeze compatibility)
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['nama'] = $value;
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
