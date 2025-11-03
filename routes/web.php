@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\PemilikController;
 use App\Http\Controllers\Admin\TindakanTerapiController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,16 +26,8 @@ Route::get('/dashboard', function () {
     return redirect()->route('admin.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Breeze Profile Routes
-// we don't need this atm
-/* Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-}); */
-
-// Admin Routes - Protected by role middleware (Administrator, Dokter, Resepsionis, Perawat)
-Route::middleware(['auth', 'role:Administrator,Dokter,Resepsionis,Perawat'])->prefix('admin')->group(function () {
+// Admin Routes - Protected by role middleware (Administrator, Dokter, Resepsionis, Perawat) and email verification
+Route::middleware(['auth', 'verified', 'role:Administrator,Dokter,Resepsionis,Perawat'])->prefix('admin')->group(function () {
     
     // Admin Dashboard - All roles can access
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');

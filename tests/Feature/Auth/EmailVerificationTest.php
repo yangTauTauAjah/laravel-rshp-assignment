@@ -55,4 +55,13 @@ class EmailVerificationTest extends TestCase
 
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
     }
+
+    public function test_unverified_user_cannot_access_admin(): void
+    {
+        $user = User::factory()->unverified()->create();
+
+        $response = $this->actingAs($user)->get('/admin/dashboard');
+
+        $response->assertRedirect('/verify-email');
+    }
 }
