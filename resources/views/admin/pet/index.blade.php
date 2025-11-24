@@ -79,10 +79,9 @@
                                             @endif
                                         </div>
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $pet->rasHewan->nama_ras }}</div>
-                                    <div class="text-sm text-gray-500">{{ $pet->rasHewan->jenisHewan->nama_jenis_hewan }}
+                                </td>                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $pet->nama_ras }}</div>
+                                    <div class="text-sm text-gray-500">{{ $pet->nama_jenis_hewan }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -100,10 +99,9 @@
                                     @else
                                         <span class="text-gray-400">-</span>
                                     @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $pet->pemilik->user->nama }}
-                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $pet->pemilik_nama }}
+                                </td><td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="editPet({{ $pet->idpet }})"

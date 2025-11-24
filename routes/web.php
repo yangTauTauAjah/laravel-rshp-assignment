@@ -106,6 +106,22 @@ Route::middleware(['auth', 'verified', 'role:Administrator,Dokter,Resepsionis,Pe
         Route::put('/kode-tindakan/{id}', [TindakanTerapiController::class, 'updateKodeTindakan'])->name('admin.kode-tindakan.update');
         Route::delete('/kode-tindakan/{id}', [TindakanTerapiController::class, 'destroyKodeTindakan'])->name('admin.kode-tindakan.destroy');
     });
+    
+    // Rekam Medis Management Routes
+    // View: Administrator, Dokter, Resepsionis
+    // CRUD: Administrator, Dokter
+    Route::get('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'index'])->name('admin.rekam-medis.index');
+    Route::get('/rekam-medis/kode-tindakan', [App\Http\Controllers\Admin\RekamMedisController::class, 'getKodeTindakan'])->name('admin.rekam-medis.get-kode-tindakan');
+    Route::get('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'show'])->name('admin.rekam-medis.show');
+    Route::middleware('role:Administrator,Dokter')->group(function () {
+        Route::get('/rekam-medis/create', [App\Http\Controllers\Admin\RekamMedisController::class, 'create'])->name('admin.rekam-medis.create');
+        Route::post('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'store'])->name('admin.rekam-medis.store');
+        Route::get('/rekam-medis/{id}/edit', [App\Http\Controllers\Admin\RekamMedisController::class, 'edit'])->name('admin.rekam-medis.edit');
+        Route::put('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'update'])->name('admin.rekam-medis.update');
+    });
+    Route::middleware('role:Administrator')->group(function () {
+        Route::delete('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'destroy'])->name('admin.rekam-medis.destroy');
+    });
 });
 
 // Include Breeze authentication routes

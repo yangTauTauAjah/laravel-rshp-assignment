@@ -15,13 +15,26 @@ class PemilikController extends Controller
      */
     public function index()
     {
-        // Get all pemilik with their user relationships
-        $pemilikList = Pemilik::with('user')->get();
-        
-        // Get all users that are not already pemilik for the dropdown
-        $existingPemilikUserIds = Pemilik::pluck('iduser')->toArray();
-        $availableUsers = User::whereNotIn('iduser', $existingPemilikUserIds)->get();
-        
+        // Query Builder: pemilik with user data and pets count
+        $pemilikList = DB::table('pemilik')
+            ->join('user', 'pemilik.iduser', '=', 'user.iduser')
+            ->leftJoin('pet', 'pemilik.idpemilik', '=', 'pet.idpemilik')
+            ->select(
+                'pemilik.*', 
+                'user.nama', 
+                'user.email',
+                DB::raw('COUNT(pet.idpet) as pets_count')
+            )
+            ->groupBy('pemilik.idpemilik', 'pemilik.iduser', 'pemilik.no_wa', 'pemilik.alamat', 'user.nama', 'user.email')
+            ->get();
+
+        // Users not in pemilik
+        $existingPemilikUserIds = DB::table('pemilik')->pluck('iduser')->toArray();
+        $availableUsers = DB::table('user')
+            ->whereNotIn('iduser', $existingPemilikUserIds)
+            ->select('iduser', 'nama', 'email')
+            ->get();
+
         return view('admin.pemilik.index', compact('pemilikList', 'availableUsers'));
     }
     

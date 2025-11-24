@@ -60,20 +60,19 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div
-                                            class="flex-shrink-0 h-10 w-10 bg-rshp-green rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">
-                                                {{ strtoupper(substr($pemilik->user->nama, 0, 2)) }}
+                                            class="flex-shrink-0 h-10 w-10 bg-rshp-green rounded-full flex items-center justify-center">                                            <span class="text-white font-semibold text-sm">
+                                                {{ strtoupper(substr($pemilik->nama, 0, 2)) }}
                                             </span>
                                         </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900">
-                                                {{ $pemilik->user->nama }}
+                                                {{ $pemilik->nama }}
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $pemilik->user->email }}
+                                    {{ $pemilik->email }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <div class="flex items-center">
@@ -88,12 +87,11 @@
                                     <div class="max-w-xs truncate" title="{{ $pemilik->alamat }}">
                                         {{ $pemilik->alamat }}
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ $pemilik->pets->count() }} hewan
-                                    </span>                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        {{ $pemilik->pets_count }} hewan
+                                    </span></td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="editPemilik({{ $pemilik->idpemilik }})"
@@ -105,9 +103,8 @@
                                             </svg>
                                         </button>
                                         @endif
-                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-                                        <button
-                                            onclick="deletePemilik({{ $pemilik->idpemilik }}, '{{ $pemilik->user->nama }}', {{ $pemilik->pets->count() }})"
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())                                        <button
+                                            onclick="deletePemilik({{ $pemilik->idpemilik }}, '{{ $pemilik->nama }}', {{ $pemilik->pets_count }})"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
