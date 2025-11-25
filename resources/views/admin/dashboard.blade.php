@@ -250,6 +250,30 @@
                     <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">Rekam Medis
                     </h4>
                     <p class="text-gray-600 text-sm">Manajemen rekam medis hewan, diagnosa, anamnesa, dan detail tindakan</p>
+                </div>            </a>
+            @endif
+            
+            <!-- Temu Dokter Management Card - Administrator, Resepsionis, Perawat -->
+            @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis() || Auth::user()->isPerawat())
+            <a href="{{ route('admin.temu-dokter.index') }}"
+                class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition-all duration-300 group">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-indigo-100 rounded-lg p-3 group-hover:bg-indigo-500 transition-colors">
+                            <svg class="w-8 h-8 text-indigo-600 group-hover:text-white transition-colors" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4h6m0 0v8a2 2 0 01-2 2H10a2 2 0 01-2-2v-8m0 0V9a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-6 h-6 text-gray-400 group-hover:text-indigo-500 transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-500 transition-colors">Temu Dokter
+                    </h4>
+                    <p class="text-gray-600 text-sm">Manajemen reservasi dan antrian konsultasi dengan dokter</p>
                 </div>
             </a>
             @endif
