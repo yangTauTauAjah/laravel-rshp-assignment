@@ -369,4 +369,38 @@ class RekamMedisController extends Controller
 
         return response()->json($kodeTindakan);
     }
+
+    /**
+     * Delete a specific detail tindakan from rekam medis
+     */
+    public function deleteDetail($detailId)
+    {
+        try {
+            // Get the detail record first to check if it exists and get the rekam_medis ID
+            $detail = DB::table('detail_rekam_medis')
+                ->where('iddetail_rekam_medis', $detailId)
+                ->first();
+
+            if (!$detail) {
+                return redirect()->back()
+                    ->with('error', 'Detail tindakan tidak ditemukan.');
+            }
+
+            // Delete the detail record
+            $affected = DB::table('detail_rekam_medis')
+                ->where('iddetail_rekam_medis', $detailId)
+                ->delete();
+
+            if ($affected > 0) {
+                return redirect()->back()
+                    ->with('success', 'Detail tindakan berhasil dihapus.');
+            } else {
+                return redirect()->back()
+                    ->with('error', 'Gagal menghapus detail tindakan.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }

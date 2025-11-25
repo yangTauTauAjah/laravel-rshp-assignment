@@ -110,15 +110,27 @@ Route::middleware(['auth', 'verified', 'role:Administrator,Dokter,Resepsionis,Pe
     // Rekam Medis Management Routes
     // View: Administrator, Dokter, Resepsionis
     // CRUD: Administrator, Dokter
+    // Note: Specific routes (without parameters) must come before parameterized routes
     Route::get('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'index'])->name('admin.rekam-medis.index');
     Route::get('/rekam-medis/kode-tindakan', [App\Http\Controllers\Admin\RekamMedisController::class, 'getKodeTindakan'])->name('admin.rekam-medis.get-kode-tindakan');
-    Route::get('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'show'])->name('admin.rekam-medis.show');
     Route::middleware('role:Administrator,Dokter')->group(function () {
+        // Specific routes without parameters - must come first
         Route::get('/rekam-medis/create', [App\Http\Controllers\Admin\RekamMedisController::class, 'create'])->name('admin.rekam-medis.create');
+        
+        // General CRUD routes
         Route::post('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'store'])->name('admin.rekam-medis.store');
+        
+        // Parameterized routes - must come after specific routes
         Route::get('/rekam-medis/{id}/edit', [App\Http\Controllers\Admin\RekamMedisController::class, 'edit'])->name('admin.rekam-medis.edit');
         Route::put('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'update'])->name('admin.rekam-medis.update');
+        
+        // Detail tindakan management
+        Route::delete('/rekam-medis/detail/{detailId}', [App\Http\Controllers\Admin\RekamMedisController::class, 'deleteDetail'])->name('admin.rekam-medis.delete-detail');
     });
+    
+    // View-only routes (accessible to more roles)
+    Route::get('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'show'])->name('admin.rekam-medis.show');
+    
     Route::middleware('role:Administrator')->group(function () {
         Route::delete('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'destroy'])->name('admin.rekam-medis.destroy');
     });
