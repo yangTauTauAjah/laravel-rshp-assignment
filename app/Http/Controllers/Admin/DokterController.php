@@ -24,11 +24,12 @@ class DokterController extends Controller
     {
         $dokterList = DB::table('dokter')
             ->join('user', 'dokter.iduser', '=', 'user.iduser')
+            ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
             ->select(
                 'dokter.*',
                 'user.nama',
-                'user.email'/* ,
-                'user.status as user_status' */
+                'user.email',
+                'role_user.status as user_status'
             )
             ->orderBy('user.nama')
             ->get();
@@ -60,10 +61,10 @@ class DokterController extends Controller
     /**
      * Show form for creating new user and dokter profile simultaneously
      */
-    public function createWithUser()
+    /* public function createWithUser()
     {
         return view('admin.dokter.create-with-user');
-    }
+    } */
 
     /**
      * Store a newly created dokter profile
@@ -162,13 +163,14 @@ class DokterController extends Controller
     {
         $dokter = DB::table('dokter')
             ->join('user', 'dokter.iduser', '=', 'user.iduser')
+            ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
             ->where('dokter.iddokter', $id)
             ->select(
                 'dokter.*',
                 'user.nama',
                 'user.email',
-                // 'user.status as user_status',
-                // 'user.created_at as user_created_at'
+                'role_user.status as user_status',
+                'dokter.created_at as user_created_at'
             )
             ->first();
 

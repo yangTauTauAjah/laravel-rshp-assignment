@@ -3,7 +3,19 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Edit Rekam Medis" subtitle="Perbarui informasi rekam medis hewan peliharaan"
-        :backRoute="route('admin.rekam-medis.show', $rekamMedis->idrekam_medis)" backText="Kembali ke Detail" />
+        :backRoute="route('admin.rekam-medis.show', $rekamMedis->idrekam_medis)" backText="Kembali ke Detail">
+        
+        <x-slot:actionButton>
+            <a href="{{ route('admin.dashboard') }}"
+                class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                </svg>
+                Dashboard
+            </a>
+        </x-slot:actionButton>
+    </x-admin-header>
 
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">

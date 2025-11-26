@@ -3,30 +3,32 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Manajemen Data Perawat" subtitle="Kelola profil perawat dan registrasi"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard" />
+        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        
+        <x-slot:actionButton>
+            @if(Auth::user()->isAdministrator())
+                <a href="{{ route('admin.perawat.create') }}"
+                    class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Daftarkan Perawat Baru
+                </a>
+            @endif
+        </x-slot:actionButton>
+    </x-admin-header>
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">
-        <!-- Action Bar -->
-        @if(Auth::user()->isAdministrator())
-        <div class="mb-6 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <h2 class="text-xl font-semibold text-rshp-dark-gray">Daftar Perawat</h2>
-                <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                    {{ $perawatList->count() }} Perawat Terdaftar
-                </span>
-            </div>
-            <a href="{{ route('admin.perawat.create') }}"
-                class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Daftarkan Perawat Baru
-            </a>
-        </div>
-        @endif
-
         <!-- Perawat List -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-rshp-dark-gray">Daftar Perawat</h2>
+                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                        {{ $perawatList->count() }} Perawat Terdaftar
+                    </span>
+                </div>
+            </div>
             @if($perawatList->isEmpty())
             <div class="text-center py-12">
                 <div class="mx-auto h-24 w-24 bg-purple-100 rounded-full flex items-center justify-center mb-4">

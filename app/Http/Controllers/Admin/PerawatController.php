@@ -17,11 +17,12 @@ class PerawatController extends Controller
     {
         $perawatList = DB::table('perawat')
             ->join('user', 'perawat.iduser', '=', 'user.iduser')
+            ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
             ->select(
                 'perawat.*',
                 'user.nama',
-                'user.email'/* ,
-                'user.status as user_status' */
+                'user.email',
+                'role_user.status as user_status'
             )
             ->orderBy('user.nama')
             ->get();
@@ -102,13 +103,14 @@ class PerawatController extends Controller
     {
         $perawat = DB::table('perawat')
             ->join('user', 'perawat.iduser', '=', 'user.iduser')
+            ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
             ->where('perawat.idperawat', $id)
             ->select(
                 'perawat.*',
                 'user.nama',
                 'user.email',
-                // 'user.status as user_status',
-                // 'user.created_at as user_created_at'
+                'role_user.status as user_status',
+                'perawat.created_at as user_created_at'
             )
             ->first();
 

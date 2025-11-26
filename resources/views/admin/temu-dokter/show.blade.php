@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Detail Reservasi Dokter" subtitle="Informasi lengkap reservasi dokter"
-        :backRoute="route('admin.temu-dokter.index')" backText="Kembali ke Daftar Reservasi" />
+        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
 
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">

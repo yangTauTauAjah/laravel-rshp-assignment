@@ -3,7 +3,20 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Detail Profil Perawat" subtitle="Informasi lengkap profil perawat"
-        :backRoute="route('admin.perawat.index')" backText="Kembali ke Daftar Perawat" />
+        :backRoute="route('admin.perawat.index')" backText="Kembali ke Daftar Perawat">
+        
+        <x-slot:actionButton>
+            @if(Auth::user()->isAdministrator())
+                <a href="{{ route('admin.perawat.edit', $perawat->idperawat) }}"
+                    class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Edit Profil
+                </a>
+            @endif
+        </x-slot:actionButton>
+    </x-admin-header>
 
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <!-- Profile Overview -->
@@ -31,22 +44,9 @@
                                         </svg>
                                         Nonaktif
                                     </span>
-                                @endif
-                            </div>
+                                @endif                            </div>
                         </div>
                     </div>
-                    
-                    @if(Auth::user()->isAdministrator())
-                    <div class="flex space-x-2">
-                        <a href="{{ route('admin.perawat.edit', $perawat->idperawat) }}"
-                            class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                            Edit Profil
-                        </a>
-                    </div>
-                    @endif
                 </div>
             </div>
 

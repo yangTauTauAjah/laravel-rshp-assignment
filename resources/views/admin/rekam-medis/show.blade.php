@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Detail Rekam Medis" subtitle="Informasi lengkap rekam medis hewan peliharaan"
-        :backRoute="route('admin.rekam-medis.index')" backText="Kembali ke Daftar Rekam Medis">
+        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
 
         @if(Auth::user()->isAdministrator() || Auth::user()->isDokter())
         <x-slot:actionButton>

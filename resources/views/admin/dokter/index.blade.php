@@ -3,30 +3,32 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Manajemen Data Dokter" subtitle="Kelola profil dokter dan registrasi"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard" />
+        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        
+        <x-slot:actionButton>
+            @if(Auth::user()->isAdministrator())
+                <a href="{{ route('admin.dokter.create') }}"
+                    class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Daftarkan Dokter Baru
+                </a>
+            @endif
+        </x-slot:actionButton>
+    </x-admin-header>
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">
-        <!-- Action Bar -->
-        @if(Auth::user()->isAdministrator())
-        <div class="mb-6 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <h2 class="text-xl font-semibold text-rshp-dark-gray">Daftar Dokter</h2>
-                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                    {{ $dokterList->count() }} Dokter Terdaftar
-                </span>
-            </div>
-            <a href="{{ route('admin.dokter.create') }}"
-                class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Daftarkan Dokter Baru
-            </a>
-        </div>
-        @endif
-
         <!-- Dokter List -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-rshp-dark-gray">Daftar Dokter</h2>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                        {{ $dokterList->count() }} Dokter Terdaftar
+                    </span>
+                </div>
+            </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -82,13 +84,19 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($dokter->user_status == 1)
-                                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                                            Aktif
-                                        </span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Aktif
+                                    </span>
                                     @else
-                                        <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
-                                            Tidak Aktif
-                                        </span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Nonaktif
+                                    </span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
