@@ -244,4 +244,36 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->isAdministrator();
     }
+
+    /**
+     * Get the dokter profile associated with the user.
+     */
+    public function dokter()
+    {
+        return $this->hasOne(Dokter::class, 'iduser', 'iduser');
+    }
+
+    /**
+     * Get the perawat profile associated with the user.
+     */
+    public function perawat()
+    {
+        return $this->hasOne(Perawat::class, 'iduser', 'iduser');
+    }
+
+    /**
+     * Check if user has a dokter profile.
+     */
+    public function hasDokterProfile()
+    {
+        return $this->dokter()->exists();
+    }
+
+    /**
+     * Check if user has a perawat profile.
+     */
+    public function hasPerawatProfile()
+    {
+        return $this->perawat()->exists();
+    }
 }

@@ -85,6 +85,10 @@ Route::middleware(['auth', 'verified', 'role:Administrator,Dokter,Resepsionis,Pe
         Route::delete('/pemilik/{id}', [PemilikController::class, 'destroy'])->name('admin.pemilik.destroy');
     });
     
+    // Note: Removed duplicate dokter routes - see proper organization below
+    
+    // Note: Removed duplicate perawat routes - see proper organization below
+    
     // Tindakan Terapi Management Routes
     // View: Administrator, Dokter, Resepsionis
     // CRUD: Administrator, Resepsionis
@@ -169,6 +173,51 @@ Route::middleware(['auth', 'verified', 'role:Administrator,Dokter,Resepsionis,Pe
     
     Route::middleware('role:Administrator')->group(function () {
         Route::delete('/temu-dokter/{id}', [App\Http\Controllers\Admin\TemuDokterController::class, 'destroy'])->name('admin.temu-dokter.destroy');
+    });
+
+    // Dokter Management Routes - Administrator only
+    // Note: Specific routes (without parameters) must come before parameterized routes
+    Route::middleware('role:Administrator')->group(function () {
+        Route::get('/dokter', [App\Http\Controllers\Admin\DokterController::class, 'index'])->name('admin.dokter.index');
+        
+        // Specific routes without parameters - must come first
+        Route::get('/dokter/create', [App\Http\Controllers\Admin\DokterController::class, 'create'])->name('admin.dokter.create');
+        Route::get('/dokter/create-with-user', [App\Http\Controllers\Admin\DokterController::class, 'createWithUser'])->name('admin.dokter.create-with-user');
+        
+        // General CRUD routes
+        Route::post('/dokter', [App\Http\Controllers\Admin\DokterController::class, 'store'])->name('admin.dokter.store');
+        
+        // Parameterized routes - must come after specific routes
+        Route::get('/dokter/{id}', [App\Http\Controllers\Admin\DokterController::class, 'show'])->name('admin.dokter.show');
+        Route::get('/dokter/{id}/edit', [App\Http\Controllers\Admin\DokterController::class, 'edit'])->name('admin.dokter.edit');
+        Route::put('/dokter/{id}', [App\Http\Controllers\Admin\DokterController::class, 'update'])->name('admin.dokter.update');
+        Route::delete('/dokter/{id}', [App\Http\Controllers\Admin\DokterController::class, 'destroy'])->name('admin.dokter.destroy');
+    });
+
+    // Perawat Management Routes - Administrator only
+    // Note: Specific routes (without parameters) must come before parameterized routes
+    Route::middleware('role:Administrator')->group(function () {
+        Route::get('/perawat', [App\Http\Controllers\Admin\PerawatController::class, 'index'])->name('admin.perawat.index');
+        
+        // Specific routes without parameters - must come first
+        Route::get('/perawat/create', [App\Http\Controllers\Admin\PerawatController::class, 'create'])->name('admin.perawat.create');
+        Route::get('/perawat/create-with-user', [App\Http\Controllers\Admin\PerawatController::class, 'createWithUser'])->name('admin.perawat.create-with-user');
+        
+        // General CRUD routes
+        Route::post('/perawat', [App\Http\Controllers\Admin\PerawatController::class, 'store'])->name('admin.perawat.store');
+        
+        // Parameterized routes - must come after specific routes
+        Route::get('/perawat/{id}', [App\Http\Controllers\Admin\PerawatController::class, 'show'])->name('admin.perawat.show');
+        Route::get('/perawat/{id}/edit', [App\Http\Controllers\Admin\PerawatController::class, 'edit'])->name('admin.perawat.edit');
+        Route::put('/perawat/{id}', [App\Http\Controllers\Admin\PerawatController::class, 'update'])->name('admin.perawat.update');
+        Route::delete('/perawat/{id}', [App\Http\Controllers\Admin\PerawatController::class, 'destroy'])->name('admin.perawat.destroy');
+    });
+
+    // Profile Management Routes - Administrator only
+    Route::middleware('role:Administrator')->group(function () {
+        Route::get('/profiles', [App\Http\Controllers\Admin\UserProfileController::class, 'index'])->name('admin.profiles.index');
+        Route::get('/profiles/{userId}', [App\Http\Controllers\Admin\UserProfileController::class, 'show'])->name('admin.profiles.show');
+        Route::get('/profiles/{userId}/data/{profileType}', [App\Http\Controllers\Admin\UserProfileController::class, 'getProfileData'])->name('admin.profiles.data');
     });
 });
 
