@@ -18,6 +18,9 @@ class PerawatController extends Controller
         $perawatList = DB::table('perawat')
             ->join('user', 'perawat.iduser', '=', 'user.iduser')
             ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
+            ->join('role', 'role_user.idrole', '=', 'role.idrole')
+            ->where('role.nama_role', 'Perawat')
+            ->where('role_user.status', 1) // Only active records
             ->select(
                 'perawat.*',
                 'user.nama',
@@ -164,13 +167,19 @@ class PerawatController extends Controller
     {
         try {
             $perawat = Perawat::findOrFail($id);
-            $perawat->delete();
+            
+            // Instead of hard delete, deactivate the role_user record
+            DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', $perawat->iduser)
+                ->where('role.nama_role', 'Perawat')
+                ->update(['role_user.status' => 0]);
 
             return redirect()->route('admin.perawat.index')
-                ->with('success', 'Profil perawat berhasil dihapus');
+                ->with('success', 'Profil perawat berhasil dinonaktifkan');
         } catch (\Exception $e) {
             return redirect()->route('admin.perawat.index')
-                ->with('error', 'Gagal menghapus profil perawat: ' . $e->getMessage());
+                ->with('error', 'Gagal menonaktifkan profil perawat: ' . $e->getMessage());
         }
     }
 }

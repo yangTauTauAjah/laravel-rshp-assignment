@@ -55,15 +55,21 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {{ $user->email }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    @if($user->roleUsers->isNotEmpty())
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">                    @if($user->roleUsers->isNotEmpty())
                       <div class="flex flex-wrap gap-1">
                         @foreach($user->roleUsers as $roleUser)
+                          @php
+                            $profileBasedRoles = ['Dokter', 'Perawat', 'Pemilik'];
+                            $isProfileBased = in_array($roleUser->role->nama_role, $profileBasedRoles);
+                          @endphp
                           <span
                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $roleUser->status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                             {{ $roleUser->role->nama_role }}
                             @if(!$roleUser->status)
                               <span class="ml-1 text-xs opacity-75">(Nonaktif)</span>
+                            @endif
+                            @if($isProfileBased)
+                              <span class="ml-1 text-xs opacity-75" title="Dikelola melalui manajemen profil">(Auto)</span>
                             @endif
                           </span>
                         @endforeach
@@ -88,33 +94,60 @@
           </tbody>
         </table>
       </div>
-    </div>
-
-    <!-- Role Descriptions -->
+    </div>    <!-- Role Descriptions -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-8">
       <h2 class="text-lg font-semibold text-rshp-dark-gray mb-4">Deskripsi Peran</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 class="font-medium text-rshp-blue mb-2">Administrator</h3>
-          <p class="text-sm text-gray-600">Akses penuh ke semua fitur sistem, termasuk manajemen pengguna dan peran.</p>
+      
+      <!-- Manual Assignment Roles -->
+      <div class="mb-6">
+        <h3 class="text-md font-medium text-rshp-blue mb-3">Peran yang Dapat Ditugaskan Manual</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-medium text-rshp-blue mb-2">Administrator</h4>
+            <p class="text-sm text-gray-600">Akses penuh ke semua fitur sistem, termasuk manajemen pengguna dan peran.</p>
+          </div>
+          <div>
+            <h4 class="font-medium text-rshp-blue mb-2">Resepsionis</h4>
+            <p class="text-sm text-gray-600">Pendaftaran pasien, jadwal kunjungan, pembayaran, dan informasi pasien.</p>
+          </div>
         </div>
-        <div>
-          <h3 class="font-medium text-rshp-blue mb-2">Dokter</h3>
-          <p class="text-sm text-gray-600">Pemeriksaan pasien, rekam medis, jadwal praktik, dan resep obat.</p>
-        </div>
-        <div>
-          <h3 class="font-medium text-rshp-blue mb-2">Perawat</h3>
-          <p class="text-sm text-gray-600">Asistensi dokter, perawatan pasien, monitoring vital signs, dan persiapan alat.
-          </p>
-        </div>
-        <div>
-          <h3 class="font-medium text-rshp-blue mb-2">Resepsionis</h3>
-          <p class="text-sm text-gray-600">Pendaftaran pasien, jadwal kunjungan, pembayaran, dan informasi pasien.</p>
-        </div>
-        <div>
-          <h3 class="font-medium text-rshp-blue mb-2">Pemilik</h3>
-          <p class="text-sm text-gray-600">Pemilik hewan peliharaan dengan akses untuk melihat data hewan dan jadwal
-            kunjungan mereka.</p>
+      </div>
+
+      <!-- Profile-Based Roles -->
+      <div>
+        <h3 class="text-md font-medium text-orange-600 mb-3">Peran Berbasis Profil (Otomatis)</h3>
+        <p class="text-sm text-gray-600 mb-3">Peran ini hanya dapat ditambahkan/dihapus melalui halaman manajemen profil yang sesuai:</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-orange-50 rounded-lg p-4">
+            <h4 class="font-medium text-orange-700 mb-2">
+              Dokter
+              <span class="text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded-full ml-2">Auto</span>
+            </h4>
+            <p class="text-sm text-gray-600 mb-2">Pemeriksaan pasien, rekam medis, jadwal praktik, dan resep obat.</p>
+            <a href="{{ route('admin.dokter.index') }}" class="text-xs text-orange-600 hover:text-orange-800 font-medium">
+              → Kelola di Manajemen Dokter
+            </a>
+          </div>
+          <div class="bg-purple-50 rounded-lg p-4">
+            <h4 class="font-medium text-purple-700 mb-2">
+              Perawat
+              <span class="text-xs bg-purple-200 text-purple-800 px-2 py-1 rounded-full ml-2">Auto</span>
+            </h4>
+            <p class="text-sm text-gray-600 mb-2">Asistensi dokter, perawatan pasien, monitoring vital signs, dan persiapan alat.</p>
+            <a href="{{ route('admin.perawat.index') }}" class="text-xs text-purple-600 hover:text-purple-800 font-medium">
+              → Kelola di Manajemen Perawat
+            </a>
+          </div>
+          <div class="bg-green-50 rounded-lg p-4">
+            <h4 class="font-medium text-green-700 mb-2">
+              Pemilik
+              <span class="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full ml-2">Auto</span>
+            </h4>
+            <p class="text-sm text-gray-600 mb-2">Pemilik hewan peliharaan dengan akses untuk melihat data hewan dan jadwal kunjungan mereka.</p>
+            <a href="{{ route('admin.pemilik.index') }}" class="text-xs text-green-600 hover:text-green-800 font-medium">
+              → Kelola di Manajemen Pemilik
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -173,9 +206,7 @@
               Tambah Peran
             </button>
           </form>
-        </div>
-
-        <!-- Role Descriptions -->
+        </div>        <!-- Role Descriptions -->
         <div class="bg-gray-50 rounded-lg p-4">
           <h4 class="text-lg font-semibold text-rshp-dark-gray mb-3">Deskripsi Peran</h4>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -184,21 +215,16 @@
               <p class="text-gray-600">Akses penuh ke semua fitur sistem, termasuk manajemen pengguna dan peran.</p>
             </div>
             <div>
-              <h5 class="font-medium text-rshp-blue mb-1">Dokter</h5>
-              <p class="text-gray-600">Pemeriksaan pasien, rekam medis, jadwal praktik, dan resep obat.</p>
-            </div>
-            <div>
-              <h5 class="font-medium text-rshp-blue mb-1">Perawat</h5>
-              <p class="text-gray-600">Asistensi dokter, perawatan pasien, monitoring vital signs, dan persiapan alat.</p>
-            </div>
-            <div>
               <h5 class="font-medium text-rshp-blue mb-1">Resepsionis</h5>
               <p class="text-gray-600">Pendaftaran pasien, jadwal kunjungan, pembayaran, dan informasi pasien.</p>
             </div>
-            <div>
-              <h5 class="font-medium text-rshp-blue mb-1">Pemilik</h5>
-              <p class="text-gray-600">Pemilik hewan peliharaan dengan akses untuk melihat data hewan dan jadwal kunjungan
-                mereka.</p>
+          </div>
+          
+          <div class="mt-4 pt-3 border-t border-gray-200">
+            <h5 class="font-medium text-orange-600 mb-2">Peran Berbasis Profil</h5>
+            <p class="text-xs text-gray-500">Peran Dokter, Perawat, dan Pemilik dikelola otomatis melalui halaman manajemen profil masing-masing dan tidak dapat ditugaskan secara manual.</p>
+          </div>
+        </div>
             </div>
           </div>
         </div>
@@ -253,17 +279,25 @@
         return;
       }
 
-      container.innerHTML = roles.map(role => `
+      const profileBasedRoles = ['Dokter', 'Perawat', 'Pemilik'];
+
+      container.innerHTML = roles.map(role => {
+        const isProfileBased = profileBasedRoles.includes(role.nama_role);
+        
+        return `
         <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3">
             <div class="flex items-center space-x-3">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${role.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
                     ${role.nama_role}
+                    ${isProfileBased ? '<span class="ml-1 text-xs opacity-75">(Auto)</span>' : ''}
                 </span>
                 <span class="text-sm ${role.status ? 'text-green-600' : 'text-red-600'}">
                     ${role.status ? 'Aktif' : 'Nonaktif'}
                 </span>
+                ${isProfileBased ? '<span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">Dikelola via Profil</span>' : ''}
             </div>
             <div class="flex items-center space-x-2">
+                ${!isProfileBased ? `
                 <form action="/admin/roles/toggle/${role.idrole_user}" method="POST" class="inline">
                     <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
                     <button type="submit" 
@@ -272,13 +306,13 @@
                         ${role.status ? 'Nonaktifkan' : 'Aktifkan'}
                     </button>
                 </form>
+                ` : `
+                <span class="text-xs text-gray-500 italic">Kelola melalui manajemen profil</span>
+                `}
             </div>
         </div>
-      `).join('');
-      /* <button onclick="removeRole(${role.idrole_user})" 
-          class="px-3 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-md hover:bg-red-200 transition-colors">
-          Hapus
-      </button> */
+      `;
+      }).join('');
     }
     
     // Update available roles in select dropdown

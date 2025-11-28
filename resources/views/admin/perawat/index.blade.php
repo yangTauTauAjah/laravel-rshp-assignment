@@ -62,9 +62,9 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Kontak
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {{-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status
-                            </th>
+                            </th> --}}
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Aksi
                             </th>
@@ -95,7 +95,7 @@
                                 <div class="text-sm text-rshp-dark-gray">{{ $perawat->no_hp }}</div>
                                 <div class="text-sm text-gray-500 max-w-xs truncate">{{ $perawat->alamat }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            {{-- <td class="px-6 py-4 whitespace-nowrap">
                                 @if($perawat->user_status == 1)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -111,7 +111,7 @@
                                         Nonaktif
                                     </span>
                                 @endif
-                            </td>
+                            </td> --}}
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">
                                     <!-- View Button -->

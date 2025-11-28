@@ -55,7 +55,6 @@
 
                     <!-- Editable Information -->
                     <div class="space-y-4">
-                        @if($profileType != 'pemilik')
                         <div>
                             <label for="jenis_kelamin" class="block text-sm font-medium text-gray-700">
                                 Jenis Kelamin <span class="text-red-500">*</span>
@@ -70,17 +69,16 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        @endif
 
                         <div>
-                            <label for="{{ $profileType == 'pemilik' ? 'no_wa' : 'no_hp' }}" class="block text-sm font-medium text-gray-700">
-                                {{ $profileType == 'pemilik' ? 'Nomor WhatsApp' : 'Nomor Telepon' }} <span class="text-red-500">*</span>
+                            <label for="no_hp" class="block text-sm font-medium text-gray-700">
+                                Nomor Telepon <span class="text-red-500">*</span>
                             </label>
-                            <input type="tel" name="{{ $profileType == 'pemilik' ? 'no_wa' : 'no_hp' }}" id="{{ $profileType == 'pemilik' ? 'no_wa' : 'no_hp' }}" required
-                                   value="{{ old($profileType == 'pemilik' ? 'no_wa' : 'no_hp', $profileType == 'pemilik' ? $profile->no_wa : $profile->no_hp) }}"
+                            <input type="tel" name="no_hp" id="no_hp" required
+                                   value="{{ old('no_hp', $profile->no_hp) }}"
                                    placeholder="Contoh: 08123456789"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-blue focus:border-rshp-blue @error($profileType == 'pemilik' ? 'no_wa' : 'no_hp') border-red-500 @enderror">
-                            @error($profileType == 'pemilik' ? 'no_wa' : 'no_hp')
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-blue focus:border-rshp-blue @error('no_hp') border-red-500 @enderror">
+                            @error('no_hp')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

@@ -10,28 +10,41 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 class PemilikController extends Controller
-{    /**
+{    
+    /**
      * Display a listing of pet owners
      */
     public function index()
     {
-        // Query Builder: pemilik with user data and pets count
+        // Query Builder: pemilik with user data and pets count - only active records
         $pemilikList = DB::table('pemilik')
             ->join('user', 'pemilik.iduser', '=', 'user.iduser')
+            ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
+            ->join('role', 'role_user.idrole', '=', 'role.idrole')
             ->leftJoin('pet', 'pemilik.idpemilik', '=', 'pet.idpemilik')
+            ->where('role.nama_role', 'Pemilik')
+            ->where('role_user.status', 1) // Only active records
             ->select(
                 'pemilik.*', 
                 'user.nama', 
                 'user.email',
+                'role_user.status as user_status',
                 DB::raw('COUNT(pet.idpet) as pets_count')
             )
-            ->groupBy('pemilik.idpemilik', 'pemilik.iduser', 'pemilik.no_wa', 'pemilik.alamat', 'user.nama', 'user.email')
+            ->groupBy('pemilik.idpemilik', 'pemilik.iduser', 'pemilik.no_wa', 'pemilik.alamat', 'user.nama', 'user.email', 'role_user.status')
+            ->orderBy('user.nama')
             ->get();
 
-        // Users not in pemilik
-        $existingPemilikUserIds = DB::table('pemilik')->pluck('iduser')->toArray();
+        // Users not in pemilik - get users who don't have Pemilik role yet
         $availableUsers = DB::table('user')
-            ->whereNotIn('iduser', $existingPemilikUserIds)
+            ->whereNotExists(function($query) {
+                $query->select(DB::raw(1))
+                    ->from('role_user')
+                    ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                    ->where('role.nama_role', 'Pemilik')
+                    ->where('role_user.status', 1)
+                    ->whereColumn('role_user.iduser', 'user.iduser');
+            })
             ->select('iduser', 'nama', 'email')
             ->get();
 
@@ -171,7 +184,30 @@ class PemilikController extends Controller
     }
 
     /**
-     * Remove the specified pemilik
+     * Show the form for editing the specified pemilik
+     */
+    public function edit($id)
+    {
+        $pemilik = DB::table('pemilik')
+            ->join('user', 'pemilik.iduser', '=', 'user.iduser')
+            ->where('pemilik.idpemilik', $id)
+            ->select(
+                'pemilik.*',
+                'user.nama',
+                'user.email'
+            )
+            ->first();
+
+        if (!$pemilik) {
+            return redirect()->route('admin.pemilik.index')
+                ->with('error', 'Profil pemilik tidak ditemukan');
+        }
+
+        return view('admin.pemilik.edit', compact('pemilik'));
+    }
+
+    /**
+     * Remove the specified pemilik (soft delete by deactivating role)
      */
     public function destroy($id)
     {
@@ -185,40 +221,52 @@ class PemilikController extends Controller
 
         DB::beginTransaction();
         try {
-            $user = $pemilik->user;
-            
-            // Delete pemilik first
-            $pemilik->delete();
-            
-            // Then delete the associated user
-            // $user->delete();
+            // Instead of hard delete, deactivate the role_user record
+            DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', $pemilik->iduser)
+                ->where('role.nama_role', 'Pemilik')
+                ->update(['role_user.status' => 0]);
 
             DB::commit();
 
             return redirect()->route('admin.pemilik.index')
-                ->with('success', 'Data pemilik hewan berhasil dihapus');
+                ->with('success', 'Data pemilik hewan berhasil dinonaktifkan');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('admin.pemilik.index')
-                ->with('error', 'Gagal menghapus data pemilik: ' . $e->getMessage());
+                ->with('error', 'Gagal menonaktifkan data pemilik: ' . $e->getMessage());
         }
     }
 
     /**
-     * Get pemilik details for AJAX
+     * Display the specified pemilik details
      */
     public function show($id)
     {
-        $pemilik = Pemilik::with('user')->findOrFail($id);
-        
-        return response()->json([
-            'idpemilik' => $pemilik->idpemilik,
-            'iduser' => $pemilik->iduser,
-            'nama' => $pemilik->user->nama,
-            'email' => $pemilik->user->email,
-            'no_wa' => $pemilik->no_wa,
-            'alamat' => $pemilik->alamat,
-            'pets_count' => $pemilik->pets()->count(),
-        ]);
+        $pemilik = DB::table('pemilik')
+            ->join('user', 'pemilik.iduser', '=', 'user.iduser')
+            ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
+            ->join('role', 'role_user.idrole', '=', 'role.idrole')
+            ->leftJoin('pet', 'pemilik.idpemilik', '=', 'pet.idpemilik')
+            ->where('pemilik.idpemilik', $id)
+            ->where('role.nama_role', 'Pemilik')
+            ->select(
+                'pemilik.*',
+                'user.nama',
+                'user.email',
+                'role_user.status as user_status',
+                // 'pemilik.created_at as user_created_at',
+                DB::raw('COUNT(pet.idpet) as pets_count')
+            )
+            ->groupBy('pemilik.idpemilik', 'pemilik.iduser', 'pemilik.no_wa', 'pemilik.alamat', 'user.nama', 'user.email', 'role_user.status'/* , 'pemilik.created_at' */)
+            ->first();
+
+        if (!$pemilik) {
+            return redirect()->route('admin.pemilik.index')
+                ->with('error', 'Profil pemilik tidak ditemukan');
+        }
+
+        return view('admin.pemilik.show', compact('pemilik'));
     }
 }

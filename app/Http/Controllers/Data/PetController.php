@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Data;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pet;
@@ -22,7 +22,7 @@ class PetController extends Controller
         $query = Pet::with(['rasHewan.jenisHewan', 'pemilik.user']);
         
         // Apply role-based filtering
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             // Pemilik users: only show their own pets
             $pemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
@@ -36,10 +36,10 @@ class PetController extends Controller
                 $rasHewanList = RasHewan::with('jenisHewan')->get();
                 $pemilikList = collect();
                 $userRole = 'Pemilik';
-                return view('admin.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
+                return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
             }
         }
-        // For Administrator and Resepsionis: show all pets
+        // For Resepsionis: show all pets
 
         $pets = $query->get();
         
@@ -47,23 +47,21 @@ class PetController extends Controller
         $rasHewanList = RasHewan::with('jenisHewan')->get();
         
         // Get owners list based on role
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             // Pemilik can only see themselves in the dropdown
             $pemilikList = Pemilik::with('user')->where('iduser', Auth::user()->iduser)->get();
         } else {
-            // Admin and Resepsionis can see all owners
+            // Resepsionis can see all owners
             $pemilikList = Pemilik::with('user')->get();
         }
         
         // Get current user role for the view
-        $userRole = 'Administrator'; // default
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
+        $userRole = 'Resepsionis'; // default
+        if (Auth::user()->hasRole('Pemilik')) {
             $userRole = 'Pemilik';
-        } elseif (Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Administrator')) {
-            $userRole = 'Resepsionis';
         }
         
-        return view('admin.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
+        return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
     }
 
     /**
@@ -81,13 +79,13 @@ class PetController extends Controller
         ]);
 
         // Authorization check for pemilik users - can only add pets for themselves
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
             
             if (!$userPemilikId || $userPemilikId != $request->idpemilik) {
-                return redirect()->route('admin.pet.index')
+                return redirect()->route('data.pet.index')
                     ->with('error', 'Anda hanya dapat menambahkan hewan peliharaan untuk diri sendiri.');
             }
         }
@@ -101,7 +99,7 @@ class PetController extends Controller
             'idras_hewan' => $request->idras_hewan,
         ]);
 
-        return redirect()->route('admin.pet.index')
+        return redirect()->route('data.pet.index')
             ->with('success', 'Data hewan peliharaan berhasil ditambahkan');
     }
 
@@ -114,15 +112,15 @@ class PetController extends Controller
         $rasHewanList = RasHewan::with('jenisHewan')->get();
         
         // Get owners list based on role
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             // Pemilik can only add pets for themselves
             $pemilikList = Pemilik::with('user')->where('iduser', Auth::user()->iduser)->get();
         } else {
-            // Admin and Resepsionis can see all owners
+            // Resepsionis can see all owners
             $pemilikList = Pemilik::with('user')->get();
         }
         
-        return view('admin.pet.create', compact('rasHewanList', 'pemilikList'));
+        return view('data.pet.create', compact('rasHewanList', 'pemilikList'));
     }
 
     /**
@@ -133,13 +131,13 @@ class PetController extends Controller
         $pet = Pet::with(['rasHewan.jenisHewan', 'pemilik.user'])->findOrFail($id);
         
         // Authorization check for pemilik users - can only edit their own pets
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
             
             if (!$userPemilikId || $userPemilikId != $pet->idpemilik) {
-                return redirect()->route('admin.pet.index')
+                return redirect()->route('data.pet.index')
                     ->with('error', 'Anda hanya dapat mengedit hewan peliharaan Anda sendiri.');
             }
         }
@@ -148,31 +146,32 @@ class PetController extends Controller
         $rasHewanList = RasHewan::with('jenisHewan')->get();
         
         // Get owners list based on role
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             // Pemilik can only see themselves in the dropdown
             $pemilikList = Pemilik::with('user')->where('iduser', Auth::user()->iduser)->get();
         } else {
-            // Admin and Resepsionis can see all owners
+            // Resepsionis can see all owners
             $pemilikList = Pemilik::with('user')->get();
         }
         
-        return view('admin.pet.edit', compact('pet', 'rasHewanList', 'pemilikList'));
+        return view('data.pet.edit', compact('pet', 'rasHewanList', 'pemilikList'));
     }
 
     /**
      * Update the specified pet
-     */    public function update(Request $request, $id)
+     */    
+    public function update(Request $request, $id)
     {
         $pet = Pet::findOrFail($id);
 
         // Authorization check for pemilik users - can only edit their own pets
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
             
             if (!$userPemilikId || $userPemilikId != $pet->idpemilik) {
-                return redirect()->route('admin.pet.index')
+                return redirect()->route('data.pet.index')
                     ->with('error', 'Anda hanya dapat mengedit hewan peliharaan Anda sendiri.');
             }
         }
@@ -187,13 +186,13 @@ class PetController extends Controller
         ]);
 
         // Additional authorization check for pemilik users on idpemilik field
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
             
             if (!$userPemilikId || $userPemilikId != $request->idpemilik) {
-                return redirect()->route('admin.pet.index')
+                return redirect()->route('data.pet.index')
                     ->with('error', 'Anda hanya dapat mengedit hewan peliharaan untuk diri sendiri.');
             }
         }
@@ -207,7 +206,7 @@ class PetController extends Controller
             'idras_hewan' => $request->idras_hewan,
         ]);
 
-        return redirect()->route('admin.pet.index')
+        return redirect()->route('data.pet.index')
             ->with('success', 'Data hewan peliharaan berhasil diperbarui');
     }
 
@@ -219,26 +218,26 @@ class PetController extends Controller
         $pet = Pet::findOrFail($id);
         
         // Authorization check for pemilik users - can only delete their own pets
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
             
             if (!$userPemilikId || $userPemilikId != $pet->idpemilik) {
-                return redirect()->route('admin.pet.index')
+                return redirect()->route('data.pet.index')
                     ->with('error', 'Anda hanya dapat menghapus hewan peliharaan Anda sendiri.');
             }
         }
         
         // Check if pet has medical records
         if ($pet->rekamMedis()->count() > 0) {
-            return redirect()->route('admin.pet.index')
+            return redirect()->route('data.pet.index')
                 ->with('error', 'Tidak dapat menghapus hewan yang memiliki rekam medis');
         }
 
         $pet->delete();
 
-        return redirect()->route('admin.pet.index')
+        return redirect()->route('data.pet.index')
             ->with('success', 'Data hewan peliharaan berhasil dihapus');
     }
 
@@ -250,30 +249,26 @@ class PetController extends Controller
         $pet = Pet::with(['rasHewan.jenisHewan', 'pemilik.user'])->findOrFail($id);
         
         // Authorization check for pemilik users - can only view their own pets
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Pemilik')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
             
             if (!$userPemilikId || $userPemilikId != $pet->idpemilik) {
-                return redirect()->route('admin.pet.index')
+                return redirect()->route('data.pet.index')
                     ->with('error', 'Anda hanya dapat melihat hewan peliharaan Anda sendiri.');
             }
         }
         
-        // Check if this is an AJAX request
-        // if (request()->ajax()) {
-            return response()->json([
-                'idpet' => $pet->idpet,
-                'nama' => $pet->nama,
-                'tanggal_lahir' => $pet->tanggal_lahir,
-                'warna_tanda' => $pet->warna_tanda,
-                'jenis_kelamin' => $pet->jenis_kelamin,
-                'idpemilik' => $pet->idpemilik,
-                'idras_hewan' => $pet->idras_hewan,
-            ]);
-        // }
-        
-        // return view('admin.pet.show', compact('pet'));
+        // Return JSON for AJAX requests
+        return response()->json([
+            'idpet' => $pet->idpet,
+            'nama' => $pet->nama,
+            'tanggal_lahir' => $pet->tanggal_lahir,
+            'warna_tanda' => $pet->warna_tanda,
+            'jenis_kelamin' => $pet->jenis_kelamin,
+            'idpemilik' => $pet->idpemilik,
+            'idras_hewan' => $pet->idras_hewan,
+        ]);
     }
 }

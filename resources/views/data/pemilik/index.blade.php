@@ -115,8 +115,7 @@
                                             </svg>
                                         </button>
                                         @endif
-                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-                                        <button
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())                                        <button
                                             onclick="deletePemilik({{ $pemilik->idpemilik }}, '{{ $pemilik->nama }}', {{ $pemilik->pets_count }})"
                                             class="text-red-600 hover:text-red-900" title="Hapus">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

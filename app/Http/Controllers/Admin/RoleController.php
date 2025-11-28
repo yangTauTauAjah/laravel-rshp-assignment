@@ -19,8 +19,11 @@ class RoleController extends Controller
         // Get all users with their role relationships
         $users = User::with(['roleUsers.role'])->get();
         
-        // Get all available roles for the modal
-        $allRoles = Role::all();
+        // Get only manually assignable roles (exclude profile-based roles)
+        // Profile-based roles (Dokter, Perawat, Pemilik) should only be assigned
+        // through their respective profile management pages
+        $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
+        $allRoles = Role::whereNotIn('nama_role', $profileBasedRoleNames)->get();
         
         return view('admin.role.index', compact('users', 'allRoles'));
     }
@@ -35,6 +38,15 @@ class RoleController extends Controller
             'user_id' => 'required|exists:user,iduser',
             'role_id' => 'required|exists:role,idrole',
         ]);
+
+        // Prevent assignment of profile-based roles through role management
+        $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
+        $role = Role::findOrFail($request->role_id);
+        
+        if (in_array($role->nama_role, $profileBasedRoleNames)) {
+            return redirect()->route('admin.roles.index')
+                ->with('error', 'Peran ' . $role->nama_role . ' hanya dapat ditambahkan melalui halaman manajemen profil yang sesuai.');
+        }
 
         // Check if user already has this role
         $existingRole = RoleUser::where('iduser', $request->user_id)
@@ -69,7 +81,15 @@ class RoleController extends Controller
      */
     public function toggleRole(Request $request, $roleUserId)
     {
-        $roleUser = RoleUser::findOrFail($roleUserId);
+        $roleUser = RoleUser::with('role')->findOrFail($roleUserId);
+        
+        // Prevent deactivation of profile-based roles through role management
+        $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
+        
+        if (in_array($roleUser->role->nama_role, $profileBasedRoleNames)) {
+            return redirect()->route('admin.roles.index')
+                ->with('error', 'Status peran ' . $roleUser->role->nama_role . ' hanya dapat diubah melalui halaman manajemen profil yang sesuai.');
+        }
         
         $roleUser->update([
             'status' => !$roleUser->status
@@ -86,12 +106,20 @@ class RoleController extends Controller
      */
     public function removeRole($roleUserId)
     {
-        $roleUser = RoleUser::findOrFail($roleUserId);
+        $roleUser = RoleUser::with('role')->findOrFail($roleUserId);
         
         // Check if trying to remove own admin role
         if (Auth::user()->iduser === $roleUser->iduser && $roleUser->idrole === 1) {
             return redirect()->route('admin.roles.index')
                 ->with('error', 'Tidak dapat menghapus peran Administrator dari akun Anda sendiri');
+        }
+        
+        // Prevent removal of profile-based roles through role management
+        $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
+        
+        if (in_array($roleUser->role->nama_role, $profileBasedRoleNames)) {
+            return redirect()->route('admin.roles.index')
+                ->with('error', 'Peran ' . $roleUser->role->nama_role . ' hanya dapat dihapus melalui halaman manajemen profil yang sesuai.');
         }
 
         $roleUser->delete();
@@ -104,7 +132,10 @@ class RoleController extends Controller
     public function getUserRoles($userId)
     {
         $user = User::with(['roleUsers.role'])->findOrFail($userId);
-        $allRoles = Role::all();
+        
+        // Get only manually assignable roles (exclude profile-based roles)
+        $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
+        $allRoles = Role::whereNotIn('nama_role', $profileBasedRoleNames)->get();
         
         return response()->json([
             'user' => [

@@ -25,6 +25,9 @@ class DokterController extends Controller
         $dokterList = DB::table('dokter')
             ->join('user', 'dokter.iduser', '=', 'user.iduser')
             ->join('role_user', 'role_user.iduser', '=', 'user.iduser')
+            ->join('role', 'role_user.idrole', '=', 'role.idrole')
+            ->where('role.nama_role', 'Dokter')
+            ->where('role_user.status', 1) // Only active records
             ->select(
                 'dokter.*',
                 'user.nama',
@@ -224,13 +227,19 @@ class DokterController extends Controller
     {
         try {
             $dokter = Dokter::findOrFail($id);
-            $dokter->delete();
+            
+            // Instead of hard delete, deactivate the role_user record
+            DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', $dokter->iduser)
+                ->where('role.nama_role', 'Dokter')
+                ->update(['role_user.status' => 0]);
 
             return redirect()->route('admin.dokter.index')
-                ->with('success', 'Profil dokter berhasil dihapus');
+                ->with('success', 'Profil dokter berhasil dinonaktifkan');
         } catch (\Exception $e) {
             return redirect()->route('admin.dokter.index')
-                ->with('error', 'Gagal menghapus profil dokter: ' . $e->getMessage());
+                ->with('error', 'Gagal menonaktifkan profil dokter: ' . $e->getMessage());
         }
     }
 }
