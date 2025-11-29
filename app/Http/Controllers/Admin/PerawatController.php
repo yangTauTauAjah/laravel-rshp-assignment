@@ -176,7 +176,7 @@ class PerawatController extends Controller
                 ->update(['role_user.status' => 0]);
 
             return redirect()->route('admin.perawat.index')
-                ->with('success', 'Profil perawat berhasil dinonaktifkan');
+                ->with('success', 'Profil perawat berhasil dihapus');
         } catch (\Exception $e) {
             return redirect()->route('admin.perawat.index')
                 ->with('error', 'Gagal menonaktifkan profil perawat: ' . $e->getMessage());

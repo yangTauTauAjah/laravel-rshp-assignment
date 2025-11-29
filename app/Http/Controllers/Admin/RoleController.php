@@ -84,12 +84,12 @@ class RoleController extends Controller
         $roleUser = RoleUser::with('role')->findOrFail($roleUserId);
         
         // Prevent deactivation of profile-based roles through role management
-        $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
+        /* $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
         
         if (in_array($roleUser->role->nama_role, $profileBasedRoleNames)) {
             return redirect()->route('admin.roles.index')
                 ->with('error', 'Status peran ' . $roleUser->role->nama_role . ' hanya dapat diubah melalui halaman manajemen profil yang sesuai.');
-        }
+        } */
         
         $roleUser->update([
             'status' => !$roleUser->status

@@ -90,6 +90,8 @@ class RekamMedisController extends Controller
                 'pet.jenis_kelamin',
                 'pet.tanggal_lahir as pet_tanggal_lahir',
                 'pet.warna_tanda',
+                'pemilik.no_wa as pemilik_no_wa',
+                'pemilik.alamat as pemilik_alamat',
                 'pemilik_user.nama as pemilik_nama',
                 'pemilik_user.email as pemilik_email',
                 'ras_hewan.nama_ras',
@@ -144,8 +146,7 @@ class RekamMedisController extends Controller
             ->select(
                 'detail_rekam_medis.*',
                 'kode_tindakan_terapi.kode',
-                'kode_tindakan_terapi.nama_tindakan',
-                'kode_tindakan_terapi.tarif',
+                'kode_tindakan_terapi.deskripsi_tindakan_terapi',
                 'kategori.nama_kategori',
                 'kategori_klinis.nama_kategori_klinis'
             )

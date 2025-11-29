@@ -252,7 +252,8 @@ class RekamMedisController extends Controller
                 'dokter_user.nama as dokter_nama',
                 'ras_hewan.nama_ras',
                 'jenis_hewan.nama_jenis_hewan'
-            )            ->first();
+            )
+            ->first();
 
         if (!$rekamMedis) {
             abort(404);

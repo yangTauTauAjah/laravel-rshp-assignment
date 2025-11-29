@@ -269,11 +269,11 @@ class PemilikController extends Controller
         $pemilik = Pemilik::findOrFail($id);
 
         // Check if pemilik has pets
-        $petsCount = DB::table('pet')->where('idpemilik', $id)->count();
+        /* $petsCount = DB::table('pet')->where('idpemilik', $id)->count();
         if ($petsCount > 0) {
             return redirect()->route('data.pemilik.index')
                 ->with('error', 'Tidak dapat menghapus pemilik yang masih memiliki hewan peliharaan');
-        }
+        } */
 
         DB::beginTransaction();
         try {

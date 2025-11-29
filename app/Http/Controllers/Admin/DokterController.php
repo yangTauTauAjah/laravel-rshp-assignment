@@ -236,7 +236,7 @@ class DokterController extends Controller
                 ->update(['role_user.status' => 0]);
 
             return redirect()->route('admin.dokter.index')
-                ->with('success', 'Profil dokter berhasil dinonaktifkan');
+                ->with('success', 'Profil dokter berhasil dihapus');
         } catch (\Exception $e) {
             return redirect()->route('admin.dokter.index')
                 ->with('error', 'Gagal menonaktifkan profil dokter: ' . $e->getMessage());

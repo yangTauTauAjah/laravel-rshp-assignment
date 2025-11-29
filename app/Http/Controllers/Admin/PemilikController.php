@@ -113,6 +113,23 @@ class PemilikController extends Controller
                     'password' => Hash::make($request->password),
                 ]);
 
+                // Assign Pemilik role to the user
+                $pemilikRole = DB::table('role')->where('nama_role', 'Pemilik')->first();
+                if ($pemilikRole) {
+                    // Check if user doesn't already have this role
+                    $existingRole = DB::table('role_user')
+                        ->where('iduser', $user->iduser)
+                        ->where('idrole', $pemilikRole->idrole)
+                        ->exists();
+                    
+                    if (!$existingRole) {
+                        DB::table('role_user')->insert([
+                            'iduser' => $user->iduser,
+                            'idrole' => $pemilikRole->idrole
+                        ]);
+                    }
+                }
+
                 // Get the next idpemilik
                 $lastPemilik = Pemilik::orderBy('idpemilik', 'desc')->first();
                 $nextIdPemilik = $lastPemilik ? $lastPemilik->idpemilik + 1 : 1;
@@ -214,10 +231,10 @@ class PemilikController extends Controller
         $pemilik = Pemilik::findOrFail($id);
         
         // Check if pemilik has pets
-        if ($pemilik->pets()->count() > 0) {
+        /* if ($pemilik->pets()->count() > 0) {
             return redirect()->route('admin.pemilik.index')
                 ->with('error', 'Tidak dapat menghapus pemilik yang memiliki hewan peliharaan terdaftar');
-        }
+        } */
 
         DB::beginTransaction();
         try {
@@ -231,7 +248,7 @@ class PemilikController extends Controller
             DB::commit();
 
             return redirect()->route('admin.pemilik.index')
-                ->with('success', 'Data pemilik hewan berhasil dinonaktifkan');
+                ->with('success', 'Profil pemilik hewan berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('admin.pemilik.index')
