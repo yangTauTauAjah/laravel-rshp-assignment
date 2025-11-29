@@ -4,7 +4,19 @@
     <!-- Page Header -->
     <x-admin-header title="Detail Reservasi Dokter" subtitle="Informasi lengkap reservasi dokter"
         :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
-
+        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+        <x-slot:actionButton>
+            <button onclick="openAddTemuDokterModal()"
+                class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Buat Reservasi
+            </button>
+        </x-slot:actionButton>
+        @endif
+    </x-admin-header>
+        
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
@@ -166,7 +178,7 @@
                             Edit Reservasi
                         </a>
 
-                        @if(Auth::user()->isAdministrator())
+                        {{-- @if(Auth::user()->isAdministrator())
                         <button onclick="deleteTemuDokter()"
                             class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +187,7 @@
                             </svg>
                             Hapus Reservasi
                         </button>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
                 @endif
@@ -246,7 +258,7 @@
                                         </svg>
                                     </a>
                                     @endif
-                                    @if(Auth::user()->isAdministrator())
+                                    {{-- @if(Auth::user()->isAdministrator())
                                     <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}')"
                                         class="text-red-600 hover:text-red-900" title="Hapus">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,7 +267,7 @@
                                             </path>
                                         </svg>
                                     </button>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                         </div>
@@ -382,9 +394,8 @@
         </div>
     </div>
     @endif
-            </div>
-        </div>
-    </div>    <script>
+
+    <script>
         let modalTindakanCounter = 0;
         let kodeTindakanData = [];
 
@@ -395,6 +406,7 @@
 
         function loadKodeTindakan() {
             fetch('/admin/temu-dokter/kode-tindakan')
+                .then(response => {console.log('test'); return response})
                 .then(response => response.json())
                 .then(data => {
                     kodeTindakanData = data;

@@ -3,11 +3,11 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Detail Profil Pemilik" subtitle="Informasi lengkap profil pemilik hewan"
-        :backRoute="route('admin.pemilik.index')" backText="Kembali ke Daftar Pemilik">
+        :backRoute="route('data.pemilik.index')" backText="Kembali ke Daftar Pemilik">
         
         <x-slot:actionButton>
             @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-                <a href="{{ route('admin.pemilik.edit', $pemilik->idpemilik) }}"
+                <a href="{{ route('data.pemilik.edit', $pemilik->idpemilik) }}"
                     class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -146,7 +146,7 @@
                 <h3 class="text-lg font-medium text-rshp-dark-gray mb-4">Aksi Cepat</h3>
                 <div class="space-y-2">
                     @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-                    <a href="{{ route('admin.pemilik.edit', $pemilik->idpemilik) }}"
+                    <a href="{{ route('data.pemilik.edit', $pemilik->idpemilik) }}"
                         class="flex items-center w-full px-3 py-2 text-sm text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <svg class="w-4 h-4 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -155,7 +155,7 @@
                     </a>
                     @endif
                     
-                    <a href="{{ route('admin.pet.index') }}?pemilik={{ $pemilik->idpemilik }}"
+                    <a href="{{ route('data.pet.index') }}?pemilik={{ $pemilik->idpemilik }}"
                         class="flex items-center w-full px-3 py-2 text-sm text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <svg class="w-4 h-4 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>

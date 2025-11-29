@@ -3,7 +3,8 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Detail Reservasi Dokter" subtitle="Informasi lengkap reservasi dokter"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
+    </x-admin-header>
 
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -156,7 +157,7 @@
                         </button>
                         @endif
 
-                        <a href="{{ route('admin.temu-dokter.edit', $temuDokter->idreservasi_dokter) }}"
+                        <a href="{{ route('data.temu-dokter.edit', $temuDokter->idreservasi_dokter) }}"
                             class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -166,7 +167,7 @@
                             Edit Reservasi
                         </a>
 
-                        @if(Auth::user()->isAdministrator())
+                        {{-- @if(Auth::user()->isAdministrator())
                         <button onclick="deleteTemuDokter()"
                             class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +176,7 @@
                             </svg>
                             Hapus Reservasi
                         </button>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
                 @endif
@@ -226,7 +227,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-2 ml-4">
-                                    <a href="{{ route('admin.rekam-medis.show', $rekamMedis->idrekam_medis) }}"
+                                    <a href="{{ route('data.rekam-medis.show', $rekamMedis->idrekam_medis) }}"
                                         class="text-rshp-green hover:text-green-900" title="Lihat Detail">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -237,7 +238,7 @@
                                         </svg>
                                     </a>
                                     @if(Auth::user()->isAdministrator() || Auth::user()->isDokter())
-                                    <a href="{{ route('admin.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
+                                    <a href="{{ route('data.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
                                         class="text-rshp-blue hover:text-blue-900" title="Edit">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -246,7 +247,7 @@
                                         </svg>
                                     </a>
                                     @endif
-                                    @if(Auth::user()->isAdministrator())
+                                    {{-- @if(Auth::user()->isAdministrator())
                                     <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}')"
                                         class="text-red-600 hover:text-red-900" title="Hapus">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,7 +256,7 @@
                                             </path>
                                         </svg>
                                     </button>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                         </div>
@@ -293,7 +294,7 @@
                 </button>
             </div>
 
-            <form id="addRekamMedisForm" action="{{ route('admin.temu-dokter.store-rekam-medis', $temuDokter->idreservasi_dokter) }}" method="POST">
+            <form id="addRekamMedisForm" action="{{ route('data.temu-dokter.store-rekam-medis', $temuDokter->idreservasi_dokter) }}" method="POST">
                 @csrf
                 <div class="space-y-4 max-h-96 overflow-y-auto">
 

@@ -188,7 +188,7 @@
                                             </svg>
                                         </a>
                                         @endif
-                                        @if(Auth::user()->isAdministrator())
+                                        {{-- @if(Auth::user()->isAdministrator())
                                         <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
                                             class="text-red-600 hover:text-red-900" title="Hapus">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,7 +197,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </td>
                             </tr>                        @empty

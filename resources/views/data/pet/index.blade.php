@@ -81,10 +81,10 @@
                                             @endif
                                         </div>
                                     </div>
-                                </td>                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $pet->nama_ras }}</div>
-                                    <div class="text-sm text-gray-500">{{ $pet->nama_jenis_hewan }}
-                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $pet->rasHewan->nama_ras }}</div>
+                                    <div class="text-sm text-gray-500">{{ $pet->rasHewan->jenisHewan->nama }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
@@ -101,9 +101,11 @@
                                     @else
                                         <span class="text-gray-400">-</span>
                                     @endif
-                                </td>                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $pet->pemilik_nama }}
-                                </td><td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $pet->pemilik->user->nama }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">                                        @if(Auth::user()->hasRole('Resepsionis') || Auth::user()->hasRole('Pemilik'))
                                         <button onclick="editPet({{ $pet->idpet }})"
                                             class="text-rshp-blue hover:text-blue-900">
@@ -114,7 +116,7 @@
                                             </svg>
                                         </button>
                                         @endif
-                                        @if(Auth::user()->hasRole('Resepsionis') || Auth::user()->hasRole('Pemilik'))
+                                        {{-- @if(Auth::user()->hasRole('Resepsionis') || Auth::user()->hasRole('Pemilik'))
                                         <button onclick="deletePet({{ $pet->idpet }}, '{{ $pet->nama }}')"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +125,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </td>
                             </tr>

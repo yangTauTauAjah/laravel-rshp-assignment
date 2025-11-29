@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')    <!-- Page Header -->    <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
@@ -94,7 +94,7 @@
                                     </span></td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         <!-- View Details Button -->
-                                        <a href="{{ route('admin.pemilik.show', $pemilik->idpemilik) }}"
+                                        <a href="{{ route('data.pemilik.show', $pemilik->idpemilik) }}"
                                             class="text-rshp-green hover:text-green-900" title="Lihat Detail">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -155,7 +155,7 @@
                         </svg>
                     </button>
                 </div>                <!-- Add Pemilik Form -->
-                <form action="{{ route('admin.pemilik.store') }}" method="POST" id="addPemilikForm">
+                <form action="{{ route('data.pemilik.store') }}" method="POST" id="addPemilikForm">
                     @csrf
 
                     <!-- Registration Type Tabs -->
@@ -353,8 +353,7 @@
                         <button type="button" onclick="closeEditPemilikModal()"
                             class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
                             Batal
-                        </button>
-                        <button type="submit"
+                        </button>                        <button type="submit"
                             class="px-4 py-2 bg-rshp-green text-white rounded-md hover:bg-green-700 transition-colors">
                             Update
                         </button>
@@ -362,7 +361,41 @@
                 </form>
             </div>
         </div>
-    </div>    <script>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-5">Hapus Data Pemilik</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">
+                        Apakah Anda yakin ingin menghapus data pemilik <span id="deletePemilikName" class="font-semibold"></span>?
+                    </p>
+                    <p class="text-sm text-red-500 mt-2">
+                        <strong>Perhatian:</strong> Tindakan ini tidak akan menghapus akun user.
+                    </p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmDelete"
+                        class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-24 mr-2 hover:bg-red-600">
+                        Hapus
+                    </button>
+                    <button onclick="closeDeleteModal()"
+                        class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 hover:bg-gray-600">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div><script>
         // Switch Registration Type
         function switchRegistrationType(type) {
             const registrationTypeInput = document.getElementById('registration_type');
@@ -457,36 +490,44 @@
         // Close Edit Pemilik Modal
         function closeEditPemilikModal() {
             document.getElementById('editPemilikModal').classList.add('hidden');
+        }        let deleteForm = null;
+
+        function deletePemilik(pemilikId, pemilikName, petsCount) {
+            document.getElementById('deletePemilikName').textContent = pemilikName;
+            document.getElementById('deleteModal').classList.remove('hidden');
+
+            if (deleteForm) {
+                deleteForm.remove();
+            }
+            deleteForm = document.createElement('form');
+            deleteForm.method = 'POST';
+            deleteForm.action = `/data/pemilik/${pemilikId}`;
+            deleteForm.style.display = 'none';
+
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            deleteForm.appendChild(csrfInput);
+
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'DELETE';
+            deleteForm.appendChild(methodInput);
+
+            document.body.appendChild(deleteForm);
+
+            document.getElementById('confirmDelete').onclick = function() {
+                deleteForm.submit();
+            };
         }
 
-        // Delete Pemilik
-        function deletePemilik(pemilikId, pemilikName, petsCount) {
-            if (petsCount > 0) {
-                alert(
-                    `Tidak dapat menghapus pemilik "${pemilikName}" karena masih memiliki ${petsCount} hewan terdaftar.`
-                    );
-                return;
-            }
-
-            if (confirm(`Apakah Anda yakin ingin menghapus data pemilik "${pemilikName}"?`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `/admin/pemilik/${pemilikId}`;
-
-                const csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = '_token';
-                csrfToken.value = '{{ csrf_token() }}';
-
-                const methodField = document.createElement('input');
-                methodField.type = 'hidden';
-                methodField.name = '_method';
-                methodField.value = 'DELETE';
-
-                form.appendChild(csrfToken);
-                form.appendChild(methodField);
-                document.body.appendChild(form);
-                form.submit();
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            if (deleteForm) {
+                deleteForm.remove();
+                deleteForm = null;
             }
         }
 
@@ -495,11 +536,15 @@
             if (e.target === this) {
                 closeAddPemilikModal();
             }
-        });
-
-        document.getElementById('editPemilikModal').addEventListener('click', function(e) {
+        });        document.getElementById('editPemilikModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeEditPemilikModal();
+            }
+        });
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
             }
         });
     </script>

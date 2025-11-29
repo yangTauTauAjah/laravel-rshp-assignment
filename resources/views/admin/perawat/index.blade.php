@@ -56,7 +56,8 @@
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Perawat
-                            </th>                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Pendidikan
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -85,7 +86,8 @@
                                         <div class="text-sm text-gray-500">{{ $perawat->email }}</div>
                                     </div>
                                 </div>
-                            </td>                            <td class="px-6 py-4 whitespace-nowrap">
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-rshp-dark-gray">{{ $perawat->pendidikan }}</div>
                                 <div class="text-sm text-gray-500">
                                     {{ $perawat->jenis_kelamin == 'M' ? 'Laki-laki' : 'Perempuan' }}
@@ -135,7 +137,7 @@
                                     </a>
                                     
                                     <!-- Delete Button -->
-                                    <button onclick="confirmDelete({{ $perawat->idperawat }}, '{{ $perawat->nama }}')" 
+                                    <button onclick="deletePerawat({{ $perawat->idperawat }}, '{{ $perawat->nama }}')" 
                                         class="text-red-600 hover:text-red-900 transition-colors"
                                         title="Hapus">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,59 +157,87 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
-            <div class="p-6">
-                <div class="flex items-center mb-4">
-                    <div class="h-10 w-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
-                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-medium text-gray-900">Konfirmasi Hapus</h3>
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
+                        </path>
+                    </svg>
                 </div>
-                <p class="text-sm text-gray-600 mb-6">
-                    Apakah Anda yakin ingin menghapus profil perawat <strong id="deleteTargetName">-</strong>? 
-                    Tindakan ini tidak dapat dibatalkan.
-                </p>
-                <div class="flex justify-end space-x-3">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-5">Hapus Data Perawat</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">
+                        Apakah Anda yakin ingin menghapus data perawat <span id="deletePerawatName" class="font-semibold"></span>?
+                    </p>
+                    <p class="text-sm text-red-500 mt-2">
+                        <strong>Perhatian:</strong> Tindakan ini tidak akan menghapus akun user.
+                    </p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmDelete"
+                        class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-24 mr-2 hover:bg-red-600">
+                        Hapus
+                    </button>
                     <button onclick="closeDeleteModal()"
-                        class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 hover:bg-gray-600">
                         Batal
                     </button>
-                    <form id="deleteForm" method="POST" style="display: inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                            Hapus
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 @endsection
 
-@push('scripts')
+{{-- @push('scripts') --}}
 <script>
-function confirmDelete(perawatId, perawatName) {
-    document.getElementById('deleteTargetName').textContent = perawatName;
-    document.getElementById('deleteForm').action = `/admin/perawat/${perawatId}`;
-    document.getElementById('deleteModal').classList.remove('hidden');
-    document.getElementById('deleteModal').classList.add('flex');
-}
+    let deleteForm = null;
 
-function closeDeleteModal() {
-    document.getElementById('deleteModal').classList.add('hidden');
-    document.getElementById('deleteModal').classList.remove('flex');
-}
+    function deletePerawat(id, name) {
+        document.getElementById('deletePerawatName').textContent = name;
+        document.getElementById('deleteModal').classList.remove('hidden');
 
-// Close modal when clicking outside
-document.getElementById('deleteModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeDeleteModal();
+        if (deleteForm) {
+            deleteForm.remove();
+        }
+        deleteForm = document.createElement('form');
+        deleteForm.method = 'POST';
+        deleteForm.action = `/admin/perawat/${id}`;
+        deleteForm.style.display = 'none';
+
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        deleteForm.appendChild(csrfInput);
+
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        deleteForm.appendChild(methodInput);
+
+        document.body.appendChild(deleteForm);
+
+        document.getElementById('confirmDelete').onclick = function() {
+            deleteForm.submit();
+        };
     }
-});
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+        if (deleteForm) {
+            deleteForm.remove();
+            deleteForm = null;
+        }
+    }
+
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
 </script>
-@endpush
+{{-- @endpush --}}

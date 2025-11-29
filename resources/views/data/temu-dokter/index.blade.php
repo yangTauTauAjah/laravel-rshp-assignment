@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Kelola Temu Dokter" subtitle="Manajemen reservasi dan antrian dokter"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
             <button onclick="openAddTemuDokterModal()"
@@ -143,7 +143,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('admin.temu-dokter.show', $temuDokter->idreservasi_dokter) }}"
+                                        <a href="{{ route('data.temu-dokter.show', $temuDokter->idreservasi_dokter) }}"
                                             class="text-rshp-green hover:text-green-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -169,7 +169,7 @@
                                             </svg>
                                         </button>
                                         @endif
-                                        <a href="{{ route('admin.temu-dokter.edit', $temuDokter->idreservasi_dokter) }}"
+                                        <a href="{{ route('data.temu-dokter.edit', $temuDokter->idreservasi_dokter) }}"
                                             class="text-rshp-blue hover:text-blue-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -178,7 +178,7 @@
                                             </svg>
                                         </a>
                                         @endif
-                                        @if(Auth::user()->isAdministrator())
+                                        {{-- @if(Auth::user()->isAdministrator())
                                         <button onclick="deleteTemuDokter({{ $temuDokter->idreservasi_dokter }}, '{{ $temuDokter->dokter_nama }}', '{{ \Carbon\Carbon::parse($temuDokter->waktu_daftar)->format('d M Y H:i') }}')"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +187,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </td>
                             </tr>
@@ -216,7 +216,7 @@
                 </button>
             </div>
 
-            <form id="addTemuDokterForm" action="{{ route('admin.temu-dokter.store') }}" method="POST">
+            <form id="addTemuDokterForm" action="{{ route('data.temu-dokter.store') }}" method="POST">
                 @csrf
                 <div class="space-y-4">
 
@@ -395,7 +395,7 @@
             const statusText = status === '1' ? 'Selesai' : 'Batal';
             
             if (confirm(`Apakah Anda yakin ingin mengubah status menjadi ${statusText}?`)) {
-                fetch(`/admin/temu-dokter/${id}/status`, {
+                fetch(`/data/temu-dokter/${id}/status`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -450,7 +450,7 @@
             }
             deleteForm = document.createElement('form');
             deleteForm.method = 'POST';
-            deleteForm.action = `/admin/temu-dokter/${id}`;
+            deleteForm.action = `/data/temu-dokter/${id}`;
             deleteForm.style.display = 'none';
 
             // Add CSRF token

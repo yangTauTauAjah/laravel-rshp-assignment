@@ -3,10 +3,10 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Edit Reservasi Dokter" subtitle="Perbarui informasi reservasi dokter"
-        :backRoute="route('admin.temu-dokter.show', $temuDokter->idreservasi_dokter)" backText="Kembali ke Detail">
+        :backRoute="route('data.temu-dokter.show', $temuDokter->idreservasi_dokter)" backText="Kembali ke Detail">
         
         <x-slot:actionButton>
-            <a href="{{ route('admin.dashboard') }}"
+            <a href="{{ route('data.dashboard') }}"
                 class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
@@ -23,7 +23,7 @@
                 <h2 class="text-lg font-semibold text-rshp-dark-gray">Form Edit Reservasi</h2>
             </div>
 
-            <form action="{{ route('admin.temu-dokter.update', $temuDokter->idreservasi_dokter) }}" method="POST">
+            <form action="{{ route('data.temu-dokter.update', $temuDokter->idreservasi_dokter) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="p-6 space-y-6">
@@ -117,7 +117,7 @@
 
                 <!-- Form Actions -->
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-                    <a href="{{ route('admin.temu-dokter.show', $temuDokter->idreservasi_dokter) }}"
+                    <a href="{{ route('data.temu-dokter.show', $temuDokter->idreservasi_dokter) }}"
                         class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
                         Batal
                     </a>

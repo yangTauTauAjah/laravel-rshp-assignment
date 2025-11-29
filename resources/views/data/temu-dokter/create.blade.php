@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Tambah Reservasi Dokter" subtitle="Buat reservasi dokter baru"
-        :backRoute="route('admin.temu-dokter.index')" backText="Kembali ke Daftar Reservasi" />
+        :backRoute="route('data.temu-dokter.index')" backText="Kembali ke Daftar Reservasi" />
 
     <div class="mx-auto my-6 max-w-2xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -11,7 +11,7 @@
                 <h2 class="text-lg font-semibold text-rshp-dark-gray">Form Reservasi Dokter</h2>
             </div>
 
-            <form action="{{ route('admin.temu-dokter.store') }}" method="POST" class="p-6 space-y-6">
+            <form action="{{ route('data.temu-dokter.store') }}" method="POST" class="p-6 space-y-6">
                 @csrf
 
                 <!-- Doctor Selection -->
@@ -81,7 +81,7 @@
 
                 <!-- Form Actions -->
                 <div class="flex justify-end space-x-3 pt-4 border-t">
-                    <a href="{{ route('admin.temu-dokter.index') }}"
+                    <a href="{{ route('data.temu-dokter.index') }}"
                         class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
                         Batal
                     </a>

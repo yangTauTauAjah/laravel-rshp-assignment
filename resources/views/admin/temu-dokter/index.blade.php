@@ -178,7 +178,7 @@
                                             </svg>
                                         </a>
                                         @endif
-                                        @if(Auth::user()->isAdministrator())
+                                        {{-- @if(Auth::user()->isAdministrator())
                                         <button onclick="deleteTemuDokter({{ $temuDokter->idreservasi_dokter }}, '{{ $temuDokter->dokter_nama }}', '{{ \Carbon\Carbon::parse($temuDokter->waktu_daftar)->format('d M Y H:i') }}')"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +187,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </td>
                             </tr>

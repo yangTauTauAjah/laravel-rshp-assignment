@@ -3,11 +3,11 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Detail Rekam Medis" subtitle="Informasi lengkap rekam medis hewan peliharaan"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
         @if($canEdit)
         <x-slot:actionButton>
-            <a href="{{ route('admin.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
+            <a href="{{ route('data.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
                 class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

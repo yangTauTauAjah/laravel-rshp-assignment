@@ -2,19 +2,19 @@
 
 @section('content')
     <!-- Page Header -->
-    @if(Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator'))
+    {{-- @if(Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator'))
         <x-admin-header title="Rekam Medis Pasien Saya" subtitle="Daftar rekam medis pasien yang telah Anda periksa"
-            :backRoute="route('home')" backText="Kembali ke Home" />
+            :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
     @elseif(Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Administrator'))
         <x-admin-header title="Kelola Rekam Medis" subtitle="Manajemen rekam medis hewan peliharaan - Perawat"
-            :backRoute="route('home')" backText="Kembali ke Home" />
+            :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
     @elseif(Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator'))
         <x-admin-header title="Rekam Medis Hewan Peliharaan Saya" subtitle="Daftar rekam medis hewan peliharaan Anda"
-            :backRoute="route('home')" backText="Kembali ke Home" />
-    @else
+            :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
+    @else --}}
         <x-admin-header title="Kelola Rekam Medis" subtitle="Manajemen rekam medis hewan peliharaan"
-            :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard" />
-    @endif
+            :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
+    {{-- @endif --}}
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">
 
@@ -31,12 +31,13 @@
                     <p class="text-blue-700 text-sm leading-relaxed">
                         Rekam medis sekarang dikelola melalui sistem <strong>Temu Dokter</strong>. 
                         Untuk menambah rekam medis baru, silakan buat reservasi dokter terlebih dahulu di menu 
-                        <a href="{{ route('admin.temu-dokter.index') }}" class="underline font-semibold">Temu Dokter</a>, 
+                        <a href="{{ route('data.temu-dokter.index') }}" class="underline font-semibold">Temu Dokter</a>, 
                         kemudian tambahkan rekam medis dari halaman detail reservasi tersebut.
                     </p>
                 </div>
             </div>
-        </div>        @elseif(Auth::user()->hasRole('Dokter'))
+        </div>
+        @elseif(Auth::user()->hasRole('Dokter'))
         <div class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
             <div class="flex items-start">
                 <svg class="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,7 +154,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     @if($rekamMedis->idreservasi_dokter)
-                                        <a href="{{ route('admin.temu-dokter.show', $rekamMedis->idreservasi_dokter) }}" 
+                                        <a href="{{ route('data.temu-dokter.show', $rekamMedis->idreservasi_dokter) }}" 
                                            class="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200">
                                             <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -168,7 +169,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('admin.rekam-medis.show', $rekamMedis->idrekam_medis) }}"
+                                        <a href="{{ route('data.rekam-medis.show', $rekamMedis->idrekam_medis) }}"
                                             class="text-rshp-green hover:text-green-900" title="Lihat Detail">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -179,7 +180,7 @@
                                             </svg>
                                         </a>
                                         @if(Auth::user()->isAdministrator() || Auth::user()->isDokter())
-                                        <a href="{{ route('admin.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
+                                        <a href="{{ route('data.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
                                             class="text-rshp-blue hover:text-blue-900" title="Edit">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -188,7 +189,7 @@
                                             </svg>
                                         </a>
                                         @endif
-                                        @if(Auth::user()->isAdministrator())
+                                        {{-- @if(Auth::user()->isAdministrator())
                                         <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
                                             class="text-red-600 hover:text-red-900" title="Hapus">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,7 +198,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </td>
                             </tr>                        @empty
@@ -213,7 +214,7 @@
                                         @else
                                             <p class="text-lg font-medium text-gray-900 mb-2">Belum ada data rekam medis</p>
                                             <p class="text-gray-500 mb-4">Mulai dengan membuat reservasi dokter untuk menambah rekam medis baru</p>
-                                            <a href="{{ route('admin.temu-dokter.index') }}" 
+                                            <a href="{{ route('data.temu-dokter.index') }}" 
                                                class="inline-flex items-center px-4 py-2 bg-rshp-blue text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>

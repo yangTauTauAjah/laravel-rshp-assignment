@@ -111,12 +111,10 @@
             <p class="text-sm text-gray-600">Pendaftaran pasien, jadwal kunjungan, pembayaran, dan informasi pasien.</p>
           </div>
         </div>
-      </div>
-
-      <!-- Profile-Based Roles -->
+      </div>      <!-- Profile-Based Roles -->
       <div>
-        <h3 class="text-md font-medium text-orange-600 mb-3">Peran Berbasis Profil (Otomatis)</h3>
-        <p class="text-sm text-gray-600 mb-3">Peran ini hanya dapat ditambahkan/dihapus melalui halaman manajemen profil yang sesuai:</p>
+        <h3 class="text-md font-medium text-orange-600 mb-3">Peran Berbasis Profil (Tidak Dapat Ditugaskan Manual)</h3>
+        <p class="text-sm text-gray-600 mb-3">Peran ini hanya dapat dibuat melalui halaman manajemen profil yang sesuai, tetapi dapat diaktifkan/dinonaktifkan melalui manajemen peran:</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="bg-orange-50 rounded-lg p-4">
             <h4 class="font-medium text-orange-700 mb-2">
@@ -219,10 +217,10 @@
               <p class="text-gray-600">Pendaftaran pasien, jadwal kunjungan, pembayaran, dan informasi pasien.</p>
             </div>
           </div>
-          
-          <div class="mt-4 pt-3 border-t border-gray-200">
+            <div class="mt-4 pt-3 border-t border-gray-200">
             <h5 class="font-medium text-orange-600 mb-2">Peran Berbasis Profil</h5>
-            <p class="text-xs text-gray-500">Peran Dokter, Perawat, dan Pemilik dikelola otomatis melalui halaman manajemen profil masing-masing dan tidak dapat ditugaskan secara manual.</p>
+            <p class="text-xs text-gray-500">Peran Dokter, Perawat, dan Pemilik tidak dapat ditugaskan secara manual. Peran ini harus dibuat melalui halaman manajemen profil masing-masing.</p>
+            <p class="text-xs text-blue-500 mt-1">Namun, Anda dapat mengaktifkan/menonaktifkan peran yang sudah ada untuk mengontrol akses tanpa menghapus profil.</p>
           </div>
         </div>
             </div>
@@ -279,9 +277,7 @@
         return;
       }
 
-      const profileBasedRoles = ['Dokter', 'Perawat', 'Pemilik'];
-
-      container.innerHTML = roles.map(role => {
+      const profileBasedRoles = ['Dokter', 'Perawat', 'Pemilik'];      container.innerHTML = roles.map(role => {
         const isProfileBased = profileBasedRoles.includes(role.nama_role);
         
         return `
@@ -294,10 +290,9 @@
                 <span class="text-sm ${role.status ? 'text-green-600' : 'text-red-600'}">
                     ${role.status ? 'Aktif' : 'Nonaktif'}
                 </span>
-                ${isProfileBased ? '<span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">Dikelola via Profil</span>' : ''}
+                ${isProfileBased ? '<span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">Berbasis Profil</span>' : ''}
             </div>
             <div class="flex items-center space-x-2">
-                ${!isProfileBased ? `
                 <form action="/admin/roles/toggle/${role.idrole_user}" method="POST" class="inline">
                     <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
                     <button type="submit" 
@@ -306,37 +301,36 @@
                         ${role.status ? 'Nonaktifkan' : 'Aktifkan'}
                     </button>
                 </form>
-                ` : `
-                <span class="text-xs text-gray-500 italic">Kelola melalui manajemen profil</span>
-                `}
             </div>
         </div>
       `;
       }).join('');
     }
-    
-    // Update available roles in select dropdown
+      // Update available roles in select dropdown
     function updateAvailableRoles(currentRoles, allRoles) {
       const select = document.getElementById('newRoleSelect');
       const currentRoleIds = currentRoles.filter(r => r.status).map(r => r.idrole);
+      const profileBasedRoles = ['Dokter', 'Perawat', 'Pemilik'];
 
       // Clear existing options except the first one
       while (select.options.length > 1) {
         select.remove(1);
       }
 
-      // Add all roles
+      // Add only manually assignable roles (exclude profile-based roles)
       allRoles.forEach(role => {
-        const option = document.createElement('option');
-        option.value = role.idrole;
-        option.textContent = role.nama_role;
-        option.disabled = currentRoleIds.includes(role.idrole);
-        select.appendChild(option);
+        if (!profileBasedRoles.includes(role.nama_role)) {
+          const option = document.createElement('option');
+          option.value = role.idrole;
+          option.textContent = role.nama_role;
+          option.disabled = currentRoleIds.includes(role.idrole);
+          select.appendChild(option);
+        }
       });
 
       // Reset selection
       select.value = '';
-    }    
+    }
     
     /* // Add role to user
     async function addRole(event) {

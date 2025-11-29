@@ -178,7 +178,7 @@
                         Apakah Anda yakin ingin menghapus data dokter <span id="deleteDokterName" class="font-semibold"></span>?
                     </p>
                     <p class="text-sm text-red-500 mt-2">
-                        <strong>Perhatian:</strong> Tindakan ini tidak akan menghapus akun user, hanya profil dokter.
+                        <strong>Perhatian:</strong> Tindakan ini tidak akan menghapus akun user.
                     </p>
                 </div>
                 <div class="items-center px-4 py-3">
