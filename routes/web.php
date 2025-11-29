@@ -111,26 +111,26 @@ Route::middleware(['auth', 'verified', 'role:Administrator'])->prefix('admin')->
     // Rekam Medis Management Routes (Admin only - full access)
     Route::get('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'index'])->name('admin.rekam-medis.index');
     Route::get('/rekam-medis/create', [App\Http\Controllers\Admin\RekamMedisController::class, 'create'])->name('admin.rekam-medis.create');
-    Route::post('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'store'])->name('admin.rekam-medis.store');
+    Route::get('/rekam-medis/kode-tindakan', [App\Http\Controllers\Admin\RekamMedisController::class, 'getKodeTindakan'])->name('admin.rekam-medis.get-kode-tindakan');
     Route::get('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'show'])->name('admin.rekam-medis.show');
     Route::get('/rekam-medis/{id}/edit', [App\Http\Controllers\Admin\RekamMedisController::class, 'edit'])->name('admin.rekam-medis.edit');
+    Route::post('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'store'])->name('admin.rekam-medis.store');
     Route::put('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'update'])->name('admin.rekam-medis.update');
-    Route::delete('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'destroy'])->name('admin.rekam-medis.destroy');
     Route::delete('/rekam-medis/detail/{detailId}', [App\Http\Controllers\Admin\RekamMedisController::class, 'deleteDetail'])->name('admin.rekam-medis.delete-detail');
-    Route::get('/rekam-medis/kode-tindakan', [App\Http\Controllers\Admin\RekamMedisController::class, 'getKodeTindakan'])->name('admin.rekam-medis.get-kode-tindakan');
+    Route::delete('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'destroy'])->name('admin.rekam-medis.destroy');
     
     // Temu Dokter Management Routes (Admin only - full access)
     Route::get('/temu-dokter', [App\Http\Controllers\Admin\TemuDokterController::class, 'index'])->name('admin.temu-dokter.index');
     Route::get('/temu-dokter/create', [App\Http\Controllers\Admin\TemuDokterController::class, 'create'])->name('admin.temu-dokter.create');
-    Route::post('/temu-dokter', [App\Http\Controllers\Admin\TemuDokterController::class, 'store'])->name('admin.temu-dokter.store');
+    Route::get('/temu-dokter/kode-tindakan', [App\Http\Controllers\Admin\TemuDokterController::class, 'getKodeTindakan'])->name('admin.temu-dokter.get-kode-tindakan');
     Route::get('/temu-dokter/{id}', [App\Http\Controllers\Admin\TemuDokterController::class, 'show'])->name('admin.temu-dokter.show');
     Route::get('/temu-dokter/{id}/edit', [App\Http\Controllers\Admin\TemuDokterController::class, 'edit'])->name('admin.temu-dokter.edit');
+    Route::post('/temu-dokter', [App\Http\Controllers\Admin\TemuDokterController::class, 'store'])->name('admin.temu-dokter.store');
     Route::put('/temu-dokter/{id}', [App\Http\Controllers\Admin\TemuDokterController::class, 'update'])->name('admin.temu-dokter.update');
     Route::post('/temu-dokter/{id}/status', [App\Http\Controllers\Admin\TemuDokterController::class, 'updateStatus'])->name('admin.temu-dokter.update-status');
+    Route::delete('/temu-dokter/{temuDokterId}/rekam-medis/{rekamMedisId}', [App\Http\Controllers\Admin\TemuDokterController::class, 'destroyRekamMedis'])->name('admin.temu-dokter.destroy-rekam-medis');
     Route::delete('/temu-dokter/{id}', [App\Http\Controllers\Admin\TemuDokterController::class, 'destroy'])->name('admin.temu-dokter.destroy');
     Route::post('/temu-dokter/{id}/rekam-medis', [App\Http\Controllers\Admin\TemuDokterController::class, 'storeRekamMedis'])->name('admin.temu-dokter.store-rekam-medis');
-    Route::delete('/temu-dokter/{temuDokterId}/rekam-medis/{rekamMedisId}', [App\Http\Controllers\Admin\TemuDokterController::class, 'destroyRekamMedis'])->name('admin.temu-dokter.destroy-rekam-medis');
-    Route::get('/temu-dokter/kode-tindakan', [App\Http\Controllers\Admin\TemuDokterController::class, 'getKodeTindakan'])->name('admin.temu-dokter.get-kode-tindakan');
 
     // Dokter Management Routes
     Route::get('/dokter', [App\Http\Controllers\Admin\DokterController::class, 'index'])->name('admin.dokter.index');
