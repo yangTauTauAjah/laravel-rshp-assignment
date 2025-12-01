@@ -19,6 +19,13 @@
                             </svg>
                             Admin Dashboard
                         </a>
+                        <!-- Data Dashboard access for administrators -->
+                        <a href="{{ route('data.dashboard') }}" class="text-white hover:text-rshp-yellow transition-colors {{ request()->routeIs('data.*') ? 'text-rshp-yellow font-bold' : '' }}">
+                            <svg class="w-5 h-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4h8M6 21h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Data Dashboard
+                        </a>
                     @elseif(Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Administrator'))
                         <!-- Resepsionis-specific navigation -->
                         <a href="{{ route('data.dashboard') }}" class="text-white hover:text-rshp-yellow transition-colors {{ request()->routeIs('data.dashboard') ? 'text-rshp-yellow font-bold' : '' }}">

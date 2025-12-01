@@ -22,7 +22,7 @@ class PetController extends Controller
         $query = Pet::with(['rasHewan.jenisHewan', 'pemilik.user']);
         
         // Apply role-based filtering
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             // Pemilik users: only show their own pets
             $pemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
@@ -39,7 +39,7 @@ class PetController extends Controller
                 return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
             }
         }
-        // For Resepsionis: show all pets
+        // For Administrator and Resepsionis: show all pets
 
         $pets = $query->get();
         
@@ -47,17 +47,19 @@ class PetController extends Controller
         $rasHewanList = RasHewan::with('jenisHewan')->get();
         
         // Get owners list based on role
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             // Pemilik can only see themselves in the dropdown
             $pemilikList = Pemilik::with('user')->where('iduser', Auth::user()->iduser)->get();
         } else {
-            // Resepsionis can see all owners
+            // Administrator and Resepsionis can see all owners
             $pemilikList = Pemilik::with('user')->get();
         }
         
         // Get current user role for the view
         $userRole = 'Resepsionis'; // default
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Administrator')) {
+            $userRole = 'Administrator';
+        } elseif (Auth::user()->hasRole('Pemilik')) {
             $userRole = 'Pemilik';
         }
         
@@ -79,7 +81,7 @@ class PetController extends Controller
         ]);
 
         // Authorization check for pemilik users - can only add pets for themselves
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -112,11 +114,11 @@ class PetController extends Controller
         $rasHewanList = RasHewan::with('jenisHewan')->get();
         
         // Get owners list based on role
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             // Pemilik can only add pets for themselves
             $pemilikList = Pemilik::with('user')->where('iduser', Auth::user()->iduser)->get();
         } else {
-            // Resepsionis can see all owners
+            // Administrator and Resepsionis can see all owners
             $pemilikList = Pemilik::with('user')->get();
         }
         
@@ -131,7 +133,7 @@ class PetController extends Controller
         $pet = Pet::with(['rasHewan.jenisHewan', 'pemilik.user'])->findOrFail($id);
         
         // Authorization check for pemilik users - can only edit their own pets
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -146,11 +148,11 @@ class PetController extends Controller
         $rasHewanList = RasHewan::with('jenisHewan')->get();
         
         // Get owners list based on role
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             // Pemilik can only see themselves in the dropdown
             $pemilikList = Pemilik::with('user')->where('iduser', Auth::user()->iduser)->get();
         } else {
-            // Resepsionis can see all owners
+            // Administrator and Resepsionis can see all owners
             $pemilikList = Pemilik::with('user')->get();
         }
         
@@ -165,7 +167,7 @@ class PetController extends Controller
         $pet = Pet::findOrFail($id);
 
         // Authorization check for pemilik users - can only edit their own pets
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -186,7 +188,7 @@ class PetController extends Controller
         ]);
 
         // Additional authorization check for pemilik users on idpemilik field
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -218,7 +220,7 @@ class PetController extends Controller
         $pet = Pet::findOrFail($id);
         
         // Authorization check for pemilik users - can only delete their own pets
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -249,7 +251,7 @@ class PetController extends Controller
         $pet = Pet::with(['rasHewan.jenisHewan', 'pemilik.user'])->findOrFail($id);
         
         // Authorization check for pemilik users - can only view their own pets
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             $userPemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');

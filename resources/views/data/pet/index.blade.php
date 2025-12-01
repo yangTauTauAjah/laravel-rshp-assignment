@@ -5,7 +5,7 @@
     <x-admin-header title="Kelola Data Hewan Peliharaan" subtitle="Manajemen data hewan peliharaan pasien"
         :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
-        @if(Auth::user()->hasRole('Resepsionis') || Auth::user()->hasRole('Pemilik'))
+        @if(Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Resepsionis'))
         <x-slot:actionButton>
             <button onclick="openAddPetModal()"
                 class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">

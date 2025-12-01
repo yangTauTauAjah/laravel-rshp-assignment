@@ -1,0 +1,32 @@
+User, Role, Tindakan Terapi
+- only administrator can perform crud operation
+
+Dokter, Pemilik, and Perawat Data Management
+- role dokter: no permissions
+- role perawat: no permissions
+- role resepsionis: no permissions
+- role pemilik: no permissions
+
+Pet data management
+- role dokter: no permissions
+- role perawat: no permissions
+- role resepsionis: allow all crud operation
+- role pemilik: can only view records that belongs to this pemilik
+
+Jenis Hewan data management
+- role dokter: no permissions
+- role perawat: no permissions
+- role resepsionis: allow all crud operation
+- role pemilik: no permissions
+
+Temu Dokter data management
+- role dokter: only can view temu dokter records, which the role associate to this dokter.
+- role perawat: no permissions.
+- role resepsionis: allow all crud operation
+- role pemilik: can only view records, which the rekam medis records that associate with the pet of this pemilik, associate with this temu dokter record
+
+Rekam Medis data management
+- role dokter: can only view records, which the dokter pemeriksa associate with this dokter. can only perform crud operation on the detail rekam medis data that associates with the rekam medis record.
+- role perawat: can perform crud operation. can only detail rekam medis data that associates with this rekam medis record.
+- role resepsionis: no permissions.
+- role pemilik: no permissions.
