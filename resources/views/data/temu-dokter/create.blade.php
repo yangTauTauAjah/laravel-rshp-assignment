@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
-    <!-- Page Header -->
+@section('content')    <!-- Page Header -->
     <x-admin-header title="Tambah Reservasi Dokter" subtitle="Buat reservasi dokter baru"
         :backRoute="route('data.temu-dokter.index')" backText="Kembali ke Daftar Reservasi" />
 
@@ -77,9 +76,7 @@
                             </p>
                         </div>
                     </div>
-                </div>
-
-                <!-- Form Actions -->
+                </div>                <!-- Form Actions -->
                 <div class="flex justify-end space-x-3 pt-4 border-t">
                     <a href="{{ route('data.temu-dokter.index') }}"
                         class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">

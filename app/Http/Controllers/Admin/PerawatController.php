@@ -30,7 +30,7 @@ class PerawatController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.perawat.index', compact('perawatList'));
+        return view('data.perawat.index', compact('perawatList'));
     }
 
     /**
@@ -51,7 +51,7 @@ class PerawatController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.perawat.create', compact('availableUsers'));
+        return view('data.perawat.create', compact('availableUsers'));
     }
 
     /**
@@ -122,7 +122,7 @@ class PerawatController extends Controller
                 ->with('error', 'Profil perawat tidak ditemukan');
         }
 
-        return view('admin.perawat.show', compact('perawat'));
+        return view('data.perawat.show', compact('perawat'));
     }
 
     /**
@@ -132,7 +132,7 @@ class PerawatController extends Controller
     {
         $perawat = Perawat::findOrFail($id);
         
-        return view('admin.perawat.edit', compact('perawat'));
+        return view('data.perawat.edit', compact('perawat'));
     }
 
     /**

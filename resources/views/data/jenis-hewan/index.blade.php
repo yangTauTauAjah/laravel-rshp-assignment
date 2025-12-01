@@ -1,11 +1,8 @@
 @extends('layouts.app')
 
-@section('content')
-    <!-- Page Header -->
+@section('content')    <!-- Page Header -->
     <x-admin-header title="Kelola Jenis & Ras Hewan" subtitle="Manajemen data jenis hewan dan ras yang terkait"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
-
-        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+        :backRoute="route(Auth::user()->isAdministrator() ? 'admin.dashboard' : 'data.dashboard')" backText="Kembali ke Dashboard">        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
             <x-slot:actionButton>
                 <button onclick="openAddJenisModal()"
                     class="bg-rshp-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center">
@@ -57,8 +54,7 @@
                                         <div class="flex flex-wrap gap-2">
                                             @foreach($jenis->rasHewan as $ras)
                                                 <div
-                                                    class="inline-flex items-center bg-gray-100 border border-gray-300 text-gray-800 px-3 py-1 rounded-full text-sm font-medium group hover:bg-gray-200 transition-colors">
-                                                    <span class="mr-2">{{ $ras->nama_ras }}</span>
+                                                    class="inline-flex items-center bg-gray-100 border border-gray-300 text-gray-800 px-3 py-1 rounded-full text-sm font-medium group hover:bg-gray-200 transition-colors">                                                    <span class="mr-2">{{ $ras->nama_ras }}</span>
                                                     @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                                         <div class="flex items-center space-x-1">
                                                             <button type="button"
@@ -90,9 +86,7 @@
                                             Belum ada ras hewan
                                         </div>
                                     @endif
-                                </td>
-
-                                <!-- Action Column -->
+                                </td>                                <!-- Action Column -->
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <div class="flex items-center justify-center space-x-2">
@@ -141,8 +135,7 @@
                 </table>
             </div>
         </div>
-    </div>
-    <!-- Add Jenis Hewan Modal -->
+    </div>    <!-- Add Jenis Hewan Modal -->
     @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <div id="addJenisModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -157,7 +150,7 @@
                         </button>
                     </div>
 
-                    <form method="POST" action="{{ route('jenis-hewan.store') }}" class="space-y-4" id="addJenisForm">
+                    <form method="POST" action="{{ route('data.jenis-hewan.store') }}" class="space-y-4" id="addJenisForm">
                         @csrf
                         <div>
                             <label for="nama_jenis_hewan" class="block text-sm font-medium text-gray-700 mb-2">
@@ -197,7 +190,7 @@
                         </button>
                     </div>
 
-                    <form method="POST" action="{{ route('ras-hewan.store') }}" class="space-y-4" id="addRasForm">
+                    <form method="POST" action="{{ route('data.ras-hewan.store') }}" class="space-y-4" id="addRasForm">
                         @csrf
                         <input type="hidden" id="modal_idjenis_hewan" name="idjenis_hewan" value="">
 

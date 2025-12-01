@@ -38,7 +38,7 @@ class TemuDokterController extends Controller
             ->select('role_user.idrole_user', 'user.nama')
             ->get();
 
-        return view('admin.temu-dokter.index', compact('temuDokterList', 'doctors'));
+        return view('data.temu-dokter.index', compact('temuDokterList', 'doctors'));
     }
 
     /**
@@ -55,7 +55,7 @@ class TemuDokterController extends Controller
             ->select('role_user.idrole_user', 'user.nama')
             ->get();
 
-        return view('admin.temu-dokter.create', compact('doctors'));
+        return view('data.temu-dokter.create', compact('doctors'));
     }
 
     /**
@@ -169,7 +169,7 @@ class TemuDokterController extends Controller
             )
             ->get();
 
-        return view('admin.temu-dokter.show', compact('temuDokter', 'rekamMedisList', 'pets'));
+        return view('data.temu-dokter.show', compact('temuDokter', 'rekamMedisList', 'pets'));
     }
 
     /**
@@ -195,7 +195,7 @@ class TemuDokterController extends Controller
             ->select('role_user.idrole_user', 'user.nama')
             ->get();
 
-        return view('admin.temu-dokter.edit', compact('temuDokter', 'doctors'));
+        return view('data.temu-dokter.edit', compact('temuDokter', 'doctors'));
     }
 
     /**

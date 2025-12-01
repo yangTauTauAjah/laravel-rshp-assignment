@@ -11,6 +11,6 @@ class RasHewanController extends Controller
     public function index()
     {
         $rasHewan = RasHewan::with('jenisHewan')->get();
-        return view('admin.ras-hewan.index', compact('rasHewan'));
+        return view('data.ras-hewan.index', compact('rasHewan'));
     }
 }

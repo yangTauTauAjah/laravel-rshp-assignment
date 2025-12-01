@@ -3,7 +3,7 @@
 @section('content')  <!-- Page Header -->  <x-admin-header title="Manajemen Tindakan Terapi" subtitle="Kelola Kategori, Kategori Klinis, dan Kode Tindakan Terapi"
     :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
 
-    @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+    @if(Auth::user()->isAdministrator())
     <x-slot:actionButton>
       <button onclick="openAddKodeTindakanModal()"
         class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">

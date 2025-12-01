@@ -20,7 +20,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                         </svg>
-                    </div>                    <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak Ada User Tersedia</h3>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak Ada User Tersedia</h3>
                     <p class="text-gray-600 mb-4">
                         Semua user sudah memiliki role Dokter, atau belum ada user yang dapat diberikan role Dokter. 
                         Sistem akan menampilkan user yang belum memiliki role Dokter untuk dapat diberikan akses sebagai dokter.
@@ -45,7 +46,7 @@
                         Pilih User <span class="text-red-500">*</span>
                     </label>
                     <select name="iduser" id="iduser" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('iduser') border-red-500 @enderror">
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('iduser') border-red-500 @enderror">
                         <option value="">-- Pilih User --</option>
                         @foreach($availableUsers as $user)
                             <option value="{{ $user->iduser }}" {{ old('iduser') == $user->iduser ? 'selected' : '' }}>
@@ -72,7 +73,7 @@
                             Jenis Kelamin <span class="text-red-500">*</span>
                         </label>
                         <select name="jenis_kelamin" id="jenis_kelamin" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('jenis_kelamin') border-red-500 @enderror">
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('jenis_kelamin') border-red-500 @enderror">
                             <option value="">-- Pilih Jenis Kelamin --</option>
                             <option value="M" {{ old('jenis_kelamin') == 'M' ? 'selected' : '' }}>Laki-laki</option>
                             <option value="F" {{ old('jenis_kelamin') == 'F' ? 'selected' : '' }}>Perempuan</option>
@@ -90,7 +91,7 @@
                         <input type="tel" name="no_hp" id="no_hp" required
                             value="{{ old('no_hp') }}"
                             placeholder="Contoh: 08123456789"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('no_hp') border-red-500 @enderror">
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('no_hp') border-red-500 @enderror">
                         @error('no_hp')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -105,7 +106,7 @@
                     <input type="text" name="bidang_dokter" id="bidang_dokter" required
                         value="{{ old('bidang_dokter') }}"
                         placeholder="Contoh: Obstetri dan Ginekologi, Pediatri, Anestesi, dll."
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('bidang_dokter') border-red-500 @enderror">
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('bidang_dokter') border-red-500 @enderror">
                     @error('bidang_dokter')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -118,7 +119,7 @@
                     </label>
                     <textarea name="alamat" id="alamat" required rows="3"
                         placeholder="Alamat lengkap tempat tinggal"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('alamat') border-red-500 @enderror">{{ old('alamat') }}</textarea>
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('alamat') border-red-500 @enderror">{{ old('alamat') }}</textarea>
                     @error('alamat')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

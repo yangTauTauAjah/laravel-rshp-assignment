@@ -4,8 +4,19 @@
     <!-- Page Header -->
     <x-admin-header title="Detail Reservasi Dokter" subtitle="Informasi lengkap reservasi dokter"
         :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
+        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+        <x-slot:actionButton>
+            <button onclick="openAddTemuDokterModal()"
+                class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Buat Reservasi
+            </button>
+        </x-slot:actionButton>
+        @endif
     </x-admin-header>
-
+        
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
@@ -128,7 +139,9 @@
                             </p>
                         </div>
                     </div>
-                </div>                <!-- Action Buttons -->
+                </div>
+                
+                <!-- Action Buttons -->
                 @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                 <div class="border-t pt-6">
                     <div class="flex flex-wrap gap-3 mb-4">
@@ -190,7 +203,7 @@
                             </svg>
                             Rekam Medis ({{ $rekamMedisList->count() }})
                         </h3>
-                        @if((Auth::user()->isAdministrator() || Auth::user()->isDokter()) && $temuDokter->status == '0')
+                        @if((Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isPerawat()) && $temuDokter->status == '0')
                         <button onclick="openAddRekamMedisModal()"
                             class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,7 +281,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         <p class="text-gray-500">Belum ada rekam medis untuk reservasi ini</p>
-                        @if((Auth::user()->isAdministrator() || Auth::user()->isDokter()) && $temuDokter->status == '0')
+                        @if((Auth::user()->isAdministrator() || Auth::user()->isResepsionis()) && $temuDokter->status == '0')
                         <button onclick="openAddRekamMedisModal()"
                             class="mt-4 bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                             Tambah Rekam Medis Pertama
@@ -348,6 +361,7 @@
                         <div id="modal_diagnosa_error" class="text-red-500 text-xs mt-1 hidden"></div>
                     </div>
 
+                    @if (!Auth::user()->isPerawat())
                     <!-- Treatment Details Section -->
                     <div class="border-t pt-4">
                         <div class="flex justify-between items-center mb-3">
@@ -362,10 +376,11 @@
                             <!-- Tindakan rows will be added here by JavaScript -->
                         </div>
                         
-                        <p class="text-sm text-gray-500 mt-2">
+                        {{-- <p class="text-sm text-gray-500 mt-2">
                             <em>Opsional: Tambahkan detail tindakan dan terapi yang dilakukan</em>
-                        </p>
+                        </p> --}}
                     </div>
+                    @endif
                 </div>
 
                 <!-- Modal Actions -->
@@ -383,9 +398,8 @@
         </div>
     </div>
     @endif
-            </div>
-        </div>
-    </div>    <script>
+
+    <script>
         let modalTindakanCounter = 0;
         let kodeTindakanData = [];
 
@@ -396,6 +410,7 @@
 
         function loadKodeTindakan() {
             fetch('/admin/temu-dokter/kode-tindakan')
+                .then(response => {console.log('test'); return response})
                 .then(response => response.json())
                 .then(data => {
                     kodeTindakanData = data;

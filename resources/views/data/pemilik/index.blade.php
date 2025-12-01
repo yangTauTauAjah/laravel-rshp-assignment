@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
-@section('content')    <!-- Page Header -->    <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
-        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
+@section('content')
+    <!-- Page Header -->
+    <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
+        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
 
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
@@ -94,7 +96,7 @@
                                     </span></td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         <!-- View Details Button -->
-                                        <a href="{{ route('data.pemilik.show', $pemilik->idpemilik) }}"
+                                        <a href="{{ route('admin.pemilik.show', $pemilik->idpemilik) }}"
                                             class="text-rshp-green hover:text-green-900" title="Lihat Detail">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -115,7 +117,8 @@
                                             </svg>
                                         </button>
                                         @endif
-                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())                                        <button
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+                                        <button
                                             onclick="deletePemilik({{ $pemilik->idpemilik }}, '{{ $pemilik->nama }}', {{ $pemilik->pets_count }})"
                                             class="text-red-600 hover:text-red-900" title="Hapus">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,8 +157,10 @@
                             </path>
                         </svg>
                     </button>
-                </div>                <!-- Add Pemilik Form -->
-                <form action="{{ route('data.pemilik.store') }}" method="POST" id="addPemilikForm">
+                </div>
+                
+                <!-- Add Pemilik Form -->
+                <form action="{{ route('admin.pemilik.store') }}" method="POST" id="addPemilikForm">
                     @csrf
 
                     <!-- Registration Type Tabs -->
@@ -501,7 +506,7 @@
             }
             deleteForm = document.createElement('form');
             deleteForm.method = 'POST';
-            deleteForm.action = `/data/pemilik/${pemilikId}`;
+            deleteForm.action = `/admin/pemilik/${pemilikId}`;
             deleteForm.style.display = 'none';
 
             const csrfInput = document.createElement('input');

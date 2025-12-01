@@ -6,7 +6,7 @@
         :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
         
         <x-slot:actionButton>
-            @if(Auth::user()->isAdministrator())
+            {{-- @if(Auth::user()->isAdministrator()) --}}
                 <a href="{{ route('admin.dokter.create') }}"
                     class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
                     </svg>
                     Daftarkan Dokter Baru
                 </a>
-            @endif
+            {{-- @endif --}}
         </x-slot:actionButton>
     </x-admin-header>
 
@@ -111,7 +111,7 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                        @if(Auth::user()->isAdministrator())
+                                        {{-- @if(Auth::user()->isAdministrator()) --}}
                                         <a href="{{ route('admin.dokter.edit', $dokter->iddokter) }}"
                                             class="text-rshp-blue hover:text-blue-900" title="Edit">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,7 +128,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
+                                        {{-- @endif --}}
                                     </div>
                                 </td>
                             </tr>
@@ -142,7 +142,7 @@
                                         </svg>
                                         <p class="text-lg font-medium text-gray-900 mb-2">Belum ada data dokter</p>
                                         <p class="text-gray-500 mb-4">Mulai dengan mendaftarkan dokter pertama</p>
-                                        @if(Auth::user()->isAdministrator())
+                                        {{-- @if(Auth::user()->isAdministrator()) --}}
                                         <a href="{{ route('admin.dokter.create') }}" 
                                            class="inline-flex items-center px-4 py-2 bg-rshp-blue text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +150,7 @@
                                             </svg>
                                             Daftarkan Dokter Baru
                                         </a>
-                                        @endif
+                                        {{-- @endif --}}
                                     </div>
                                 </td>
                             </tr>

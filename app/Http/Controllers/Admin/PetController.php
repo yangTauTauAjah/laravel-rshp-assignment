@@ -36,7 +36,7 @@ class PetController extends Controller
                 $rasHewanList = RasHewan::with('jenisHewan')->get();
                 $pemilikList = collect();
                 $userRole = 'Pemilik';
-                return view('admin.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
+                return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
             }
         }
         // For Administrator and Resepsionis: show all pets
@@ -63,7 +63,7 @@ class PetController extends Controller
             $userRole = 'Resepsionis';
         }
         
-        return view('admin.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
+        return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
     }
 
     /**
@@ -122,7 +122,7 @@ class PetController extends Controller
             $pemilikList = Pemilik::with('user')->get();
         }
         
-        return view('admin.pet.create', compact('rasHewanList', 'pemilikList'));
+        return view('data.pet.create', compact('rasHewanList', 'pemilikList'));
     }
 
     /**
@@ -156,7 +156,7 @@ class PetController extends Controller
             $pemilikList = Pemilik::with('user')->get();
         }
         
-        return view('admin.pet.edit', compact('pet', 'rasHewanList', 'pemilikList'));
+        return view('data.pet.edit', compact('pet', 'rasHewanList', 'pemilikList'));
     }
 
     /**
@@ -274,6 +274,6 @@ class PetController extends Controller
             ]);
         // }
         
-        // return view('admin.pet.show', compact('pet'));
+        // return view('data.pet.show', compact('pet'));
     }
 }

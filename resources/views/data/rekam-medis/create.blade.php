@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Tambah Rekam Medis" subtitle="Buat rekam medis baru untuk hewan peliharaan"
-        :backRoute="route('data.rekam-medis.index')" backText="Kembali ke Daftar Rekam Medis" />
+        :backRoute="route('admin.rekam-medis.index')" backText="Kembali ke Daftar Rekam Medis" />
 
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -11,7 +11,7 @@
                 <h2 class="text-lg font-semibold text-rshp-dark-gray">Form Rekam Medis Baru</h2>
             </div>
 
-            <form action="{{ route('data.rekam-medis.store') }}" method="POST" id="rekamMedisForm">
+            <form action="{{ route('admin.rekam-medis.store') }}" method="POST" id="rekamMedisForm">
                 @csrf
                 <div class="p-6 space-y-6">
 
@@ -114,7 +114,7 @@
 
                 <!-- Form Actions -->
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-                    <a href="{{ route('data.rekam-medis.index') }}"
+                    <a href="{{ route('admin.rekam-medis.index') }}"
                         class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
                         Batal
                     </a>

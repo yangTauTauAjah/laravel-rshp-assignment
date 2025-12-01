@@ -19,7 +19,7 @@ class TindakanTerapiController extends Controller
             ->orderBy('kode')
             ->get();
         
-        return view('admin.tindakan-terapi.index', compact('kategoris', 'kategoriKlinises', 'kodeTindakanTerapis'));
+        return view('data.tindakan-terapi.index', compact('kategoris', 'kategoriKlinises', 'kodeTindakanTerapis'));
     }
 
     // ===== KATEGORI METHODS =====

@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('/cek-koneksi', [SiteController::class, 'cekKoneksi'])->name('site.cek-koneksi');
 
-Route::get('/', [SiteController::class, 'index'])->name('home');
+Route::get('/home', [SiteController::class, 'index'])->name('home');
 Route::get('/layanan', [SiteController::class, 'layanan'])->name('layanan');
 Route::get('/kontak', [SiteController::class, 'kontak'])->name('kontak');
 Route::get('/struktur-organisasi', [SiteController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
@@ -50,13 +50,13 @@ Route::middleware(['auth', 'verified', 'role:Administrator'])->prefix('admin')->
     // Admin Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
-    // User Management Routes (Admin only)
-    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
-    Route::get('/users/{id}', [UserController::class, 'show'])->name('admin.users.show');
-    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('admin.users.update');
-    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-    Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.reset-password');
+    // User Management Routes
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
     
     // Role Management Routes
     Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
@@ -65,12 +65,12 @@ Route::middleware(['auth', 'verified', 'role:Administrator'])->prefix('admin')->
     Route::post('/roles/toggle/{id}', [RoleController::class, 'toggleRole'])->name('admin.roles.toggle');
     
     // Jenis Hewan & Ras Hewan Routes
-    Route::get('/jenis-hewan', [JenisHewanController::class, 'index'])->name('admin.jenis-hewan.index');
-    Route::post('/jenis-hewan', [JenisHewanController::class, 'storeJenis'])->name('admin.jenis-hewan.store');
-    Route::delete('/jenis-hewan/{id}', [JenisHewanController::class, 'destroyJenis'])->name('admin.jenis-hewan.destroy');
-    Route::post('/ras-hewan', [JenisHewanController::class, 'storeRas'])->name('admin.ras-hewan.store');
-    Route::put('/ras-hewan/{id}', [JenisHewanController::class, 'updateRas'])->name('admin.ras-hewan.update');
-    Route::delete('/ras-hewan/{id}', [JenisHewanController::class, 'destroyRas'])->name('admin.ras-hewan.destroy');
+    Route::get('/jenis-hewan', [JenisHewanController::class, 'index'])->name('jenis-hewan.index');
+    Route::post('/jenis-hewan', [JenisHewanController::class, 'storeJenis'])->name('jenis-hewan.store');
+    Route::delete('/jenis-hewan/{id}', [JenisHewanController::class, 'destroyJenis'])->name('jenis-hewan.destroy');
+    Route::post('/ras-hewan', [JenisHewanController::class, 'storeRas'])->name('ras-hewan.store');
+    Route::put('/ras-hewan/{id}', [JenisHewanController::class, 'updateRas'])->name('ras-hewan.update');
+    Route::delete('/ras-hewan/{id}', [JenisHewanController::class, 'destroyRas'])->name('ras-hewan.destroy');
     
     // Pet Management Routes (Admin only)
     Route::get('/pet', [AdminPetController::class, 'index'])->name('admin.pet.index');
@@ -111,26 +111,26 @@ Route::middleware(['auth', 'verified', 'role:Administrator'])->prefix('admin')->
     // Rekam Medis Management Routes (Admin only - full access)
     Route::get('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'index'])->name('admin.rekam-medis.index');
     Route::get('/rekam-medis/create', [App\Http\Controllers\Admin\RekamMedisController::class, 'create'])->name('admin.rekam-medis.create');
-    Route::get('/rekam-medis/kode-tindakan', [App\Http\Controllers\Admin\RekamMedisController::class, 'getKodeTindakan'])->name('admin.rekam-medis.get-kode-tindakan');
+    Route::post('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'store'])->name('admin.rekam-medis.store');
     Route::get('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'show'])->name('admin.rekam-medis.show');
     Route::get('/rekam-medis/{id}/edit', [App\Http\Controllers\Admin\RekamMedisController::class, 'edit'])->name('admin.rekam-medis.edit');
-    Route::post('/rekam-medis', [App\Http\Controllers\Admin\RekamMedisController::class, 'store'])->name('admin.rekam-medis.store');
     Route::put('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'update'])->name('admin.rekam-medis.update');
-    Route::delete('/rekam-medis/detail/{detailId}', [App\Http\Controllers\Admin\RekamMedisController::class, 'deleteDetail'])->name('admin.rekam-medis.delete-detail');
     Route::delete('/rekam-medis/{id}', [App\Http\Controllers\Admin\RekamMedisController::class, 'destroy'])->name('admin.rekam-medis.destroy');
+    Route::delete('/rekam-medis/detail/{detailId}', [App\Http\Controllers\Admin\RekamMedisController::class, 'deleteDetail'])->name('admin.rekam-medis.delete-detail');
+    Route::get('/rekam-medis/kode-tindakan', [App\Http\Controllers\Admin\RekamMedisController::class, 'getKodeTindakan'])->name('admin.rekam-medis.get-kode-tindakan');
     
     // Temu Dokter Management Routes (Admin only - full access)
     Route::get('/temu-dokter', [App\Http\Controllers\Admin\TemuDokterController::class, 'index'])->name('admin.temu-dokter.index');
     Route::get('/temu-dokter/create', [App\Http\Controllers\Admin\TemuDokterController::class, 'create'])->name('admin.temu-dokter.create');
-    Route::get('/temu-dokter/kode-tindakan', [App\Http\Controllers\Admin\TemuDokterController::class, 'getKodeTindakan'])->name('admin.temu-dokter.get-kode-tindakan');
+    Route::post('/temu-dokter', [App\Http\Controllers\Admin\TemuDokterController::class, 'store'])->name('admin.temu-dokter.store');
     Route::get('/temu-dokter/{id}', [App\Http\Controllers\Admin\TemuDokterController::class, 'show'])->name('admin.temu-dokter.show');
     Route::get('/temu-dokter/{id}/edit', [App\Http\Controllers\Admin\TemuDokterController::class, 'edit'])->name('admin.temu-dokter.edit');
-    Route::post('/temu-dokter', [App\Http\Controllers\Admin\TemuDokterController::class, 'store'])->name('admin.temu-dokter.store');
     Route::put('/temu-dokter/{id}', [App\Http\Controllers\Admin\TemuDokterController::class, 'update'])->name('admin.temu-dokter.update');
     Route::post('/temu-dokter/{id}/status', [App\Http\Controllers\Admin\TemuDokterController::class, 'updateStatus'])->name('admin.temu-dokter.update-status');
-    Route::delete('/temu-dokter/{temuDokterId}/rekam-medis/{rekamMedisId}', [App\Http\Controllers\Admin\TemuDokterController::class, 'destroyRekamMedis'])->name('admin.temu-dokter.destroy-rekam-medis');
     Route::delete('/temu-dokter/{id}', [App\Http\Controllers\Admin\TemuDokterController::class, 'destroy'])->name('admin.temu-dokter.destroy');
     Route::post('/temu-dokter/{id}/rekam-medis', [App\Http\Controllers\Admin\TemuDokterController::class, 'storeRekamMedis'])->name('admin.temu-dokter.store-rekam-medis');
+    Route::delete('/temu-dokter/{temuDokterId}/rekam-medis/{rekamMedisId}', [App\Http\Controllers\Admin\TemuDokterController::class, 'destroyRekamMedis'])->name('admin.temu-dokter.destroy-rekam-medis');
+    Route::get('/temu-dokter/kode-tindakan', [App\Http\Controllers\Admin\TemuDokterController::class, 'getKodeTindakan'])->name('admin.temu-dokter.get-kode-tindakan');
 
     // Dokter Management Routes
     Route::get('/dokter', [App\Http\Controllers\Admin\DokterController::class, 'index'])->name('admin.dokter.index');
@@ -159,37 +159,26 @@ Route::middleware(['auth', 'verified', 'role:Administrator'])->prefix('admin')->
 });
 
 // ==============================================
-// DATA ROUTES - All role-based users including Administrator
+// DATA ROUTES - Non-admin users (Dokter, Perawat, Resepsionis, Pemilik)
 // ==============================================
-Route::middleware(['auth', 'verified', 'role:Administrator,Dokter,Perawat,Resepsionis,Pemilik'])->prefix('data')->group(function () {
+Route::middleware(['auth', 'verified', 'role:Dokter,Perawat,Resepsionis,Pemilik'])->prefix('data')->group(function () {
     
     // Data Dashboard
     Route::get('/dashboard', [DataDashboardController::class, 'index'])->name('data.dashboard');
     
-    // Jenis Hewan & Ras Hewan Routes - Resepsionis + Administrator
-    Route::middleware('role:Administrator,Resepsionis')->group(function () {
-        Route::get('/jenis-hewan', [JenisHewanController::class, 'index'])->name('data.jenis-hewan.index');
-        Route::post('/jenis-hewan', [JenisHewanController::class, 'storeJenis'])->name('data.jenis-hewan.store');
-        Route::delete('/jenis-hewan/{id}', [JenisHewanController::class, 'destroyJenis'])->name('data.jenis-hewan.destroy');
-        Route::post('/ras-hewan', [JenisHewanController::class, 'storeRas'])->name('data.ras-hewan.store');
-        Route::put('/ras-hewan/{id}', [JenisHewanController::class, 'updateRas'])->name('data.ras-hewan.update');
-        Route::delete('/ras-hewan/{id}', [JenisHewanController::class, 'destroyRas'])->name('data.ras-hewan.destroy');
-    });
-    
-    // Pet Management Routes - Administrator + Resepsionis (CRUD), Pemilik (view only - own pets)
-    Route::get('/pet', [DataPetController::class, 'index'])->name('data.pet.index');
-    Route::get('/pet/{id}', [DataPetController::class, 'show'])->name('data.pet.show');
-    
-    Route::middleware('role:Administrator,Resepsionis')->group(function () {
+    // Pet Management Routes - Pemilik and Resepsionis
+    Route::middleware('role:Pemilik,Resepsionis')->group(function () {
+        Route::get('/pet', [DataPetController::class, 'index'])->name('data.pet.index');
         Route::get('/pet/create', [DataPetController::class, 'create'])->name('data.pet.create');
         Route::post('/pet', [DataPetController::class, 'store'])->name('data.pet.store');
+        Route::get('/pet/{id}', [DataPetController::class, 'show'])->name('data.pet.show');
         Route::get('/pet/{id}/edit', [DataPetController::class, 'edit'])->name('data.pet.edit');
         Route::put('/pet/{id}', [DataPetController::class, 'update'])->name('data.pet.update');
         Route::delete('/pet/{id}', [DataPetController::class, 'destroy'])->name('data.pet.destroy');
     });
     
-    // Pemilik Management Routes - Administrator + Resepsionis only
-    Route::middleware('role:Administrator,Resepsionis')->group(function () {
+    // Pemilik Management Routes - Resepsionis only
+    Route::middleware('role:Resepsionis')->group(function () {
         Route::get('/pemilik', [DataPemilikController::class, 'index'])->name('data.pemilik.index');
         Route::post('/pemilik', [DataPemilikController::class, 'store'])->name('data.pemilik.store');
         Route::get('/pemilik/{id}', [DataPemilikController::class, 'show'])->name('data.pemilik.show');
@@ -198,27 +187,28 @@ Route::middleware(['auth', 'verified', 'role:Administrator,Dokter,Perawat,Reseps
         Route::delete('/pemilik/{id}', [DataPemilikController::class, 'destroy'])->name('data.pemilik.destroy');
     });
     
-    // Temu Dokter Management Routes - All roles view, Administrator + Resepsionis CRUD
-    Route::middleware('role:Administrator,Dokter,Resepsionis,Pemilik')->group(function () {
-        Route::get('/temu-dokter', [DataTemuDokterController::class, 'index'])->name('data.temu-dokter.index');
-        Route::get('/temu-dokter/{id}', [DataTemuDokterController::class, 'show'])->name('data.temu-dokter.show');
-    });
+    // Temu Dokter Management Routes - Resepsionis and Pemilik (create/edit), all can view
+    Route::get('/temu-dokter', [DataTemuDokterController::class, 'index'])->name('data.temu-dokter.index');
+    Route::get('/temu-dokter/{id}', [DataTemuDokterController::class, 'show'])->name('data.temu-dokter.show');
     
-    Route::middleware('role:Administrator,Resepsionis')->group(function () {
+    Route::middleware('role:Resepsionis,Pemilik')->group(function () {
         Route::get('/temu-dokter/create', [DataTemuDokterController::class, 'create'])->name('data.temu-dokter.create');
         Route::post('/temu-dokter', [DataTemuDokterController::class, 'store'])->name('data.temu-dokter.store');
+    });
+    
+    Route::middleware('role:Resepsionis')->group(function () {
         Route::get('/temu-dokter/{id}/edit', [DataTemuDokterController::class, 'edit'])->name('data.temu-dokter.edit');
         Route::put('/temu-dokter/{id}', [DataTemuDokterController::class, 'update'])->name('data.temu-dokter.update');
         Route::post('/temu-dokter/{id}/status', [DataTemuDokterController::class, 'updateStatus'])->name('data.temu-dokter.update-status');
     });
     
-    // Rekam Medis Management Routes - Administrator + Dokter + Perawat
-    Route::middleware('role:Administrator,Dokter,Perawat')->group(function () {
-        Route::get('/rekam-medis', [DataRekamMedisController::class, 'index'])->name('data.rekam-medis.index');
-        Route::get('/rekam-medis/{id}', [DataRekamMedisController::class, 'show'])->name('data.rekam-medis.show');
+    // Rekam Medis Management Routes - All roles can view, Dokter and Perawat can edit
+    Route::get('/rekam-medis', [DataRekamMedisController::class, 'index'])->name('data.rekam-medis.index');
+    Route::get('/rekam-medis/{id}', [DataRekamMedisController::class, 'show'])->name('data.rekam-medis.show');
+    
+    Route::middleware('role:Dokter,Perawat')->group(function () {
         Route::get('/rekam-medis/{id}/edit', [DataRekamMedisController::class, 'edit'])->name('data.rekam-medis.edit');
         Route::put('/rekam-medis/{id}', [DataRekamMedisController::class, 'update'])->name('data.rekam-medis.update');
-        Route::post('/temu-dokter/{id}/rekam-medis', [App\Http\Controllers\Admin\TemuDokterController::class, 'storeRekamMedis'])->name('data.temu-dokter.store-rekam-medis');
     });
 });
 

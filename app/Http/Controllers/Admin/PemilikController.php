@@ -48,7 +48,7 @@ class PemilikController extends Controller
             ->select('iduser', 'nama', 'email')
             ->get();
 
-        return view('admin.pemilik.index', compact('pemilikList', 'availableUsers'));
+        return view('data.pemilik.index', compact('pemilikList', 'availableUsers'));
     }
     
     /**
@@ -220,7 +220,7 @@ class PemilikController extends Controller
                 ->with('error', 'Profil pemilik tidak ditemukan');
         }
 
-        return view('admin.pemilik.edit', compact('pemilik'));
+        return view('data.pemilik.edit', compact('pemilik'));
     }
 
     /**
@@ -284,6 +284,6 @@ class PemilikController extends Controller
                 ->with('error', 'Profil pemilik tidak ditemukan');
         }
 
-        return view('admin.pemilik.show', compact('pemilik'));
+        return view('data.pemilik.show', compact('pemilik'));
     }
 }

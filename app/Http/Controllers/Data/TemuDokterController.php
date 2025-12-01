@@ -21,7 +21,10 @@ class TemuDokterController extends Controller
             ->where('role.nama_role', 'Dokter');
 
         // Apply role-based filtering
-        if (Auth::user()->hasRole('Pemilik')) {
+        if (Auth::user()->hasRole('Administrator')) {
+            // Administrator: Full access to all appointments
+            // No filtering needed
+        } elseif (Auth::user()->hasRole('Pemilik')) {
             // Pemilik can only see appointments related to their pets
             $pemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
@@ -36,6 +39,7 @@ class TemuDokterController extends Controller
                 return view('data.temu-dokter.index', ['temuDokterList' => collect(), 'doctors' => collect()]);
             }
         }
+        // For Dokter, Resepsionis: show all appointments
 
         $temuDokterList = $query->select(
                 'temu_dokter.*',
@@ -46,9 +50,9 @@ class TemuDokterController extends Controller
             ->orderBy('temu_dokter.waktu_daftar', 'desc')
             ->get();
 
-        // Get doctors for dropdown (only for Resepsionis)
+        // Get doctors for dropdown (only for Administrator and Resepsionis)
         $doctors = collect();
-        if (Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Resepsionis')) {
             $doctors = DB::table('role_user')
                 ->join('user', 'role_user.iduser', '=', 'user.iduser')
                 ->join('role', 'role_user.idrole', '=', 'role.idrole')
@@ -66,8 +70,8 @@ class TemuDokterController extends Controller
      */
     public function create()
     {
-        // Only Resepsionis and Pemilik can create appointments
-        if (!Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Pemilik')) {
+        // Only Administrator, Resepsionis and Pemilik can create appointments
+        if (!Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Pemilik')) {
             return redirect()->route('data.temu-dokter.index')
                 ->with('error', 'Anda tidak memiliki akses untuk membuat janji temu.');
         }
@@ -89,8 +93,8 @@ class TemuDokterController extends Controller
      */
     public function store(Request $request)
     {
-        // Only Resepsionis and Pemilik can create appointments
-        if (!Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Pemilik')) {
+        // Only Administrator, Resepsionis and Pemilik can create appointments
+        if (!Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Pemilik')) {
             return redirect()->route('data.temu-dokter.index')
                 ->with('error', 'Anda tidak memiliki akses untuk membuat janji temu.');
         }
@@ -207,7 +211,21 @@ class TemuDokterController extends Controller
             ->orderBy('rekam_medis.created_at', 'desc')
             ->get();
 
-        return view('data.temu-dokter.show', compact('temuDokter', 'rekamMedisList'));
+        // Get pets for adding new rekam medis
+        $pets = DB::table('pet')
+            ->join('pemilik', 'pet.idpemilik', '=', 'pemilik.idpemilik')
+            ->join('user', 'pemilik.iduser', '=', 'user.iduser')
+            ->join('ras_hewan', 'pet.idras_hewan', '=', 'ras_hewan.idras_hewan')
+            ->join('jenis_hewan', 'ras_hewan.idjenis_hewan', '=', 'jenis_hewan.idjenis_hewan')
+            ->select(
+                'pet.*',
+                'user.nama as pemilik_nama',
+                'ras_hewan.nama_ras',
+                'jenis_hewan.nama_jenis_hewan'
+            )
+            ->get();
+
+        return view('data.temu-dokter.show', compact('temuDokter', 'rekamMedisList', 'pets'));
     }
 
     /**
@@ -215,8 +233,8 @@ class TemuDokterController extends Controller
      */
     public function edit($id)
     {
-        // Only Resepsionis can edit appointments
-        if (!Auth::user()->hasRole('Resepsionis')) {
+        // Only Administrator and Resepsionis can edit appointments
+        if (!Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
             return redirect()->route('data.temu-dokter.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit janji temu.');
         }
@@ -247,8 +265,8 @@ class TemuDokterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Only Resepsionis can edit appointments
-        if (!Auth::user()->hasRole('Resepsionis')) {
+        // Only Administrator and Resepsionis can edit appointments
+        if (!Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
             return redirect()->route('data.temu-dokter.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit janji temu.');
         }
@@ -289,8 +307,8 @@ class TemuDokterController extends Controller
      */
     public function updateStatus(Request $request, $id)
     {
-        // Only Resepsionis can update status
-        if (!Auth::user()->hasRole('Resepsionis')) {
+        // Only Administrator and Resepsionis can update status
+        if (!Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
             return response()->json([
                 'success' => false,
                 'message' => 'Anda tidak memiliki akses untuk mengubah status.'

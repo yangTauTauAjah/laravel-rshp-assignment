@@ -37,7 +37,7 @@ class DokterController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.dokter.index', compact('dokterList'));
+        return view('data.dokter.index', compact('dokterList'));
     }
 
     /**
@@ -58,7 +58,7 @@ class DokterController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.dokter.create', compact('availableUsers'));
+        return view('data.dokter.create', compact('availableUsers'));
     }
 
     /**
@@ -66,7 +66,7 @@ class DokterController extends Controller
      */
     /* public function createWithUser()
     {
-        return view('admin.dokter.create-with-user');
+        return view('data.dokter.create-with-user');
     } */
 
     /**
@@ -182,7 +182,7 @@ class DokterController extends Controller
                 ->with('error', 'Profil dokter tidak ditemukan');
         }
 
-        return view('admin.dokter.show', compact('dokter'));
+        return view('data.dokter.show', compact('dokter'));
     }
 
     /**
@@ -192,7 +192,7 @@ class DokterController extends Controller
     {
         $dokter = Dokter::findOrFail($id);
         
-        return view('admin.dokter.edit', compact('dokter'));
+        return view('data.dokter.edit', compact('dokter'));
     }
 
     /**

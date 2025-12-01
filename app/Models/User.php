@@ -127,6 +127,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Check if user is Pemilik (permissions TBD)
+     */
+    public function isPemilik()
+    {
+        return $this->hasRole('Pemilik');
+    }
+
+    /**
      * Check if user can access admin panel
      * (Administrator, Dokter, Resepsionis, Perawat)
      */

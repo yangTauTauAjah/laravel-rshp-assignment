@@ -3,10 +3,10 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Edit Rekam Medis" subtitle="Perbarui informasi rekam medis hewan peliharaan"
-        :backRoute="route('data.rekam-medis.show', $rekamMedis->idrekam_medis)" backText="Kembali ke Detail">
+        :backRoute="route('admin.rekam-medis.show', $rekamMedis->idrekam_medis)" backText="Kembali ke Detail">
         
         <x-slot:actionButton>
-            <a href="{{ route('data.dashboard') }}"
+            <a href="{{ route('admin.dashboard') }}"
                 class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
@@ -23,7 +23,7 @@
                 <h2 class="text-lg font-semibold text-rshp-dark-gray">Edit Rekam Medis #{{ $rekamMedis->idrekam_medis }}</h2>
             </div>
 
-            <form action="{{ route('data.rekam-medis.update', $rekamMedis->idrekam_medis) }}" method="POST">
+            <form action="{{ route('admin.rekam-medis.update', $rekamMedis->idrekam_medis) }}" method="POST">
                 @csrf
                 @method('PUT')
                 
@@ -123,7 +123,7 @@
                                         @endif
                                     </div>
                                     @if($canManageDetails)
-                                    <form method="POST" action="{{ route('data.rekam-medis.delete-detail', $detail->iddetail_rekam_medis) }}" 
+                                    <form method="POST" action="{{ route('admin.rekam-medis.delete-detail', $detail->iddetail_rekam_medis) }}" 
                                         class="inline" onsubmit="return confirm('Hapus detail tindakan ini?')">
                                         @csrf
                                         @method('DELETE')
@@ -180,7 +180,7 @@
 
                 <!-- Form Actions -->
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-                    <a href="{{ route('data.rekam-medis.show', $rekamMedis->idrekam_medis) }}"
+                    <a href="{{ route('admin.rekam-medis.show', $rekamMedis->idrekam_medis) }}"
                         class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
                         Batal
                     </a>

@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Auth;
 class RekamMedisController extends Controller
 {    /**
      * Display a listing of medical records
-     */      public function index()
+     */
+    public function index()
     {
         // Build base query for medical records
         $query = DB::table('rekam_medis')
+            ->join('temu_dokter', 'rekam_medis.idreservasi_dokter', '=', 'temu_dokter.idreservasi_dokter')
             ->join('pet', 'rekam_medis.idpet', '=', 'pet.idpet')
             ->join('pemilik', 'pet.idpemilik', '=', 'pemilik.idpemilik')
             ->join('user as pemilik_user', 'pemilik.iduser', '=', 'pemilik_user.iduser')
@@ -40,7 +42,7 @@ class RekamMedisController extends Controller
                 $pets = collect();
                 $doctors = collect();
                 $userRole = 'Dokter';
-                return view('admin.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
+                return view('data.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
             }
         } elseif (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
             // Filter for pemilik users: only show their own pets' records
@@ -56,7 +58,7 @@ class RekamMedisController extends Controller
                 $pets = collect();
                 $doctors = collect();
                 $userRole = 'Pemilik';
-                return view('admin.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
+                return view('data.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
             }
         }
         // For Administrator, Perawat, and Resepsionis: show all records (no additional filtering)
@@ -69,7 +71,8 @@ class RekamMedisController extends Controller
                 'pemilik_user.nama as pemilik_nama',
                 'dokter_user.nama as dokter_nama',
                 'ras_hewan.nama_ras',
-                'jenis_hewan.nama_jenis_hewan'
+                'jenis_hewan.nama_jenis_hewan',
+                'temu_dokter.no_urut',
             )
             ->orderBy('rekam_medis.created_at', 'desc')
             ->get();
@@ -107,7 +110,7 @@ class RekamMedisController extends Controller
             $userRole = 'Pemilik';
         }
         
-        return view('admin.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
+        return view('data.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
     }
 
     /**
@@ -138,7 +141,7 @@ class RekamMedisController extends Controller
             ->select('role_user.idrole_user', 'user.nama')
             ->get();
 
-        return view('admin.rekam-medis.create', compact('pets', 'doctors'));
+        return view('data.rekam-medis.create', compact('pets', 'doctors'));
     }    /**
      * Store a newly created medical record
      */
@@ -310,12 +313,13 @@ class RekamMedisController extends Controller
             $canEdit = true;
         }
 
-        return view('admin.rekam-medis.show', compact('rekamMedis', 'detailRekamMedis', 'canEdit'));
+        return view('data.rekam-medis.show', compact('rekamMedis', 'detailRekamMedis', 'canEdit'));
     }
 
     /**
      * Show the form for editing the specified medical record
-     */    public function edit($id)
+     */
+    public function edit($id)
     {
         // Get medical record
         $rekamMedis = DB::table('rekam_medis')->where('idrekam_medis', $id)->first();
@@ -380,7 +384,7 @@ class RekamMedisController extends Controller
         $canManageDetails = Auth::user()->hasRole('Administrator') || 
                            (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Perawat'));
 
-        return view('admin.rekam-medis.edit', compact('rekamMedis', 'pets', 'doctors', 'detailRekamMedis', 'kodeTindakan', 'canManageDetails'));
+        return view('data.rekam-medis.edit', compact('rekamMedis', 'pets', 'doctors', 'detailRekamMedis', 'kodeTindakan', 'canManageDetails'));
     }
 
     /**

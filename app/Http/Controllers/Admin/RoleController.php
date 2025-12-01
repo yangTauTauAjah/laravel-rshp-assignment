@@ -25,7 +25,7 @@ class RoleController extends Controller
         $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
         $allRoles = Role::whereNotIn('nama_role', $profileBasedRoleNames)->get();
         
-        return view('admin.role.index', compact('users', 'allRoles'));
+        return view('data.role.index', compact('users', 'allRoles'));
     }
 
     /**

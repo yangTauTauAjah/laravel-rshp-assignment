@@ -80,7 +80,7 @@
                           </path>
                         </svg>
                       </button>
-                      @auth
+                      {{-- @auth
                         @if($user->iduser == auth()->user()->iduser)
                           <button disabled class="text-gray-400 cursor-not-allowed"
                             title="Tidak dapat menghapus akun Anda sendiri">
@@ -91,7 +91,7 @@
                             </svg>
                           </button>
                         @else
-                          <form action="{{ route('users.destroy', $user->iduser) }}" method="POST" class="inline"
+                          <form action="{{ route('admin.users.destroy', $user->iduser) }}" method="POST" class="inline"
                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna {{ $user->nama }}?')">
                             @csrf
                             @method('DELETE')
@@ -104,7 +104,7 @@
                             </button>
                           </form>
                         @endif
-                      @endauth
+                      @endauth --}}
                     @endif
                   </div>
                 </td>
@@ -133,7 +133,7 @@
           </svg>
         </button>
       </div>
-      <form action="{{ route('users.store') }}" method="POST" class="mt-4">
+      <form action="{{ route('admin.users.store') }}" method="POST" class="mt-4">
         @csrf
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap</label>

@@ -24,6 +24,6 @@ class DashboardController extends Controller
             'total_kode_tindakan' => KodeTindakanTerapi::count(),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        return view('data.dashboard', compact('stats'));
     }
 }

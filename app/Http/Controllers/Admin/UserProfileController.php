@@ -22,7 +22,7 @@ class UserProfileController extends Controller
     {
         $usersWithMultipleRoles = $this->userProfileService->getUsersWithMultipleRoles();
         
-        return view('admin.profiles.index', compact('usersWithMultipleRoles'));
+        return view('data.profiles.index', compact('usersWithMultipleRoles'));
     }
 
     /**
@@ -33,7 +33,7 @@ class UserProfileController extends Controller
         try {
             $profileData = $this->userProfileService->getUserProfiles($userId);
             
-            return view('admin.profiles.show', [
+            return view('data.profiles.show', [
                 'user' => $profileData['user'],
                 'profiles' => $profileData['profiles'],
                 'roles' => $profileData['roles'],
