@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Multi-Role Profile: {{ $user->nama }}" subtitle="Kelola semua profile role pengguna"
-        :backRoute="route('admin.profiles.index')" backText="Kembali ke Multi-Role Profiles" />
+        :backRoute="route('data.profiles.index')" backText="Kembali ke Multi-Role Profiles" />
 
     <div class="mx-auto my-6 max-w-6xl w-full flex-1">
         <!-- User Overview -->
@@ -161,7 +161,7 @@
                                 Edit User
                             </a>
                             
-                            <a href="{{ route('admin.role-user.index') }}"
+                            <a href="{{ route('data.role-user.index') }}"
                                 class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
@@ -225,7 +225,7 @@
                     <!-- Actions -->
                     <div class="mt-6 pt-6 border-t border-gray-200">
                         <div class="flex space-x-3">
-                            <a href="{{ route('admin.dokter.show', $profiles['dokter']->iddokter) }}"
+                            <a href="{{ route('data.dokter.show', $profiles['dokter']->iddokter) }}"
                                 class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -234,7 +234,7 @@
                                 View Full Profile
                             </a>
                             
-                            <a href="{{ route('admin.dokter.edit', $profiles['dokter']->iddokter) }}"
+                            <a href="{{ route('data.dokter.edit', $profiles['dokter']->iddokter) }}"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -299,7 +299,7 @@
                     <!-- Actions -->
                     <div class="mt-6 pt-6 border-t border-gray-200">
                         <div class="flex space-x-3">
-                            <a href="{{ route('admin.perawat.show', $profiles['perawat']->idperawat) }}"
+                            <a href="{{ route('data.perawat.show', $profiles['perawat']->idperawat) }}"
                                 class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -308,7 +308,7 @@
                                 View Full Profile
                             </a>
                             
-                            <a href="{{ route('admin.perawat.edit', $profiles['perawat']->idperawat) }}"
+                            <a href="{{ route('data.perawat.edit', $profiles['perawat']->idperawat) }}"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>

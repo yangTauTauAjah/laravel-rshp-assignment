@@ -39,7 +39,7 @@ class UserProfileController extends Controller
                 'roles' => $profileData['roles'],
             ]);
         } catch (\Exception $e) {
-            return redirect()->route('admin.profiles.index')
+            return redirect()->route('data.profiles.index')
                 ->with('error', 'User tidak ditemukan: ' . $e->getMessage());
         }
     }

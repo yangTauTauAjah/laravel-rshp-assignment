@@ -36,7 +36,7 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil ditambahkan');
+        return redirect()->route('data.users.index')->with('success', 'Pengguna berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -55,7 +55,7 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil diperbarui');
+        return redirect()->route('data.users.index')->with('success', 'Pengguna berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -64,12 +64,12 @@ class UserController extends Controller
         
         // Prevent users from deleting their own account
         if (auth()->check() && auth()->user()->iduser == $user->iduser) {
-            return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri');
+            return redirect()->route('data.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri');
         }
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus');
+        return redirect()->route('data.users.index')->with('success', 'Pengguna berhasil dihapus');
     }
 
     public function resetPassword($id)

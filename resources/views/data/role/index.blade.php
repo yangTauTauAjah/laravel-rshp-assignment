@@ -3,7 +3,7 @@
 @section('content')
   <!-- Users and Roles Table -->
   <x-admin-header title="Kelola Peran Pengguna" subtitle="Manajemen peran dan hak akses pengguna sistem RSHP"
-    :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard" />
+    :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
 
   <div class="mx-auto my-6 max-w-7xl w-full flex-1">
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -122,7 +122,7 @@
               <span class="text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded-full ml-2">Auto</span>
             </h4>
             <p class="text-sm text-gray-600 mb-2">Pemeriksaan pasien, rekam medis, jadwal praktik, dan resep obat.</p>
-            <a href="{{ route('admin.dokter.index') }}" class="text-xs text-orange-600 hover:text-orange-800 font-medium">
+            <a href="{{ route('data.dokter.index') }}" class="text-xs text-orange-600 hover:text-orange-800 font-medium">
               → Kelola di Manajemen Dokter
             </a>
           </div>
@@ -132,7 +132,7 @@
               <span class="text-xs bg-purple-200 text-purple-800 px-2 py-1 rounded-full ml-2">Auto</span>
             </h4>
             <p class="text-sm text-gray-600 mb-2">Asistensi dokter, perawatan pasien, monitoring vital signs, dan persiapan alat.</p>
-            <a href="{{ route('admin.perawat.index') }}" class="text-xs text-purple-600 hover:text-purple-800 font-medium">
+            <a href="{{ route('data.perawat.index') }}" class="text-xs text-purple-600 hover:text-purple-800 font-medium">
               → Kelola di Manajemen Perawat
             </a>
           </div>
@@ -142,7 +142,7 @@
               <span class="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full ml-2">Auto</span>
             </h4>
             <p class="text-sm text-gray-600 mb-2">Pemilik hewan peliharaan dengan akses untuk melihat data hewan dan jadwal kunjungan mereka.</p>
-            <a href="{{ route('admin.pemilik.index') }}" class="text-xs text-green-600 hover:text-green-800 font-medium">
+            <a href="{{ route('data.pemilik.index') }}" class="text-xs text-green-600 hover:text-green-800 font-medium">
               → Kelola di Manajemen Pemilik
             </a>
           </div>
@@ -189,7 +189,7 @@
         </div>        <!-- Add New Role -->
         <div class="mb-6">
           <h4 class="text-lg font-semibold text-rshp-dark-gray mb-3">Tambah Peran Baru</h4>
-          <form action="{{ route('admin.roles.add') }}" method="POST" class="flex items-center space-x-4">
+          <form action="{{ route('data.roles.add') }}" method="POST" class="flex items-center space-x-4">
             @csrf
             <input type="hidden" name="user_id" id="modalUserId">            <select name="role_id" id="newRoleSelect" required
               class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rshp-blue">
@@ -245,7 +245,7 @@
       currentUserId = userId;
 
       try {
-        const response = await fetch(`/admin/roles/user/${userId}`);
+        const response = await fetch(`/data/roles/user/${userId}`);
         const data = await response.json();
 
         // Populate user info
@@ -293,7 +293,7 @@
                 ${isProfileBased ? '<span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">Berbasis Profil</span>' : ''}
             </div>
             <div class="flex items-center space-x-2">
-                <form action="/admin/roles/toggle/${role.idrole_user}" method="POST" class="inline">
+                <form action="/data/roles/toggle/${role.idrole_user}" method="POST" class="inline">
                     <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
                     <button type="submit" 
                         class="px-3 py-1 text-xs font-medium rounded-md ${role.status ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'} transition-colors"
@@ -339,7 +339,7 @@
       const formData = new FormData(event.target);
 
       try {
-        const response = await fetch('{{ route('admin.roles.add') }}', {
+        const response = await fetch('{{ route('data.roles.add') }}', {
           method: 'POST',
           headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -366,7 +366,7 @@
       }
 
       try {
-        const response = await fetch(`/admin/roles/remove/${roleUserId}`, {
+        const response = await fetch(`/data/roles/remove/${roleUserId}`, {
           method: 'DELETE',
           headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',

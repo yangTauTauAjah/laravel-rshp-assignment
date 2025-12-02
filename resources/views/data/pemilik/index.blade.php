@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
@@ -96,7 +96,7 @@
                                     </span></td>                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         <!-- View Details Button -->
-                                        <a href="{{ route('admin.pemilik.show', $pemilik->idpemilik) }}"
+                                        <a href="{{ route('data.pemilik.show', $pemilik->idpemilik) }}"
                                             class="text-rshp-green hover:text-green-900" title="Lihat Detail">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -160,7 +160,7 @@
                 </div>
                 
                 <!-- Add Pemilik Form -->
-                <form action="{{ route('admin.pemilik.store') }}" method="POST" id="addPemilikForm">
+                <form action="{{ route('data.pemilik.store') }}" method="POST" id="addPemilikForm">
                     @csrf
 
                     <!-- Registration Type Tabs -->
@@ -463,7 +463,7 @@
         // Edit Pemilik
         async function editPemilik(pemilikId) {
             try {
-                const response = await fetch(`/admin/pemilik/${pemilikId}`);
+                const response = await fetch(`/data/pemilik/${pemilikId}`);
                 const pemilik = await response.json();
 
                 // Populate form fields
@@ -482,12 +482,12 @@
                 }
 
                 // Set form action
-                document.getElementById('editPemilikForm').action = `/admin/pemilik/${pemilikId}`;
+                document.getElementById('editPemilikForm').action = `/data/pemilik/${pemilikId}`;
 
                 // Show modal
                 document.getElementById('editPemilikModal').classList.remove('hidden');
             } catch (error) {
-                console.error('Error fetching pemilik data:', error);
+                console.error('Error fetching pemilik /data/:', error);
                 alert('Gagal memuat data pemilik');
             }
         }
@@ -506,7 +506,7 @@
             }
             deleteForm = document.createElement('form');
             deleteForm.method = 'POST';
-            deleteForm.action = `/admin/pemilik/${pemilikId}`;
+            deleteForm.action = `/data/pemilik/${pemilikId}`;
             deleteForm.style.display = 'none';
 
             const csrfInput = document.createElement('input');

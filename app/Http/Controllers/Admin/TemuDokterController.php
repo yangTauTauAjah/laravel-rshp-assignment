@@ -14,8 +14,8 @@ class TemuDokterController extends Controller
      */
     public function index()
     {
-        // Get all doctor appointments with related data using Query Builder
-        $temuDokterList = DB::table('temu_dokter')
+        // Base query for temu dokter
+        $query = DB::table('temu_dokter')
             ->join('role_user', 'temu_dokter.idrole_user', '=', 'role_user.idrole_user')
             ->join('user', 'role_user.iduser', '=', 'user.iduser')
             ->join('role', 'role_user.idrole', '=', 'role.idrole')
@@ -25,37 +25,72 @@ class TemuDokterController extends Controller
                 'user.email as dokter_email',
                 'role.nama_role'
             )
-            ->where('role.nama_role', 'Dokter')
-            ->orderBy('temu_dokter.waktu_daftar', 'desc')
-            ->get();
+            ->where('role.nama_role', 'Dokter');
 
-        // Get doctors for dropdown
-        $doctors = DB::table('role_user')
+        // Apply role-based filtering
+        if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            // Dokter users: only show appointments assigned to them
+            $userRoleId = DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', Auth::user()->iduser)
+                ->where('role.nama_role', 'Dokter')
+                ->value('role_user.idrole_user');
+            
+            if ($userRoleId) {
+                $query->where('temu_dokter.idrole_user', $userRoleId);
+            } else {
+                // If dokter profile not found, show no appointments
+                $temuDokterList = collect();
+                $doctors = collect();
+                return view('data.temu-dokter.index', compact('temuDokterList', 'doctors'));
+            }
+        } elseif (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            // Pemilik users: only show their own appointments (through pet ownership)
+            $pemilikId = DB::table('pemilik')
+                ->where('iduser', Auth::user()->iduser)
+                ->value('idpemilik');
+            
+            if ($pemilikId) {
+                $query->join('rekam_medis', 'temu_dokter.idreservasi_dokter', '=', 'rekam_medis.idreservasi_dokter')
+                      ->join('pet', 'rekam_medis.idpet', '=', 'pet.idpet')
+                      ->where('pet.idpemilik', $pemilikId)
+                      ->distinct();
+            } else {
+                // If pemilik profile not found, show no appointments
+                $temuDokterList = collect();
+                $doctors = collect();
+                return view('data.temu-dokter.index', compact('temuDokterList', 'doctors'));
+            }
+        }
+        // For Administrator and Resepsionis: show all appointments
+
+        $temuDokterList = $query->orderBy('temu_dokter.waktu_daftar', 'desc')->get();
+
+        // Get doctors for dropdown based on role
+        $doctorsQuery = DB::table('role_user')
             ->join('user', 'role_user.iduser', '=', 'user.iduser')
             ->join('role', 'role_user.idrole', '=', 'role.idrole')
             ->where('role.nama_role', 'Dokter')
             ->where('role_user.status', 1)
-            ->select('role_user.idrole_user', 'user.nama')
-            ->get();
+            ->select('role_user.idrole_user', 'user.nama');
+
+        // For Dokter role, only show themselves in dropdown
+        if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            $doctorsQuery->where('role_user.iduser', Auth::user()->iduser);
+        }
+
+        $doctors = $doctorsQuery->get();
 
         return view('data.temu-dokter.index', compact('temuDokterList', 'doctors'));
     }
 
     /**
-     * Show the form for creating a new appointment
+     * Show the form for creating a new appointment (handled via modal in index view)
      */
     public function create()
     {
-        // Get active doctors
-        $doctors = DB::table('role_user')
-            ->join('user', 'role_user.iduser', '=', 'user.iduser')
-            ->join('role', 'role_user.idrole', '=', 'role.idrole')
-            ->where('role.nama_role', 'Dokter')
-            ->where('role_user.status', 1)
-            ->select('role_user.idrole_user', 'user.nama')
-            ->get();
-
-        return view('data.temu-dokter.create', compact('doctors'));
+        // Since we use modals, redirect to index
+        return redirect()->route('data.temu-dokter.index');
     }
 
     /**
@@ -68,6 +103,37 @@ class TemuDokterController extends Controller
             'waktu_daftar' => 'required|date',
             'no_urut' => 'nullable|integer|min:1'
         ]);
+
+        // Authorization check - only Administrator and Resepsionis can create appointments for any doctor
+        // Dokter can only create appointments for themselves, Pemilik cannot create appointments through this method
+        if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            $userRoleId = DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', Auth::user()->iduser)
+                ->where('role.nama_role', 'Dokter')
+                ->value('role_user.idrole_user');
+            
+            if (!$userRoleId || $userRoleId != $request->idrole_user) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Anda hanya dapat membuat reservasi untuk diri sendiri.'
+                    ], 403);
+                }
+                return redirect()->route('data.temu-dokter.index')
+                    ->with('error', 'Anda hanya dapat membuat reservasi untuk diri sendiri.');
+            }
+        } elseif (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            // Pemilik cannot create appointments directly through admin interface
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pemilik tidak dapat membuat reservasi melalui interface ini.'
+                ], 403);
+            }
+            return redirect()->route('data.temu-dokter.index')
+                ->with('error', 'Pemilik tidak dapat membuat reservasi melalui interface ini.');
+        }
 
         try {
             // Get next queue number if not provided
@@ -96,7 +162,7 @@ class TemuDokterController extends Controller
                 ]);
             }
 
-            return redirect()->route('admin.temu-dokter.index')
+            return redirect()->route('data.temu-dokter.index')
                 ->with('success', 'Reservasi dokter berhasil ditambahkan');
         } catch (\Exception $e) {
             // Return JSON response for AJAX requests
@@ -132,8 +198,44 @@ class TemuDokterController extends Controller
             ->first();
 
         if (!$temuDokter) {
-            return redirect()->route('admin.temu-dokter.index')
+            return redirect()->route('data.temu-dokter.index')
                 ->with('error', 'Data reservasi tidak ditemukan');
+        }
+
+        // Authorization check for role-based access
+        if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            // Dokter users: only show appointments assigned to them
+            $userRoleId = DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', Auth::user()->iduser)
+                ->where('role.nama_role', 'Dokter')
+                ->value('role_user.idrole_user');
+            
+            if (!$userRoleId || $userRoleId != $temuDokter->idrole_user) {
+                return redirect()->route('data.temu-dokter.index')
+                    ->with('error', 'Anda hanya dapat melihat reservasi Anda sendiri.');
+            }
+        } elseif (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            // Pemilik users: only show appointments for their pets
+            $pemilikId = DB::table('pemilik')
+                ->where('iduser', Auth::user()->iduser)
+                ->value('idpemilik');
+            
+            if ($pemilikId) {
+                $hasAccess = DB::table('rekam_medis')
+                    ->join('pet', 'rekam_medis.idpet', '=', 'pet.idpet')
+                    ->where('rekam_medis.idreservasi_dokter', $id)
+                    ->where('pet.idpemilik', $pemilikId)
+                    ->exists();
+                
+                if (!$hasAccess) {
+                    return redirect()->route('data.temu-dokter.index')
+                        ->with('error', 'Anda hanya dapat melihat reservasi untuk hewan peliharaan Anda.');
+                }
+            } else {
+                return redirect()->route('data.temu-dokter.index')
+                    ->with('error', 'Profil pemilik tidak ditemukan.');
+            }
         }
 
         // Get related medical records
@@ -175,27 +277,13 @@ class TemuDokterController extends Controller
     /**
      * Show the form for editing the specified appointment
      */
+    /**
+     * Show the form for editing the specified appointment (handled via modal in index view)
+     */
     public function edit($id)
     {
-        $temuDokter = DB::table('temu_dokter')
-            ->where('idreservasi_dokter', $id)
-            ->first();
-
-        if (!$temuDokter) {
-            return redirect()->route('admin.temu-dokter.index')
-                ->with('error', 'Data reservasi tidak ditemukan');
-        }
-
-        // Get active doctors
-        $doctors = DB::table('role_user')
-            ->join('user', 'role_user.iduser', '=', 'user.iduser')
-            ->join('role', 'role_user.idrole', '=', 'role.idrole')
-            ->where('role.nama_role', 'Dokter')
-            ->where('role_user.status', 1)
-            ->select('role_user.idrole_user', 'user.nama')
-            ->get();
-
-        return view('data.temu-dokter.edit', compact('temuDokter', 'doctors'));
+        // Since we use modals, redirect to index
+        return redirect()->route('data.temu-dokter.index');
     }
 
     /**
@@ -210,6 +298,39 @@ class TemuDokterController extends Controller
             'status' => 'required|in:0,1,2'
         ]);
 
+        // Check if appointment exists and get current data
+        $currentAppointment = DB::table('temu_dokter')->where('idreservasi_dokter', $id)->first();
+        if (!$currentAppointment) {
+            return redirect()->route('data.temu-dokter.index')
+                ->with('error', 'Data reservasi tidak ditemukan');
+        }
+
+        // Authorization check - only Administrator and Resepsionis can update any appointment
+        // Dokter can only update their own appointments (limited fields)
+        if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            $userRoleId = DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', Auth::user()->iduser)
+                ->where('role.nama_role', 'Dokter')
+                ->value('role_user.idrole_user');
+            
+            if (!$userRoleId || $userRoleId != $currentAppointment->idrole_user) {
+                return redirect()->route('data.temu-dokter.index')
+                    ->with('error', 'Anda hanya dapat mengupdate reservasi Anda sendiri.');
+            }
+            
+            // Dokter can only change status and queue number, not doctor assignment or date
+            if ($request->idrole_user != $currentAppointment->idrole_user || 
+                $request->waktu_daftar != $currentAppointment->waktu_daftar) {
+                return redirect()->route('data.temu-dokter.index')
+                    ->with('error', 'Anda hanya dapat mengubah status dan nomor urut.');
+            }
+        } elseif (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+            // Pemilik cannot update appointments
+            return redirect()->route('data.temu-dokter.index')
+                ->with('error', 'Anda tidak dapat mengupdate reservasi.');
+        }
+
         try {
             $affected = DB::table('temu_dokter')
                 ->where('idreservasi_dokter', $id)
@@ -221,11 +342,11 @@ class TemuDokterController extends Controller
                 ]);
 
             if ($affected === 0) {
-                return redirect()->route('admin.temu-dokter.index')
+                return redirect()->route('data.temu-dokter.index')
                     ->with('error', 'Data reservasi tidak ditemukan');
             }
 
-            return redirect()->route('admin.temu-dokter.index')
+            return redirect()->route('data.temu-dokter.index')
                 ->with('success', 'Data reservasi berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -245,14 +366,14 @@ class TemuDokterController extends Controller
                 ->delete();
 
             if ($affected === 0) {
-                return redirect()->route('admin.temu-dokter.index')
+                return redirect()->route('data.temu-dokter.index')
                     ->with('error', 'Data reservasi tidak ditemukan');
             }
 
-            return redirect()->route('admin.temu-dokter.index')
+            return redirect()->route('data.temu-dokter.index')
                 ->with('success', 'Data reservasi berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->route('admin.temu-dokter.index')
+            return redirect()->route('data.temu-dokter.index')
                 ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }

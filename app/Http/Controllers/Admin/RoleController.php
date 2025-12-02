@@ -44,7 +44,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($request->role_id);
         
         if (in_array($role->nama_role, $profileBasedRoleNames)) {
-            return redirect()->route('admin.roles.index')
+            return redirect()->route('data.roles.index')
                 ->with('error', 'Peran ' . $role->nama_role . ' hanya dapat ditambahkan melalui halaman manajemen profil yang sesuai.');
         }
 
@@ -57,11 +57,11 @@ class RoleController extends Controller
             // If exists but inactive, reactivate it
             if (!$existingRole->status) {
                 $existingRole->update(['status' => 1]);
-                return redirect()->route('admin.roles.index')
+                return redirect()->route('data.roles.index')
                     ->with('success', 'Peran berhasil diaktifkan kembali');
             }
             
-            return redirect()->route('admin.roles.index')
+            return redirect()->route('data.roles.index')
                 ->with('error', 'Pengguna sudah memiliki peran ini');
         }
 
@@ -72,7 +72,7 @@ class RoleController extends Controller
             'status' => 1
         ]);
 
-        return redirect()->route('admin.roles.index')
+        return redirect()->route('data.roles.index')
             ->with('success', 'Peran berhasil ditambahkan');
     }
 
@@ -87,7 +87,7 @@ class RoleController extends Controller
         /* $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
         
         if (in_array($roleUser->role->nama_role, $profileBasedRoleNames)) {
-            return redirect()->route('admin.roles.index')
+            return redirect()->route('data.roles.index')
                 ->with('error', 'Status peran ' . $roleUser->role->nama_role . ' hanya dapat diubah melalui halaman manajemen profil yang sesuai.');
         } */
         
@@ -97,7 +97,7 @@ class RoleController extends Controller
 
         $message = $roleUser->status ? 'Peran berhasil diaktifkan' : 'Peran berhasil dinonaktifkan';
 
-        return redirect()->route('admin.roles.index')
+        return redirect()->route('data.roles.index')
             ->with('success', $message);
     }
 
@@ -110,7 +110,7 @@ class RoleController extends Controller
         
         // Check if trying to remove own admin role
         if (Auth::user()->iduser === $roleUser->iduser && $roleUser->idrole === 1) {
-            return redirect()->route('admin.roles.index')
+            return redirect()->route('data.roles.index')
                 ->with('error', 'Tidak dapat menghapus peran Administrator dari akun Anda sendiri');
         }
         
@@ -118,13 +118,13 @@ class RoleController extends Controller
         $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
         
         if (in_array($roleUser->role->nama_role, $profileBasedRoleNames)) {
-            return redirect()->route('admin.roles.index')
+            return redirect()->route('data.roles.index')
                 ->with('error', 'Peran ' . $roleUser->role->nama_role . ' hanya dapat dihapus melalui halaman manajemen profil yang sesuai.');
         }
 
         $roleUser->delete();
 
-        return redirect()->route('admin.roles.index')
+        return redirect()->route('data.roles.index')
             ->with('success', 'Peran berhasil dihapus');
     }    /**
      * Get user roles data for AJAX request

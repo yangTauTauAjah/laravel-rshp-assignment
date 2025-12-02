@@ -2,7 +2,7 @@
 
 @section('content')
   <!-- Page Header -->
-  <x-admin-header title="Kelola Pengguna" subtitle="Manajemen pengguna sistem RSHP" :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+  <x-admin-header title="Kelola Pengguna" subtitle="Manajemen pengguna sistem RSHP" :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
     <x-slot:actionButton>
       @if(Auth::user()->isAdministrator())
@@ -91,7 +91,7 @@
                             </svg>
                           </button>
                         @else
-                          <form action="{{ route('admin.users.destroy', $user->iduser) }}" method="POST" class="inline"
+                          <form action="{{ route('data.users.destroy', $user->iduser) }}" method="POST" class="inline"
                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna {{ $user->nama }}?')">
                             @csrf
                             @method('DELETE')
@@ -133,7 +133,7 @@
           </svg>
         </button>
       </div>
-      <form action="{{ route('admin.users.store') }}" method="POST" class="mt-4">
+      <form action="{{ route('data.users.store') }}" method="POST" class="mt-4">
         @csrf
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap</label>
@@ -259,7 +259,7 @@
     }
       // Edit User Modal
     function editUser(userId) {
-      fetch(`/admin/users/${userId}`)
+      fetch(`/data/users/${userId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -269,7 +269,7 @@
         .then(data => {
           document.getElementById('editNama').value = data.nama;
           document.getElementById('editEmail').value = data.email;
-          document.getElementById('editUserForm').action = `/admin/users/${userId}`;
+          document.getElementById('editUserForm').action = `/data/users/${userId}`;
           document.getElementById('editUserModal').classList.remove('hidden');
         })
         .catch(error => {
@@ -291,7 +291,7 @@
           return;
         }
 
-        fetch(`/admin/users/${userId}/reset-password`, {
+        fetch(`/data/users/${userId}/reset-password`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

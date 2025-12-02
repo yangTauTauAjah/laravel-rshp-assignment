@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Multi-Role Profiles" subtitle="Kelola pengguna dengan multiple role"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard" />
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">
         <!-- Info Card -->
@@ -94,7 +94,7 @@
                                 </span>
                             </td>--}}
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.profiles.show', $user->iduser) }}"
+                                <a href="{{ route('data.profiles.show', $user->iduser) }}"
                                     class="inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>

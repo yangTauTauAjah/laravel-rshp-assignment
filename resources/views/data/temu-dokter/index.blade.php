@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Kelola Temu Dokter" subtitle="Manajemen reservasi dan antrian dokter"
-        :backRoute="route(Auth::user()->isAdministrator() ? 'admin.dashboard': 'data.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
             <button onclick="openAddTemuDokterModal()"
@@ -450,7 +450,7 @@
             }
             deleteForm = document.createElement('form');
             deleteForm.method = 'POST';
-            deleteForm.action = `/admin/temu-dokter/${id}`;
+            deleteForm.action = `/data/temu-dokter/${id}`;
             deleteForm.style.display = 'none';
 
             // Add CSRF token

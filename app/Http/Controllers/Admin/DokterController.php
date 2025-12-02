@@ -110,7 +110,7 @@ class DokterController extends Controller
                 }
             });
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'Profil dokter berhasil ditambahkan dan role Dokter telah diberikan');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -150,7 +150,7 @@ class DokterController extends Controller
                 ]
             );
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'User dan profil dokter berhasil dibuat dengan role Dokter');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -178,7 +178,7 @@ class DokterController extends Controller
             ->first();
 
         if (!$dokter) {
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('error', 'Profil dokter tidak ditemukan');
         }
 
@@ -211,7 +211,7 @@ class DokterController extends Controller
             $dokter = Dokter::findOrFail($id);
             $dokter->update($request->only(['alamat', 'no_hp', 'bidang_dokter', 'jenis_kelamin']));
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'Profil dokter berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -235,10 +235,10 @@ class DokterController extends Controller
                 ->where('role.nama_role', 'Dokter')
                 ->update(['role_user.status' => 0]);
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'Profil dokter berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('error', 'Gagal menonaktifkan profil dokter: ' . $e->getMessage());
         }
     }

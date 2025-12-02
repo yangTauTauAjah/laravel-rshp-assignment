@@ -2,7 +2,7 @@
 
 @section('content')    <!-- Page Header -->
     <x-admin-header title="Kelola Jenis & Ras Hewan" subtitle="Manajemen data jenis hewan dan ras yang terkait"
-        :backRoute="route(Auth::user()->isAdministrator() ? 'admin.dashboard' : 'data.dashboard')" backText="Kembali ke Dashboard">        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
             <x-slot:actionButton>
                 <button onclick="openAddJenisModal()"
                     class="bg-rshp-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center">
@@ -340,7 +340,7 @@
 
             // Set the form action
             const form = document.getElementById('editRasForm');
-            form.action = `/admin/ras-hewan/${rasId}`;
+            form.action = `/data/ras-hewan/${rasId}`;
 
             openEditRasModal();
         }
@@ -350,7 +350,7 @@
             if (confirm(`Apakah Anda yakin ingin menghapus ras "${rasName}"?`)) {
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = `/admin/ras-hewan/${rasId}`;
+                form.action = `/data/ras-hewan/${rasId}`;
                 form.style.display = 'none';
 
                 const csrfInput = document.createElement('input');
@@ -375,7 +375,7 @@
             if (confirm(`Apakah Anda yakin ingin menghapus jenis hewan "${jenisName}"?\n\nPeringatan: Semua ras yang terkait dengan jenis ini juga akan terhapus.`)) {
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = `/admin/jenis-hewan/${jenisId}`;
+                form.action = `/data/jenis-hewan/${jenisId}`;
                 form.style.display = 'none';
 
                 const csrfInput = document.createElement('input');

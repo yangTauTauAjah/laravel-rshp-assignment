@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Daftarkan Dokter Baru" subtitle="Tambahkan profil dokter ke sistem"
-        :backRoute="route('admin.dokter.index')" backText="Kembali ke Daftar Dokter" />
+        :backRoute="route('data.dokter.index')" backText="Kembali ke Daftar Dokter" />
 
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -27,11 +27,11 @@
                         Sistem akan menampilkan user yang belum memiliki role Dokter untuk dapat diberikan akses sebagai dokter.
                     </p>
                     <div class="flex justify-center space-x-4">
-                        <a href="{{ route('admin.dokter.create-with-user') }}"
+                        <a href="{{ route('data.dokter.create-with-user') }}"
                             class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                             Buat User & Dokter Baru
                         </a>
-                        <a href="{{ route('admin.dokter.index') }}"
+                        <a href="{{ route('data.dokter.index') }}"
                             class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors">
                             Kembali
                         </a>
@@ -39,7 +39,7 @@
                 </div>
             </div>
             @else
-            <form action="{{ route('admin.dokter.store') }}" method="POST" class="p-6">
+            <form action="{{ route('data.dokter.store') }}" method="POST" class="p-6">
                 @csrf                <!-- User Selection -->
                 <div class="mb-6">
                     <label for="iduser" class="block text-sm font-medium text-gray-700 mb-2">
@@ -127,7 +127,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                    <a href="{{ route('admin.dokter.index') }}"
+                    <a href="{{ route('data.dokter.index') }}"
                         class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                         Batal
                     </a>

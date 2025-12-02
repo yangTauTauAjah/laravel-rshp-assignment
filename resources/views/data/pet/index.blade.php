@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Kelola Data Hewan Peliharaan" subtitle="Manajemen data hewan peliharaan pasien"
-        :backRoute="route(Auth::user()->isAdministrator() ? 'admin.dashboard' : 'data.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
@@ -107,7 +107,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
-                                        @if(Auth::user()->isResepsionis())
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="editPet({{ $pet->idpet }})"
                                             class="text-rshp-blue hover:text-blue-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@
                                             </svg>
                                         </button>
                                         @endif
-                                        @if(Auth::user()->isResepsionis())
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="deletePet({{ $pet->idpet }}, '{{ $pet->nama }}')"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,7 +143,7 @@
         </div>
     </div>
 
-    @if(Auth::user()->isResepsionis())
+    @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
     <!-- Add Pet Modal -->
     <div id="addPetModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
         <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white mb-10">
@@ -256,7 +256,7 @@
     </div>
     @endif
 
-    @if(Auth::user()->isResepsionis())
+    @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
     <!-- Edit Pet Modal -->
     <div id="editPetModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
         <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white mb-10">
@@ -402,7 +402,7 @@
                 // Show modal
                 document.getElementById('editPetModal').classList.remove('hidden');
             } catch (error) {
-                console.error('Error fetching pet data:', error);
+                console.error('Error fetching pet /data/:', error);
                 alert('Gagal memuat data hewan peliharaan');
             }
         }

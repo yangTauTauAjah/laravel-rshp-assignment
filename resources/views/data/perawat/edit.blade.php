@@ -3,10 +3,10 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Edit Profil Perawat" subtitle="Perbarui informasi profil perawat"
-        :backRoute="route('admin.perawat.show', $perawat->idperawat)" backText="Kembali ke Detail">
+        :backRoute="route('data.perawat.show', $perawat->idperawat)" backText="Kembali ke Detail">
         
         <x-slot:actionButton>
-            <a href="{{ route('admin.dashboard') }}"
+            <a href="{{ route('data.dashboard') }}"
                 class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
@@ -33,7 +33,7 @@
             </div>
 
             <!-- Form -->
-            <form action="{{ route('admin.perawat.update', $perawat->idperawat) }}" method="POST" class="p-6">
+            <form action="{{ route('data.perawat.update', $perawat->idperawat) }}" method="POST" class="p-6">
                 @csrf
                 @method('PUT')
 
@@ -128,7 +128,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                    <a href="{{ route('admin.perawat.show', $perawat->idperawat) }}"
+                    <a href="{{ route('data.perawat.show', $perawat->idperawat) }}"
                         class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                         Batal
                     </a>
@@ -147,7 +147,7 @@
         <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 class="text-lg font-medium text-rshp-dark-gray mb-4">Aksi Lainnya</h3>
             <div class="flex flex-wrap gap-3">
-                {{-- <a href="{{ route('admin.role-user.index') }}"
+                {{-- <a href="{{ route('data.role-user.index') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
@@ -232,7 +232,7 @@ $(document).ready(function() {
 });
 
 function confirmDelete(perawatId) {
-    document.getElementById('deleteForm').action = `/admin/perawat/${perawatId}`;
+    document.getElementById('deleteForm').action = `/data/perawat/${perawatId}`;
     document.getElementById('deleteModal').classList.remove('hidden');
     document.getElementById('deleteModal').classList.add('flex');
 }

@@ -95,7 +95,7 @@
 
             <!-- User Management Card - Administrator only -->
             @if(Auth::user()->isAdministrator())
-            <a href="{{ route('admin.users.index') }}"
+            <a href="{{ route('data.users.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-rshp-blue transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -120,7 +120,7 @@
             
             <!-- Role Management Card - Administrator only -->
             @if(Auth::user()->isAdministrator())
-            <a href="{{ route('admin.roles.index') }}"
+            <a href="{{ route('data.roles.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-purple-500 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -145,7 +145,7 @@
 
             <!-- Temu Dokter Management Card - Administrator, Resepsionis, Perawat -->
             @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis() || Auth::user()->isDokter())
-            <a href="{{ route(Auth::user()->isAdministrator() ? 'admin.temu-dokter.index' : 'data.temu-dokter.index') }}"
+            <a href="{{ route('data.temu-dokter.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -169,7 +169,7 @@
 
             <!-- Dokter Management Card - Administrator only -->
             @if(Auth::user()->isAdministrator())
-            <a href="{{ route('admin.dokter.index') }}"
+            <a href="{{ route('data.dokter.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-rshp-green transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -193,7 +193,7 @@
             
             <!-- Perawat Management Card - Administrator only -->
             @if(Auth::user()->isAdministrator())
-            <a href="{{ route('admin.perawat.index') }}"
+            <a href="{{ route('data.perawat.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-purple-500 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -217,7 +217,7 @@
             
             <!-- Pemilik Management Card - Administrator, Dokter, Resepsionis -->
             @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis() || Auth::user()->isPemilik())
-            <a href="{{ route(Auth::user()->isAdministrator() ? 'admin.pemilik.index' : 'data.pemilik.index') }}"
+            <a href="{{ route('data.pemilik.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-rshp-green transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -241,7 +241,7 @@
             
             <!-- Tindakan Terapi Card - Administrator -->
             @if(Auth::user()->isAdministrator())
-            <a href="{{ route('admin.tindakan-terapi.index') }}"
+            <a href="{{ route('data.tindakan-terapi.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -266,7 +266,7 @@
 
             <!-- Rekam Medis Card - Administrator, Dokter -->
             @if(Auth::user()->isAdministrator() || Auth::user()->isDokter())
-            <a href="{{ route('admin.rekam-medis.index') }}"
+            <a href="{{ route('data.rekam-medis.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-purple-600 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -291,7 +291,7 @@
             
             <!-- Pet Management Card - Administrator, Dokter, Resepsionis -->
             @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis() || Auth::user()->isPemilik())
-            <a href="{{ route(Auth::user()->isAdministrator() ? 'admin.pet.index' : 'data.pet.index') }}"
+            <a href="{{ route('data.pet.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-yellow-500 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -316,7 +316,7 @@
             
             <!-- Jenis & Ras Hewan Card - Administrator, Dokter, Resepsionis -->
             @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-            <a href="{{ route(Auth::user()->isAdministrator() ? 'admin.jenis-hewan.index' : 'data.jenis-hewan.index') }}"
+            <a href="{{ route('data.jenis-hewan.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-orange-500 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -341,7 +341,7 @@
 
             <!-- Multi-Role Profiles Card - Administrator only -->
             {{-- @if(Auth::user()->isAdministrator())
-            <a href="{{ route('admin.profiles.index') }}"
+            <a href="{{ route('data.profiles.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition-all duration-300 group">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">

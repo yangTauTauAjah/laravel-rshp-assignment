@@ -67,7 +67,7 @@ class PemilikController extends Controller
             // Check if user is already a pemilik
             $existingPemilik = Pemilik::where('iduser', $request->existing_user_id)->first();
             if ($existingPemilik) {
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('error', 'User ini sudah terdaftar sebagai pemilik hewan');
             }
 
@@ -87,11 +87,11 @@ class PemilikController extends Controller
 
                 DB::commit();
 
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('success', 'Data pemilik hewan berhasil ditambahkan dari user yang sudah ada');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('error', 'Gagal menambahkan data pemilik: ' . $e->getMessage());
             }
         } else {
@@ -144,11 +144,11 @@ class PemilikController extends Controller
 
                 DB::commit();
 
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('success', 'Data pemilik hewan berhasil ditambahkan dengan user baru');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('error', 'Gagal menambahkan data pemilik: ' . $e->getMessage());
             }
         }
@@ -191,11 +191,11 @@ class PemilikController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('success', 'Data pemilik hewan berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Gagal memperbarui data pemilik: ' . $e->getMessage());
         }
     }
@@ -216,7 +216,7 @@ class PemilikController extends Controller
             ->first();
 
         if (!$pemilik) {
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Profil pemilik tidak ditemukan');
         }
 
@@ -232,7 +232,7 @@ class PemilikController extends Controller
         
         // Check if pemilik has pets
         /* if ($pemilik->pets()->count() > 0) {
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Tidak dapat menghapus pemilik yang memiliki hewan peliharaan terdaftar');
         } */
 
@@ -247,11 +247,11 @@ class PemilikController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('success', 'Profil pemilik hewan berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Gagal menonaktifkan data pemilik: ' . $e->getMessage());
         }
     }
@@ -280,7 +280,7 @@ class PemilikController extends Controller
             ->first();
 
         if (!$pemilik) {
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Profil pemilik tidak ditemukan');
         }
 

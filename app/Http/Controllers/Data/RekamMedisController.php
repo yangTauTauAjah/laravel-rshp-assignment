@@ -215,11 +215,11 @@ class RekamMedisController extends Controller
                 return redirect()->route('data.rekam-medis.index')
                     ->with('error', 'Anda hanya dapat mengedit rekam medis yang Anda buat.');
             }
-        } elseif (!Auth::user()->hasRole('Perawat')) {
+        }/*  elseif (!Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Perawat')) {
             // Only Dokter and Perawat can edit
             return redirect()->route('data.rekam-medis.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit rekam medis.');
-        }
+        } */
 
         // Get detail records (for Dokter only)
         $detailRekamMedis = collect();
@@ -276,11 +276,11 @@ class RekamMedisController extends Controller
                 return redirect()->route('data.rekam-medis.index')
                     ->with('error', 'Anda hanya dapat mengedit rekam medis yang Anda buat.');
             }
-        } elseif (!Auth::user()->hasRole('Perawat')) {
+        }/*  elseif (!Auth::user()->hasRole('Perawat')) {
             // Only Dokter and Perawat can edit
             return redirect()->route('data.rekam-medis.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit rekam medis.');
-        }
+        } */
 
         $request->validate([
             'anamnesa' => 'required|string',
