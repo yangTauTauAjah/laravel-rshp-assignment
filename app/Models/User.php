@@ -26,6 +26,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'email_verified_at',
+        'deleted_at',
+        'deleted_by'
     ];
 
     /**
@@ -62,6 +64,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'password' => 'hashed',
+            'deleted_at' => 'datetime',
+            'email_verified_at' => 'timestamp'
         ];
     }
 

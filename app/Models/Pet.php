@@ -13,8 +13,17 @@ class Pet extends Model
         'warna_tanda',
         'jenis_kelamin',
         'idpemilik',
-        'idras_hewan'
+        'idras_hewan',
+        'deleted_at',
+        'deleted_by'
     ];
+    
+    // Cast deleted_at as datetime for proper handling
+    /* protected $casts = [
+        'deleted_at' => 'datetime',
+        'tanggal_lahir' => 'date'
+    ]; */
+    
     public $timestamps = false;
 
     public function rasHewan()
