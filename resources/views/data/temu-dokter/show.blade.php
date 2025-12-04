@@ -2,8 +2,8 @@
 
 @section('content')
     <!-- Page Header -->
-    <x-admin-header title="Detail Reservasi Dokter" subtitle="Informasi lengkap reservasi dokter"
-        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
+    <x-admin-header title="Detail Reservasi Dokter" subtitle="Kembali ke index Temu Dokter"
+        :backRoute="route('data.temu-dokter.index')" backText="Kembali ke Temu Dokter">
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
             <button onclick="openAddTemuDokterModal()"

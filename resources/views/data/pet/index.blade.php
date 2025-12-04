@@ -48,9 +48,11 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Pemilik
                             </th>
+                            @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Aksi
                             </th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -116,8 +118,6 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
-                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="deletePet({{ $pet->idpet }}, '{{ $pet->nama }}')"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

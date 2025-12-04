@@ -85,6 +85,23 @@ class PemilikController extends Controller
                     'alamat' => $request->alamat,
                 ]);
 
+                // Assign Pemilik role to the user
+                $pemilikRole = DB::table('role')->where('nama_role', 'Pemilik')->first();
+                if ($pemilikRole) {
+                    // Check if user doesn't already have this role
+                    $existingRole = DB::table('role_user')
+                        ->where('iduser', $request->existing_user_id)
+                        ->where('idrole', $pemilikRole->idrole)
+                        ->exists();
+                    
+                    if (!$existingRole) {
+                        DB::table('role_user')->insert([
+                            'iduser' => $request->existing_user_id,
+                            'idrole' => $pemilikRole->idrole
+                        ]);
+                    }
+                }
+
                 DB::commit();
 
                 return redirect()->route('data.pemilik.index')
@@ -259,7 +276,7 @@ class PemilikController extends Controller
     /**
      * Display the specified pemilik details
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $pemilik = DB::table('pemilik')
             ->join('user', 'pemilik.iduser', '=', 'user.iduser')
@@ -282,6 +299,10 @@ class PemilikController extends Controller
         if (!$pemilik) {
             return redirect()->route('data.pemilik.index')
                 ->with('error', 'Profil pemilik tidak ditemukan');
+        }
+
+        if ($request->ajax()) {
+            return response()->json($pemilik);
         }
 
         return view('data.pemilik.show', compact('pemilik'));

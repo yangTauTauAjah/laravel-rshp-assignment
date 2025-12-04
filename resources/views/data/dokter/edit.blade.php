@@ -146,16 +146,16 @@
         </div>
 
         <!-- Additional Actions -->
-        <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        {{-- <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 class="text-lg font-medium text-rshp-dark-gray mb-4">Aksi Lainnya</h3>
             <div class="flex flex-wrap gap-3">
-                {{-- <a href="{{ route('data.role-user.index') }}"
+                <a href="{{ route('data.role-user.index') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
                     </svg>
                     Kelola Role User
-                </a> --}}
+                </a>
                 
                 <button onclick="confirmDelete({{ $dokter->iddokter }})"
                     class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
@@ -165,7 +165,7 @@
                     Hapus Profil
                 </button>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Delete Confirmation Modal -->

@@ -143,8 +143,8 @@
             </a>
             @endif
 
-            <!-- Temu Dokter Management Card - Administrator, Resepsionis, Perawat -->
-            @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis() || Auth::user()->isDokter())
+            <!-- Temu Dokter Management Card - Administrator, Dokter, Resepsionis, Pemilik -->
+            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isResepsionis() || Auth::user()->isPemilik())
             <a href="{{ route('data.temu-dokter.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition-all duration-300 group">
                 <div class="p-6">
@@ -216,7 +216,7 @@
             @endif
             
             <!-- Pemilik Management Card - Administrator, Dokter, Resepsionis -->
-            @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis() || Auth::user()->isPemilik())
+            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isResepsionis())
             <a href="{{ route('data.pemilik.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-rshp-green transition-all duration-300 group">
                 <div class="p-6">
@@ -264,8 +264,8 @@
             </a>
             @endif
 
-            <!-- Rekam Medis Card - Administrator, Dokter -->
-            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter())
+            <!-- Rekam Medis Card - Administrator, Dokter, Perawat, Pemilik -->
+            @if(Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isPerawat() || Auth::user()->isPemilik())
             <a href="{{ route('data.rekam-medis.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg hover:border-purple-600 transition-all duration-300 group">
                 <div class="p-6">

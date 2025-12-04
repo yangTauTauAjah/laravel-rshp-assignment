@@ -80,7 +80,7 @@
                           </path>
                         </svg>
                       </button>
-                      {{-- @auth
+                      @auth
                         @if($user->iduser == auth()->user()->iduser)
                           <button disabled class="text-gray-400 cursor-not-allowed"
                             title="Tidak dapat menghapus akun Anda sendiri">
@@ -104,7 +104,7 @@
                             </button>
                           </form>
                         @endif
-                      @endauth --}}
+                      @endauth
                     @endif
                   </div>
                 </td>

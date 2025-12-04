@@ -112,7 +112,7 @@
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        {{-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -157,10 +157,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Action Section -->
-        @if(Auth::user()->isAdministrator())
+        {{-- @if(Auth::user()->isAdministrator())
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 class="text-lg font-medium text-rshp-dark-gray mb-4">Aksi Manajemen</h3>
             <div class="flex flex-wrap gap-3">
@@ -181,7 +181,7 @@
                 </a>
             </div>
         </div>
-        @endif
+        @endif --}}
     </div>
 
     <!-- Delete Confirmation Modal -->
