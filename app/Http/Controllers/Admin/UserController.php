@@ -6,19 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        // Filter out soft-deleted users
+        $users = User::whereNull('deleted_at')->get();
+        return view('data.users.index', compact('users'));
     }
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        // Only show non-deleted users
+        $user = User::whereNull('deleted_at')->findOrFail($id);
         return response()->json($user);
     }
 
@@ -26,7 +29,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:500',
-            'email' => 'required|email|unique:user,email|max:200',
+            'email' => 'required|email|max:200|unique:user,email,NULL,iduser,deleted_at,NULL',
             'password' => 'required|string|min:6',
         ]);
 
@@ -36,12 +39,13 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect()->route('users.index')->with('success', 'Pengguna berhasil ditambahkan');
+        return redirect()->route('data.users.index')->with('success', 'Pengguna berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
+        // Only update non-deleted users
+        $user = User::whereNull('deleted_at')->findOrFail($id);
 
         $validated = $request->validate([
             'nama' => 'required|string|max:500',
@@ -49,32 +53,38 @@ class UserController extends Controller
                 'required',
                 'email',
                 'max:200',
-                Rule::unique('user', 'email')->ignore($user->iduser, 'iduser')
+                Rule::unique('user', 'email')->ignore($user->iduser, 'iduser')->whereNull('deleted_at')
             ],
         ]);
 
         $user->update($validated);
 
-        return redirect()->route('users.index')->with('success', 'Pengguna berhasil diperbarui');
+        return redirect()->route('data.users.index')->with('success', 'Pengguna berhasil diperbarui');
     }
 
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
+        // Only allow deletion of non-deleted users
+        $user = User::whereNull('deleted_at')->findOrFail($id);
         
         // Prevent users from deleting their own account
-        if (auth()->check() && auth()->user()->iduser == $user->iduser) {
-            return redirect()->route('users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri');
+        if (Auth::check() && Auth::user()->iduser == $user->iduser) {
+            return redirect()->route('data.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri');
         }
 
-        $user->delete();
+        // Perform soft delete by setting deleted_at timestamp and deleted_by user ID
+        $user->update([
+            'deleted_at' => now(),
+            'deleted_by' => Auth::user()->iduser
+        ]);
 
-        return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus');
+        return redirect()->route('data.users.index')->with('success', 'Pengguna berhasil dihapus');
     }
 
     public function resetPassword($id)
     {
-        $user = User::findOrFail($id);
+        // Only reset password for non-deleted users
+        $user = User::whereNull('deleted_at')->findOrFail($id);
         
         // Generate random password
         $newPassword = bin2hex(random_bytes(8));

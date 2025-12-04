@@ -22,7 +22,7 @@ class UserProfileController extends Controller
     {
         $usersWithMultipleRoles = $this->userProfileService->getUsersWithMultipleRoles();
         
-        return view('admin.profiles.index', compact('usersWithMultipleRoles'));
+        return view('data.profiles.index', compact('usersWithMultipleRoles'));
     }
 
     /**
@@ -33,13 +33,13 @@ class UserProfileController extends Controller
         try {
             $profileData = $this->userProfileService->getUserProfiles($userId);
             
-            return view('admin.profiles.show', [
+            return view('data.profiles.show', [
                 'user' => $profileData['user'],
                 'profiles' => $profileData['profiles'],
                 'roles' => $profileData['roles'],
             ]);
         } catch (\Exception $e) {
-            return redirect()->route('admin.profiles.index')
+            return redirect()->route('data.profiles.index')
                 ->with('error', 'User tidak ditemukan: ' . $e->getMessage());
         }
     }

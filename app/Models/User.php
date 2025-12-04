@@ -26,6 +26,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'email_verified_at',
+        'deleted_at',
+        'deleted_by'
     ];
 
     /**
@@ -62,6 +64,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'password' => 'hashed',
+            'deleted_at' => 'datetime',
+            'email_verified_at' => 'timestamp'
         ];
     }
 
@@ -124,6 +128,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isPerawat()
     {
         return $this->hasRole('Perawat');
+    }
+
+    /**
+     * Check if user is Pemilik (permissions TBD)
+     */
+    public function isPemilik()
+    {
+        return $this->hasRole('Pemilik');
     }
 
     /**

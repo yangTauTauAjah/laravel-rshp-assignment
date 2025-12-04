@@ -5,7 +5,7 @@
     <x-admin-header title="Kelola Data Hewan Peliharaan" subtitle="Manajemen data hewan peliharaan pasien"
         :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
-        @if(Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Resepsionis'))
+        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
         <x-slot:actionButton>
             <button onclick="openAddPetModal()"
                 class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
@@ -48,9 +48,11 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Pemilik
                             </th>
+                            @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Aksi
                             </th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -84,7 +86,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">{{ $pet->rasHewan->nama_ras }}</div>
-                                    <div class="text-sm text-gray-500">{{ $pet->rasHewan->jenisHewan->nama }}</div>
+                                    <div class="text-sm text-gray-500">{{ $pet->rasHewan->jenisHewan->nama_jenis_hewan }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
@@ -106,7 +108,8 @@
                                     {{ $pet->pemilik->user->nama }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center space-x-2">                                        @if(Auth::user()->hasRole('Resepsionis') || Auth::user()->hasRole('Pemilik'))
+                                    <div class="flex items-center space-x-2">
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
                                         <button onclick="editPet({{ $pet->idpet }})"
                                             class="text-rshp-blue hover:text-blue-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,8 +118,6 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
-                                        {{-- @if(Auth::user()->hasRole('Resepsionis') || Auth::user()->hasRole('Pemilik'))
                                         <button onclick="deletePet({{ $pet->idpet }}, '{{ $pet->nama }}')"
                                             class="text-red-600 hover:text-red-900">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +126,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif --}}
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -142,6 +143,7 @@
         </div>
     </div>
 
+    @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
     <!-- Add Pet Modal -->
     <div id="addPetModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
         <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white mb-10">
@@ -157,7 +159,8 @@
                     </button>
                 </div>
 
-                <!-- Add Pet Form -->                <form action="{{ route('data.pet.store') }}" method="POST" id="addPetForm">
+                <!-- Add Pet Form -->
+                <form action="{{ route('data.pet.store') }}" method="POST">
                     @csrf
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -251,7 +254,9 @@
             </div>
         </div>
     </div>
+    @endif
 
+    @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
     <!-- Edit Pet Modal -->
     <div id="editPetModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
         <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white mb-10">
@@ -363,6 +368,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <script>
         // Open Add Pet Modal
@@ -374,7 +380,9 @@
         function closeAddPetModal() {
             document.getElementById('addPetModal').classList.add('hidden');
             document.getElementById('addPetForm').reset();
-        }        // Edit Pet
+        }
+
+        // Edit Pet
         async function editPet(petId) {
             try {
                 const response = await fetch(`/data/pet/${petId}`);
@@ -394,7 +402,7 @@
                 // Show modal
                 document.getElementById('editPetModal').classList.remove('hidden');
             } catch (error) {
-                console.error('Error fetching pet data:', error);
+                console.error('Error fetching pet /data/:', error);
                 alert('Gagal memuat data hewan peliharaan');
             }
         }
@@ -402,7 +410,9 @@
         // Close Edit Pet Modal
         function closeEditPetModal() {
             document.getElementById('editPetModal').classList.add('hidden');
-        }        // Delete Pet
+        }
+
+        // Delete Pet
         function deletePet(petId, petName) {
             if (confirm(`Apakah Anda yakin ingin menghapus data hewan "${petName}"?`)) {
                 const form = document.createElement('form');

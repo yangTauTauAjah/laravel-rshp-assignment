@@ -99,6 +99,6 @@ class DashboardController extends Controller
             ];
         }
         
-        return view('data.dashboard.index', compact('dashboardData', 'userRoles'));
+        return view('data.dashboard', compact('dashboardData', 'userRoles'));
     }
 }

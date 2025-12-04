@@ -13,7 +13,7 @@ class JenisHewanController extends Controller
     public function index()
     {
         $jenisHewan = JenisHewan::with('rasHewan')->get();
-        return view('admin.jenis-hewan.index', compact('jenisHewan'));
+        return view('data.jenis-hewan.index', compact('jenisHewan'));
     }
 
     public function storeJenis(Request $request)
@@ -24,7 +24,7 @@ class JenisHewanController extends Controller
 
         JenisHewan::create($validated);
 
-        return redirect()->route('jenis-hewan.index')->with('success', 'Jenis hewan berhasil ditambahkan');
+        return redirect()->route('data.jenis-hewan.index')->with('success', 'Jenis hewan berhasil ditambahkan');
     }
 
     public function destroyJenis($id)
@@ -32,13 +32,13 @@ class JenisHewanController extends Controller
         $jenis = JenisHewan::findOrFail($id);
         
         // Check if there are related breeds
-        if ($jenis->rasHewan()->count() > 0) {
-            return redirect()->route('jenis-hewan.index')->with('error', 'Tidak dapat menghapus jenis hewan yang masih memiliki ras');
-        }
+        /* if ($jenis->rasHewan()->count() > 0) {
+            return redirect()->route('data.jenis-hewan.index')->with('error', 'Tidak dapat menghapus jenis hewan yang masih memiliki ras');
+        } */
 
         $jenis->delete();
 
-        return redirect()->route('jenis-hewan.index')->with('success', 'Jenis hewan berhasil dihapus');
+        return redirect()->route('data.jenis-hewan.index')->with('success', 'Jenis hewan berhasil dihapus');
     }
 
     public function storeRas(Request $request)
@@ -50,7 +50,7 @@ class JenisHewanController extends Controller
 
         RasHewan::create($validated);
 
-        return redirect()->route('jenis-hewan.index')->with('success', 'Ras hewan berhasil ditambahkan');
+        return redirect()->route('data.jenis-hewan.index')->with('success', 'Ras hewan berhasil ditambahkan');
     }
 
     public function updateRas(Request $request, $id)
@@ -64,7 +64,7 @@ class JenisHewanController extends Controller
 
         $ras->update($validated);
 
-        return redirect()->route('jenis-hewan.index')->with('success', 'Ras hewan berhasil diperbarui');
+        return redirect()->route('data.jenis-hewan.index')->with('success', 'Ras hewan berhasil diperbarui');
     }
 
     public function destroyRas($id)
@@ -72,6 +72,6 @@ class JenisHewanController extends Controller
         $ras = RasHewan::findOrFail($id);
         $ras->delete();
 
-        return redirect()->route('jenis-hewan.index')->with('success', 'Ras hewan berhasil dihapus');
+        return redirect()->route('data.jenis-hewan.index')->with('success', 'Ras hewan berhasil dihapus');
     }
 }

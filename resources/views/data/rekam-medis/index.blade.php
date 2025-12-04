@@ -2,24 +2,21 @@
 
 @section('content')
     <!-- Page Header -->
-    {{-- @if(Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator'))
+    @if(Auth::user()->hasRole('Dokter'))
         <x-admin-header title="Rekam Medis Pasien Saya" subtitle="Daftar rekam medis pasien yang telah Anda periksa"
             :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
-    @elseif(Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Administrator'))
+    @elseif(Auth::user()->hasRole('Perawat'))
         <x-admin-header title="Kelola Rekam Medis" subtitle="Manajemen rekam medis hewan peliharaan - Perawat"
             :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
-    @elseif(Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator'))
-        <x-admin-header title="Rekam Medis Hewan Peliharaan Saya" subtitle="Daftar rekam medis hewan peliharaan Anda"
-            :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
-    @else --}}
+    @else
         <x-admin-header title="Kelola Rekam Medis" subtitle="Manajemen rekam medis hewan peliharaan"
             :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard" />
-    {{-- @endif --}}
+    @endif
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">
 
         <!-- Info Card -->
-        @if(Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Resepsionis'))
+        @if(Auth::user()->hasRole('Administrator'))
         <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div class="flex items-start">
                 <svg class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,8 +25,8 @@
                 </svg>
                 <div>
                     <h4 class="text-lg font-bold text-blue-600 mb-2">Informasi Pengelolaan Rekam Medis</h4>
+                        {{-- Rekam medis sekarang dikelola melalui sistem <strong>Temu Dokter</strong>.  --}}
                     <p class="text-blue-700 text-sm leading-relaxed">
-                        Rekam medis sekarang dikelola melalui sistem <strong>Temu Dokter</strong>. 
                         Untuk menambah rekam medis baru, silakan buat reservasi dokter terlebih dahulu di menu 
                         <a href="{{ route('data.temu-dokter.index') }}" class="underline font-semibold">Temu Dokter</a>, 
                         kemudian tambahkan rekam medis dari halaman detail reservasi tersebut.
@@ -56,6 +53,24 @@
         <div class="mb-6 bg-purple-50 border border-purple-200 rounded-lg p-4">
             <div class="flex items-start">
                 <svg class="w-6 h-6 text-purple-600 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <div>
+                    <h4 class="text-lg font-bold text-purple-600 mb-2">Kelola Rekam Medis</h4>
+                    <p class="text-purple-700 text-sm leading-relaxed">
+                        Sebagai perawat, Anda dapat melihat dan mengelola rekam medis dari semua pasien. 
+                        Anda dapat melihat detail, mengedit, dan membantu memelihara data rekam medis hewan peliharaan.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {{-- @endif
+            </div>
+        </div>
+        @elseif(Auth::user()->hasRole('Perawat'))
+        <div class="mb-6 bg-purple-50 border border-purple-200 rounded-lg p-4">
+            <div class="flex items-start">
+                <svg class="w-6 h-6 text-purple-600 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                 </svg>
                 <div>
@@ -66,7 +81,7 @@
                     </p>
                 </div>
             </div>
-        </div>
+        </div> --}}
         @endif
 
         <!-- Medical Records Table -->
@@ -118,8 +133,8 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div
+                                    {{-- <div class="flex items-center ml-4"> --}}
+                                        {{-- <div
                                             class="flex-shrink-0 h-10 w-10 bg-rshp-orange rounded-full flex items-center justify-center">
                                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -127,19 +142,19 @@
                                                     d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                                 </path>
                                             </svg>
-                                        </div>
-                                        <div class="ml-4">
+                                        </div> --}}
+                                        {{-- <div class="ml-4"> --}}
                                             <div class="text-sm font-medium text-gray-900">
                                                 {{ $rekamMedis->pet_nama }}
-                                            </div>
-                                            <div class="text-sm text-gray-500">
-                                                {{ $rekamMedis->nama_ras }} - {{ $rekamMedis->nama_jenis_hewan }}
                                                 <span class="ml-2 px-2 py-1 text-xs rounded-full {{ $rekamMedis->jenis_kelamin == 'M' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800' }}">
                                                     {{ $rekamMedis->jenis_kelamin == 'M' ? 'Jantan' : 'Betina' }}
                                                 </span>
                                             </div>
-                                        </div>
-                                    </div>
+                                            <div class="text-sm text-gray-500">
+                                                {{ $rekamMedis->nama_ras }} - {{ $rekamMedis->nama_jenis_hewan }}
+                                            </div>
+                                        {{-- </div> --}}
+                                    {{-- </div> --}}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $rekamMedis->pemilik_nama }}
@@ -179,15 +194,58 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                        @if(Auth::user()->isAdministrator() || Auth::user()->isDokter())
-                                        <a href="{{ route('data.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
-                                            class="text-rshp-blue hover:text-blue-900" title="Edit">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </a>
+                                        
+                                        {{-- Role-based Edit Buttons --}}
+                                        @if(Auth::user()->hasRole('Administrator'))
+                                            {{-- Administrator can edit both data and details --}}
+                                            <a href="{{ route('data.rekam-medis.edit-data', $rekamMedis->idrekam_medis) }}"
+                                                class="text-rshp-blue hover:text-blue-900" title="Edit Data Rekam Medis">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                            <a href="{{ route('data.rekam-medis.edit-detail', $rekamMedis->idrekam_medis) }}"
+                                                class="text-purple-600 hover:text-purple-900" title="Edit Detail Tindakan">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                        d="M9 5H7a2 2 0 00-2 2v11a2 2 0 002 2h2M9 5a2 2 0 012 2v11a2 2 0 01-2 2M9 5a2 2 0 012-2h2a2 2 0 012 2v11a2 2 0 01-2 2H11a2 2 0 01-2-2V5z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        @elseif(Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Dokter'))
+                                            {{-- Perawat can only edit main data --}}
+                                            <a href="{{ route('data.rekam-medis.edit-data', $rekamMedis->idrekam_medis) }}"
+                                                class="text-rshp-blue hover:text-blue-900" title="Edit Data Rekam Medis">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        @elseif(Auth::user()->hasRole('Dokter'))
+                                            {{-- Check if this is the examining doctor --}}
+                                            @php
+                                                $dokterRoleUserId = DB::table('role_user')
+                                                    ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                                                    ->where('role_user.iduser', Auth::user()->iduser)
+                                                    ->where('role.nama_role', 'Dokter')
+                                                    ->where('role_user.status', 1)
+                                                    ->value('role_user.idrole_user');
+                                            @endphp
+                                            
+                                            @if($dokterRoleUserId && $rekamMedis->dokter_pemeriksa == $dokterRoleUserId)
+                                                {{-- Dokter can only edit details of their own records --}}
+                                                <a href="{{ route('data.rekam-medis.edit-detail', $rekamMedis->idrekam_medis) }}"
+                                                    class="text-purple-600 hover:text-purple-900" title="Edit Detail Tindakan">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                            d="M9 5H7a2 2 0 00-2 2v11a2 2 0 002 2h2M9 5a2 2 0 012 2v11a2 2 0 01-2 2M9 5a2 2 0 012-2h2a2 2 0 012 2v11a2 2 0 01-2 2H11a2 2 0 01-2-2V5z">
+                                                        </path>
+                                                    </svg>
+                                                </a>
+                                            @endif
                                         @endif
                                         {{-- @if(Auth::user()->isAdministrator())
                                         <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
@@ -201,14 +259,15 @@
                                         @endif --}}
                                     </div>
                                 </td>
-                            </tr>                        @empty
+                            </tr>
+                        @empty
                             <tr>
                                 <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                     <div class="flex flex-col items-center py-8">
                                         <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
-                                        @if(Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator'))
+                                        @if(Auth::user()->hasRole('Dokter'))
                                             <p class="text-lg font-medium text-gray-900 mb-2">Belum ada rekam medis pasien</p>
                                             <p class="text-gray-500 mb-4">Anda belum memiliki rekam medis pasien yang telah diperiksa</p>
                                         @else
@@ -284,7 +343,7 @@
             }
             deleteForm = document.createElement('form');
             deleteForm.method = 'POST';
-            deleteForm.action = `/admin/rekam-medis/${id}`;
+            deleteForm.action = `/data/rekam-medis/${id}`;
             deleteForm.style.display = 'none';
 
             // Add CSRF token

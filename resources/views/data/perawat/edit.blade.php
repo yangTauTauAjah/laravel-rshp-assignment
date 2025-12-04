@@ -2,11 +2,11 @@
 
 @section('content')
     <!-- Page Header -->
-    <x-admin-header title="Edit Profil Dokter" subtitle="Perbarui informasi profil dokter"
-        :backRoute="route('admin.dokter.show', $dokter->iddokter)" backText="Kembali ke Detail">
+    <x-admin-header title="Edit Profil Perawat" subtitle="Perbarui informasi profil perawat"
+        :backRoute="route('data.perawat.show', $perawat->idperawat)" backText="Kembali ke Detail">
         
         <x-slot:actionButton>
-            <a href="{{ route('admin.dashboard') }}"
+            <a href="{{ route('data.dashboard') }}"
                 class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
@@ -22,18 +22,18 @@
             <!-- Header -->
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center space-x-4">
-                    <div class="h-12 w-12 bg-rshp-green rounded-full flex items-center justify-center text-white font-bold">
-                        {{ strtoupper(substr($dokter->user->nama, 0, 2)) }}
+                    <div class="h-12 w-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                        {{ strtoupper(substr($perawat->user->nama, 0, 2)) }}
                     </div>
                     <div>
-                        <h3 class="text-lg font-medium text-rshp-dark-gray">Edit Profil: {{ $dokter->user->nama }}</h3>
-                        <p class="text-sm text-gray-600 mt-1">Perbarui informasi profil dokter</p>
+                        <h3 class="text-lg font-medium text-rshp-dark-gray">Edit Profil: {{ $perawat->user->nama }}</h3>
+                        <p class="text-sm text-gray-600 mt-1">Perbarui informasi profil perawat</p>
                     </div>
                 </div>
             </div>
 
             <!-- Form -->
-            <form action="{{ route('admin.dokter.update', $dokter->iddokter) }}" method="POST" class="p-6">
+            <form action="{{ route('data.perawat.update', $perawat->idperawat) }}" method="POST" class="p-6">
                 @csrf
                 @method('PUT')
 
@@ -47,7 +47,7 @@
                             <h4 class="text-sm font-medium text-blue-800">Catatan</h4>
                             <p class="text-sm text-blue-700 mt-1">
                                 Untuk mengubah informasi nama dan email, silakan edit melalui manajemen user. 
-                                Halaman ini hanya untuk mengubah informasi khusus profil dokter.
+                                Halaman ini hanya untuk mengubah informasi khusus profil perawat.
                             </p>
                         </div>
                     </div>
@@ -59,11 +59,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $dokter->user->nama }}</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $perawat->user->nama }}</p>
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Email</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $dokter->user->email }}</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $perawat->user->email }}</p>
                         </div>
                     </div>
                 </div>
@@ -78,8 +78,8 @@
                         <select name="jenis_kelamin" id="jenis_kelamin" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('jenis_kelamin') border-red-500 @enderror">
                             <option value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="M" {{ old('jenis_kelamin', $dokter->jenis_kelamin) == 'M' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="F" {{ old('jenis_kelamin', $dokter->jenis_kelamin) == 'F' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="M" {{ old('jenis_kelamin', $perawat->jenis_kelamin) == 'M' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="F" {{ old('jenis_kelamin', $perawat->jenis_kelamin) == 'F' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                         @error('jenis_kelamin')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -92,25 +92,23 @@
                             Nomor Telepon <span class="text-red-500">*</span>
                         </label>
                         <input type="tel" name="no_hp" id="no_hp" required
-                            value="{{ old('no_hp', $dokter->no_hp) }}"
+                            value="{{ old('no_hp', $perawat->no_hp) }}"
                             placeholder="Contoh: 08123456789"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('no_hp') border-red-500 @enderror">
                         @error('no_hp')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-                </div>
-
-                <!-- Speciality -->
+                </div>                <!-- Speciality -->
                 <div class="mb-6">
-                    <label for="bidang_dokter" class="block text-sm font-medium text-gray-700 mb-2">
-                        Bidang Keahlian <span class="text-red-500">*</span>
+                    <label for="pendidikan" class="block text-sm font-medium text-gray-700 mb-2">
+                        Pendidikan/Keahlian <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="bidang_dokter" id="bidang_dokter" required
-                        value="{{ old('bidang_dokter', $dokter->bidang_dokter) }}"
-                        placeholder="Contoh: Obstetri dan Ginekologi, Pediatri, Anestesi, dll."
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('bidang_dokter') border-red-500 @enderror">
-                    @error('bidang_dokter')
+                    <input type="text" name="pendidikan" id="pendidikan" required
+                        value="{{ old('pendidikan', $perawat->pendidikan) }}"
+                        placeholder="Contoh: D3 Keperawatan, S1 Keperawatan + Spesialis ICU, dll."
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('pendidikan') border-red-500 @enderror">
+                    @error('pendidikan')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -122,7 +120,7 @@
                     </label>
                     <textarea name="alamat" id="alamat" required rows="3"
                         placeholder="Alamat lengkap tempat tinggal"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('alamat') border-red-500 @enderror">{{ old('alamat', $dokter->alamat) }}</textarea>
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rshp-green focus:border-rshp-green @error('alamat') border-red-500 @enderror">{{ old('alamat', $perawat->alamat) }}</textarea>
                     @error('alamat')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -130,7 +128,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                    <a href="{{ route('admin.dokter.show', $dokter->iddokter) }}"
+                    <a href="{{ route('data.perawat.show', $perawat->idperawat) }}"
                         class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                         Batal
                     </a>
@@ -149,7 +147,7 @@
         <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 class="text-lg font-medium text-rshp-dark-gray mb-4">Aksi Lainnya</h3>
             <div class="flex flex-wrap gap-3">
-                {{-- <a href="{{ route('admin.role-user.index') }}"
+                {{-- <a href="{{ route('data.role-user.index') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
@@ -157,7 +155,7 @@
                     Kelola Role User
                 </a> --}}
                 
-                <button onclick="confirmDelete({{ $dokter->iddokter }})"
+                <button onclick="confirmDelete({{ $perawat->idperawat }})"
                     class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -181,7 +179,7 @@
                     <h3 class="text-lg font-medium text-gray-900">Konfirmasi Hapus</h3>
                 </div>
                 <p class="text-sm text-gray-600 mb-6">
-                    Apakah Anda yakin ingin menghapus profil dokter <strong>{{ $dokter->user->nama }}</strong>? 
+                    Apakah Anda yakin ingin menghapus profil perawat <strong>{{ $perawat->user->nama }}</strong>? 
                     Tindakan ini tidak dapat dibatalkan.
                 </p>
                 <div class="flex justify-end space-x-3">
@@ -233,8 +231,8 @@ $(document).ready(function() {
     });
 });
 
-function confirmDelete(dokterId) {
-    document.getElementById('deleteForm').action = `/admin/dokter/${dokterId}`;
+function confirmDelete(perawatId) {
+    document.getElementById('deleteForm').action = `/data/perawat/${perawatId}`;
     document.getElementById('deleteModal').classList.remove('hidden');
     document.getElementById('deleteModal').classList.add('flex');
 }

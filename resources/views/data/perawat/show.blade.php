@@ -3,11 +3,11 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Detail Profil Perawat" subtitle="Informasi lengkap profil perawat"
-        :backRoute="route('admin.perawat.index')" backText="Kembali ke Daftar Perawat">
+        :backRoute="route('data.perawat.index')" backText="Kembali ke Daftar Perawat">
         
         <x-slot:actionButton>
             @if(Auth::user()->isAdministrator())
-                <a href="{{ route('admin.perawat.edit', $perawat->idperawat) }}"
+                <a href="{{ route('data.perawat.edit', $perawat->idperawat) }}"
                     class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -112,7 +112,7 @@
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        {{-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -157,14 +157,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Action Section -->
-        @if(Auth::user()->isAdministrator())
+        {{-- @if(Auth::user()->isAdministrator())
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 class="text-lg font-medium text-rshp-dark-gray mb-4">Aksi Manajemen</h3>
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.perawat.edit', $perawat->idperawat) }}"
+                <a href="{{ route('data.perawat.edit', $perawat->idperawat) }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -181,7 +181,7 @@
                 </a>
             </div>
         </div>
-        @endif
+        @endif --}}
     </div>
 
     <!-- Delete Confirmation Modal -->
@@ -222,7 +222,7 @@
 @push('scripts')
 <script>
 function confirmDelete(perawatId) {
-    document.getElementById('deleteForm').action = `/admin/perawat/${perawatId}`;
+    document.getElementById('deleteForm').action = `/data/perawat/${perawatId}`;
     document.getElementById('deleteModal').classList.remove('hidden');
     document.getElementById('deleteModal').classList.add('flex');
 }

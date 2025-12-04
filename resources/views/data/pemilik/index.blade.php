@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('content')    <!-- Page Header -->    <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
+@section('content')
+    <!-- Page Header -->
+    <x-admin-header title="Kelola Pemilik Hewan" subtitle="Manajemen data pemilik hewan peliharaan"
         :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
         @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
@@ -28,9 +30,9 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {{-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 ID
-                            </th>
+                            </th> --}}
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Nama Pemilik
                             </th>
@@ -54,9 +56,9 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($pemilikList as $pemilik)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{-- <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                     #{{ $pemilik->idpemilik }}
-                                </td>
+                                </td> --}}
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div
@@ -114,8 +116,17 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        {{-- <a href="{{ route('data.pemilik.edit', $pemilik->idpemilik) }}"
+                                            class="text-rshp-green hover:text-green-900" title="Lihat Detail">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
+                                        </a> --}}
                                         @endif
-                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())                                        <button
+                                        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+                                        <button
                                             onclick="deletePemilik({{ $pemilik->idpemilik }}, '{{ $pemilik->nama }}', {{ $pemilik->pets_count }})"
                                             class="text-red-600 hover:text-red-900" title="Hapus">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +165,9 @@
                             </path>
                         </svg>
                     </button>
-                </div>                <!-- Add Pemilik Form -->
+                </div>
+                
+                <!-- Add Pemilik Form -->
                 <form action="{{ route('data.pemilik.store') }}" method="POST" id="addPemilikForm">
                     @csrf
 
@@ -458,7 +471,15 @@
         // Edit Pemilik
         async function editPemilik(pemilikId) {
             try {
-                const response = await fetch(`/admin/pemilik/${pemilikId}`);
+                const response = await fetch(
+                    `/data/pemilik/${pemilikId}`,{
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'   // <-- REQUIRED
+                        }
+                    }
+                );
+
                 const pemilik = await response.json();
 
                 // Populate form fields
@@ -477,12 +498,12 @@
                 }
 
                 // Set form action
-                document.getElementById('editPemilikForm').action = `/admin/pemilik/${pemilikId}`;
+                document.getElementById('editPemilikForm').action = `/data/pemilik/${pemilikId}`;
 
                 // Show modal
                 document.getElementById('editPemilikModal').classList.remove('hidden');
             } catch (error) {
-                console.error('Error fetching pemilik data:', error);
+                console.error('Error fetching pemilik /data/:', error);
                 alert('Gagal memuat data pemilik');
             }
         }

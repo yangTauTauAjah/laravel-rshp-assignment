@@ -22,7 +22,10 @@ class PetController extends Controller
         $query = Pet::with(['rasHewan.jenisHewan', 'pemilik.user']);
         
         // Apply role-based filtering
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator')) {
+        if (Auth::user()->hasRole('Administrator')) {
+            // Administrator: Full access to all pets
+            // No filtering needed
+        } elseif (Auth::user()->hasRole('Pemilik')) {
             // Pemilik users: only show their own pets
             $pemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
@@ -39,7 +42,7 @@ class PetController extends Controller
                 return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
             }
         }
-        // For Administrator and Resepsionis: show all pets
+        // For Resepsionis, Dokter, Perawat: show all pets
 
         $pets = $query->get();
         

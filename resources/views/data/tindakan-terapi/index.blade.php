@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')  <!-- Page Header -->  <x-admin-header title="Manajemen Tindakan Terapi" subtitle="Kelola Kategori, Kategori Klinis, dan Kode Tindakan Terapi"
-    :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+    :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
 
-    @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+    @if(Auth::user()->isAdministrator())
     <x-slot:actionButton>
       <button onclick="openAddKodeTindakanModal()"
         class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
@@ -65,7 +65,7 @@
                   </button>
                   @endif
                   @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-                  <form action="{{ route('admin.kode-tindakan.destroy', $kodeTindakan->idkode_tindakan_terapi) }}"
+                  <form action="{{ route('data.kode-tindakan.destroy', $kodeTindakan->idkode_tindakan_terapi) }}"
                     method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus kode tindakan ini?')">
                     @csrf
                     @method('DELETE')
@@ -123,7 +123,7 @@
                 </button>
                 @endif
                 @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-                <form action="{{ route('admin.kategori.destroy', $kategori->idkategori) }}" method="POST"
+                <form action="{{ route('data.kategori.destroy', $kategori->idkategori) }}" method="POST"
                   onsubmit="return confirm('Yakin ingin menghapus kategori ini?')" class="inline">
                   @csrf
                   @method('DELETE')
@@ -176,7 +176,7 @@
                 </button>
                 @endif
                 @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-                <form action="{{ route('admin.kategori-klinis.destroy', $kategoriKlinis->idkategori_klinis) }}"
+                <form action="{{ route('data.kategori-klinis.destroy', $kategoriKlinis->idkategori_klinis) }}"
                   method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori klinis ini?')" class="inline">
                   @csrf
                   @method('DELETE')
@@ -260,7 +260,7 @@
           </svg>
         </button>
       </div>
-      <form action="{{ route('admin.kategori.store') }}" method="POST" class="mt-4">
+      <form action="{{ route('data.kategori.store') }}" method="POST" class="mt-4">
         @csrf
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2">Nama Kategori</label>
@@ -324,7 +324,7 @@
           </svg>
         </button>
       </div>
-      <form action="{{ route('admin.kategori-klinis.store') }}" method="POST" class="mt-4">
+      <form action="{{ route('data.kategori-klinis.store') }}" method="POST" class="mt-4">
         @csrf
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2">Nama Kategori Klinis</label>
@@ -389,7 +389,7 @@
           </svg>
         </button>
       </div>
-      <form action="{{ route('admin.kode-tindakan.store') }}" method="POST" class="mt-4">
+      <form action="{{ route('data.kode-tindakan.store') }}" method="POST" class="mt-4">
         @csrf
         <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -508,7 +508,7 @@
 
     function openEditKategoriModal(id, nama) {
       document.getElementById('edit_kategori_nama').value = nama;
-      document.getElementById('editKategoriForm').action = `/admin/kategori/${id}`;
+      document.getElementById('editKategoriForm').action = `/data/kategori/${id}`;
       document.getElementById('editKategoriModal').classList.remove('hidden');
     }
 
@@ -527,7 +527,7 @@
 
     function openEditKategoriKlinisModal(id, nama) {
       document.getElementById('edit_kategori_klinis_nama').value = nama;
-      document.getElementById('editKategoriKlinisForm').action = `/admin/kategori-klinis/${id}`;
+      document.getElementById('editKategoriKlinisForm').action = `/data/kategori-klinis/${id}`;
       document.getElementById('editKategoriKlinisModal').classList.remove('hidden');
     }
 
@@ -545,19 +545,19 @@
     }
 
     function editKodeTindakan(id) {
-      fetch(`/admin/kode-tindakan/${id}/edit`)
+      fetch(`/data/kode-tindakan/${id}/edit`)
         .then(response => response.json())
         .then(data => {
           document.getElementById('edit_kode').value = data.kode;
           document.getElementById('edit_deskripsi').value = data.deskripsi_tindakan_terapi;
           document.getElementById('edit_idkategori').value = data.idkategori;
           document.getElementById('edit_idkategori_klinis').value = data.idkategori_klinis;
-          document.getElementById('editKodeTindakanForm').action = `/admin/kode-tindakan/${id}`;
+          document.getElementById('editKodeTindakanForm').action = `/data/kode-tindakan/${id}`;
           document.getElementById('editKodeTindakanModal').classList.remove('hidden');
         })
         .catch(error => {
           console.error('Error:', error);
-          alert('Gagal memuat data');
+          alert('Gagal memuat /data/');
         });
     }
 

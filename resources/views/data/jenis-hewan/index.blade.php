@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
-@section('content')    <!-- Page Header -->    <x-admin-header title="Kelola Jenis & Ras Hewan" subtitle="Manajemen data jenis hewan dan ras yang terkait"
-        :backRoute="route(Auth::user()->isAdministrator() ? 'admin.dashboard' : 'data.dashboard')" backText="Kembali ke Dashboard">        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
+@section('content')    <!-- Page Header -->
+    <x-admin-header title="Kelola Jenis & Ras Hewan" subtitle="Manajemen data jenis hewan dan ras yang terkait"
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
             <x-slot:actionButton>
                 <button onclick="openAddJenisModal()"
                     class="bg-rshp-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center">
@@ -339,12 +340,13 @@
 
             // Set the form action
             const form = document.getElementById('editRasForm');
-            form.action = `/admin/ras-hewan/${rasId}`;
+            form.action = `/data/ras-hewan/${rasId}`;
 
             openEditRasModal();
         }
 
-        // Delete Functions        function deleteRas(rasId, rasName) {
+        // Delete Functions
+        function deleteRas(rasId, rasName) {
             if (confirm(`Apakah Anda yakin ingin menghapus ras "${rasName}"?`)) {
                 const form = document.createElement('form');
                 form.method = 'POST';
@@ -367,7 +369,9 @@
                 document.body.appendChild(form);
                 form.submit();
             }
-        }        function deleteJenis(jenisId, jenisName) {
+        }
+
+        function deleteJenis(jenisId, jenisName) {
             if (confirm(`Apakah Anda yakin ingin menghapus jenis hewan "${jenisName}"?\n\nPeringatan: Semua ras yang terkait dengan jenis ini juga akan terhapus.`)) {
                 const form = document.createElement('form');
                 form.method = 'POST';

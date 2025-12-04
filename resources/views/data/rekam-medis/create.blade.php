@@ -130,10 +130,10 @@
     <script>
         let tindakanCounter = 0;
         let kodeTindakanData = [];        // Load treatment codes
-        fetch('/admin/rekam-medis/kode-tindakan')
+        fetch('/data/rekam-medis/kode-tindakan')
             .then(response => response.json())
             .then(data => {
-                kodeTindakanData = data;
+                kodeTindakanData = /data/;
             })
             .catch(error => {
                 console.error('Error loading treatment codes:', error);

@@ -122,7 +122,7 @@
         </div>
 
         <!-- Statistics and Quick Actions -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Pet Statistics -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-medium text-rshp-dark-gray mb-4">Statistik Hewan</h3>
@@ -164,6 +164,6 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection

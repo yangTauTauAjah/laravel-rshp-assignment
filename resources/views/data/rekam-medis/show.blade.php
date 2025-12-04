@@ -2,10 +2,10 @@
 
 @section('content')
     <!-- Page Header -->
-    <x-admin-header title="Detail Rekam Medis" subtitle="Informasi lengkap rekam medis hewan peliharaan"
-        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
+    <x-admin-header title="Edit Data Rekam Medis" subtitle="Edit informasi utama rekam medis (hanya data, bukan detail tindakan)"
+        :backRoute="route('data.rekam-medis.index')" backText="Kembali ke Rekam Medis" >
 
-        @if($canEdit)
+        {{-- @if(Auth::user()->isAdministrator() || Auth::user()->isPerawat())
         <x-slot:actionButton>
             <a href="{{ route('data.rekam-medis.edit', $rekamMedis->idrekam_medis) }}"
                 class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
@@ -17,7 +17,7 @@
                 Edit Rekam Medis
             </a>
         </x-slot:actionButton>
-        @endif
+        @endif --}}
     </x-admin-header>
 
     <div class="mx-auto my-6 max-w-7xl w-full flex-1">

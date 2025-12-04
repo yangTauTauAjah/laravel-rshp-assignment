@@ -48,7 +48,7 @@ class PemilikController extends Controller
             ->select('iduser', 'nama', 'email')
             ->get();
 
-        return view('admin.pemilik.index', compact('pemilikList', 'availableUsers'));
+        return view('data.pemilik.index', compact('pemilikList', 'availableUsers'));
     }
     
     /**
@@ -67,7 +67,7 @@ class PemilikController extends Controller
             // Check if user is already a pemilik
             $existingPemilik = Pemilik::where('iduser', $request->existing_user_id)->first();
             if ($existingPemilik) {
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('error', 'User ini sudah terdaftar sebagai pemilik hewan');
             }
 
@@ -85,13 +85,30 @@ class PemilikController extends Controller
                     'alamat' => $request->alamat,
                 ]);
 
+                // Assign Pemilik role to the user
+                $pemilikRole = DB::table('role')->where('nama_role', 'Pemilik')->first();
+                if ($pemilikRole) {
+                    // Check if user doesn't already have this role
+                    $existingRole = DB::table('role_user')
+                        ->where('iduser', $request->existing_user_id)
+                        ->where('idrole', $pemilikRole->idrole)
+                        ->exists();
+                    
+                    if (!$existingRole) {
+                        DB::table('role_user')->insert([
+                            'iduser' => $request->existing_user_id,
+                            'idrole' => $pemilikRole->idrole
+                        ]);
+                    }
+                }
+
                 DB::commit();
 
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('success', 'Data pemilik hewan berhasil ditambahkan dari user yang sudah ada');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('error', 'Gagal menambahkan data pemilik: ' . $e->getMessage());
             }
         } else {
@@ -144,11 +161,11 @@ class PemilikController extends Controller
 
                 DB::commit();
 
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('success', 'Data pemilik hewan berhasil ditambahkan dengan user baru');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('admin.pemilik.index')
+                return redirect()->route('data.pemilik.index')
                     ->with('error', 'Gagal menambahkan data pemilik: ' . $e->getMessage());
             }
         }
@@ -191,11 +208,11 @@ class PemilikController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('success', 'Data pemilik hewan berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Gagal memperbarui data pemilik: ' . $e->getMessage());
         }
     }
@@ -216,11 +233,11 @@ class PemilikController extends Controller
             ->first();
 
         if (!$pemilik) {
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Profil pemilik tidak ditemukan');
         }
 
-        return view('admin.pemilik.edit', compact('pemilik'));
+        return view('data.pemilik.edit', compact('pemilik'));
     }
 
     /**
@@ -232,7 +249,7 @@ class PemilikController extends Controller
         
         // Check if pemilik has pets
         /* if ($pemilik->pets()->count() > 0) {
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Tidak dapat menghapus pemilik yang memiliki hewan peliharaan terdaftar');
         } */
 
@@ -247,11 +264,11 @@ class PemilikController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('success', 'Profil pemilik hewan berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Gagal menonaktifkan data pemilik: ' . $e->getMessage());
         }
     }
@@ -259,7 +276,7 @@ class PemilikController extends Controller
     /**
      * Display the specified pemilik details
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $pemilik = DB::table('pemilik')
             ->join('user', 'pemilik.iduser', '=', 'user.iduser')
@@ -280,10 +297,14 @@ class PemilikController extends Controller
             ->first();
 
         if (!$pemilik) {
-            return redirect()->route('admin.pemilik.index')
+            return redirect()->route('data.pemilik.index')
                 ->with('error', 'Profil pemilik tidak ditemukan');
         }
 
-        return view('admin.pemilik.show', compact('pemilik'));
+        if ($request->ajax()) {
+            return response()->json($pemilik);
+        }
+
+        return view('data.pemilik.show', compact('pemilik'));
     }
 }

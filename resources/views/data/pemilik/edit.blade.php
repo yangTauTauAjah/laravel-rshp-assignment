@@ -239,7 +239,7 @@ $(document).ready(function() {
 });
 
 function confirmDelete(pemilikId) {
-    document.getElementById('deleteForm').action = `/admin/pemilik/${pemilikId}`;
+    document.getElementById('deleteForm').action = `/data/pemilik/${pemilikId}`;
     document.getElementById('deleteModal').classList.remove('hidden');
     document.getElementById('deleteModal').classList.add('flex');
 }

@@ -60,7 +60,7 @@ class EmailVerificationTest extends TestCase
     {
         $user = User::factory()->unverified()->create();
 
-        $response = $this->actingAs($user)->get('/admin/dashboard');
+        $response = $this->actingAs($user)->get('/data/dashboard');
 
         $response->assertRedirect('/verify-email');
     }

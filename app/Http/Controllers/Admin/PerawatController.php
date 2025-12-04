@@ -30,7 +30,7 @@ class PerawatController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.perawat.index', compact('perawatList'));
+        return view('data.perawat.index', compact('perawatList'));
     }
 
     /**
@@ -51,7 +51,7 @@ class PerawatController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.perawat.create', compact('availableUsers'));
+        return view('data.perawat.create', compact('availableUsers'));
     }
 
     /**
@@ -90,7 +90,7 @@ class PerawatController extends Controller
                 }
             });
 
-            return redirect()->route('admin.perawat.index')
+            return redirect()->route('data.perawat.index')
                 ->with('success', 'Profil perawat berhasil ditambahkan dan role Perawat telah diberikan');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -118,11 +118,11 @@ class PerawatController extends Controller
             ->first();
 
         if (!$perawat) {
-            return redirect()->route('admin.perawat.index')
+            return redirect()->route('data.perawat.index')
                 ->with('error', 'Profil perawat tidak ditemukan');
         }
 
-        return view('admin.perawat.show', compact('perawat'));
+        return view('data.perawat.show', compact('perawat'));
     }
 
     /**
@@ -132,7 +132,7 @@ class PerawatController extends Controller
     {
         $perawat = Perawat::findOrFail($id);
         
-        return view('admin.perawat.edit', compact('perawat'));
+        return view('data.perawat.edit', compact('perawat'));
     }
 
     /**
@@ -151,7 +151,7 @@ class PerawatController extends Controller
             $perawat = Perawat::findOrFail($id);
             $perawat->update($request->only(['alamat', 'no_hp', 'pendidikan', 'jenis_kelamin']));
 
-            return redirect()->route('admin.perawat.index')
+            return redirect()->route('data.perawat.index')
                 ->with('success', 'Profil perawat berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -175,10 +175,10 @@ class PerawatController extends Controller
                 ->where('role.nama_role', 'Perawat')
                 ->update(['role_user.status' => 0]);
 
-            return redirect()->route('admin.perawat.index')
+            return redirect()->route('data.perawat.index')
                 ->with('success', 'Profil perawat berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->route('admin.perawat.index')
+            return redirect()->route('data.perawat.index')
                 ->with('error', 'Gagal menonaktifkan profil perawat: ' . $e->getMessage());
         }
     }

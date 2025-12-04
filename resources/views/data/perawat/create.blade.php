@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Daftarkan Perawat Baru" subtitle="Tambahkan profil perawat ke sistem"
-        :backRoute="route('admin.perawat.index')" backText="Kembali ke Daftar Perawat" />
+        :backRoute="route('data.perawat.index')" backText="Kembali ke Daftar Perawat" />
 
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -26,11 +26,11 @@
                         Sistem akan menampilkan user yang belum memiliki role Perawat untuk dapat diberikan akses sebagai perawat.
                     </p>
                     <div class="flex justify-center space-x-4">
-                        <a href="{{ route('admin.perawat.create-with-user') }}"
+                        <a href="{{ route('data.perawat.create-with-user') }}"
                             class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                             Buat User & Perawat Baru
                         </a>
-                        <a href="{{ route('admin.perawat.index') }}"
+                        <a href="{{ route('data.perawat.index') }}"
                             class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors">
                             Kembali
                         </a>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             @else
-            <form action="{{ route('admin.perawat.store') }}" method="POST" class="p-6">
+            <form action="{{ route('data.perawat.store') }}" method="POST" class="p-6">
                 @csrf
 
                 <!-- User Selection -->
@@ -125,7 +125,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                    <a href="{{ route('admin.perawat.index') }}"
+                    <a href="{{ route('data.perawat.index') }}"
                         class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                         Batal
                     </a>

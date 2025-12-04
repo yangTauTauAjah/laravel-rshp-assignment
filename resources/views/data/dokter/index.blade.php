@@ -3,18 +3,18 @@
 @section('content')
     <!-- Page Header -->
     <x-admin-header title="Manajemen Data Dokter" subtitle="Kelola profil dokter dan registrasi"
-        :backRoute="route('admin.dashboard')" backText="Kembali ke Dashboard">
+        :backRoute="route('data.dashboard')" backText="Kembali ke Dashboard">
         
         <x-slot:actionButton>
-            @if(Auth::user()->isAdministrator())
-                <a href="{{ route('admin.dokter.create') }}"
+            {{-- @if(Auth::user()->isAdministrator()) --}}
+                <a href="{{ route('data.dokter.create') }}"
                     class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                     Daftarkan Dokter Baru
                 </a>
-            @endif
+            {{-- @endif --}}
         </x-slot:actionButton>
     </x-admin-header>
 
@@ -101,7 +101,7 @@
                                 </td> --}}
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('admin.dokter.show', $dokter->iddokter) }}"
+                                        <a href="{{ route('data.dokter.show', $dokter->iddokter) }}"
                                             class="text-rshp-green hover:text-green-900" title="Lihat Detail">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -111,8 +111,8 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                        @if(Auth::user()->isAdministrator())
-                                        <a href="{{ route('admin.dokter.edit', $dokter->iddokter) }}"
+                                        {{-- @if(Auth::user()->isAdministrator()) --}}
+                                        <a href="{{ route('data.dokter.edit', $dokter->iddokter) }}"
                                             class="text-rshp-blue hover:text-blue-900" title="Edit">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -128,7 +128,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @endif
+                                        {{-- @endif --}}
                                     </div>
                                 </td>
                             </tr>
@@ -142,15 +142,15 @@
                                         </svg>
                                         <p class="text-lg font-medium text-gray-900 mb-2">Belum ada data dokter</p>
                                         <p class="text-gray-500 mb-4">Mulai dengan mendaftarkan dokter pertama</p>
-                                        @if(Auth::user()->isAdministrator())
-                                        <a href="{{ route('admin.dokter.create') }}" 
+                                        {{-- @if(Auth::user()->isAdministrator()) --}}
+                                        <a href="{{ route('data.dokter.create') }}" 
                                            class="inline-flex items-center px-4 py-2 bg-rshp-blue text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                             </svg>
                                             Daftarkan Dokter Baru
                                         </a>
-                                        @endif
+                                        {{-- @endif --}}
                                     </div>
                                 </td>
                             </tr>
@@ -207,7 +207,7 @@
             }
             deleteForm = document.createElement('form');
             deleteForm.method = 'POST';
-            deleteForm.action = `/admin/dokter/${id}`;
+            deleteForm.action = `/data/dokter/${id}`;
             deleteForm.style.display = 'none';
 
             const csrfInput = document.createElement('input');

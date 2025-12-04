@@ -37,7 +37,7 @@ class DokterController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.dokter.index', compact('dokterList'));
+        return view('data.dokter.index', compact('dokterList'));
     }
 
     /**
@@ -58,7 +58,7 @@ class DokterController extends Controller
             ->orderBy('user.nama')
             ->get();
 
-        return view('admin.dokter.create', compact('availableUsers'));
+        return view('data.dokter.create', compact('availableUsers'));
     }
 
     /**
@@ -66,7 +66,7 @@ class DokterController extends Controller
      */
     /* public function createWithUser()
     {
-        return view('admin.dokter.create-with-user');
+        return view('data.dokter.create-with-user');
     } */
 
     /**
@@ -110,7 +110,7 @@ class DokterController extends Controller
                 }
             });
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'Profil dokter berhasil ditambahkan dan role Dokter telah diberikan');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -150,7 +150,7 @@ class DokterController extends Controller
                 ]
             );
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'User dan profil dokter berhasil dibuat dengan role Dokter');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -178,11 +178,11 @@ class DokterController extends Controller
             ->first();
 
         if (!$dokter) {
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('error', 'Profil dokter tidak ditemukan');
         }
 
-        return view('admin.dokter.show', compact('dokter'));
+        return view('data.dokter.show', compact('dokter'));
     }
 
     /**
@@ -192,7 +192,7 @@ class DokterController extends Controller
     {
         $dokter = Dokter::findOrFail($id);
         
-        return view('admin.dokter.edit', compact('dokter'));
+        return view('data.dokter.edit', compact('dokter'));
     }
 
     /**
@@ -211,7 +211,7 @@ class DokterController extends Controller
             $dokter = Dokter::findOrFail($id);
             $dokter->update($request->only(['alamat', 'no_hp', 'bidang_dokter', 'jenis_kelamin']));
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'Profil dokter berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -235,10 +235,10 @@ class DokterController extends Controller
                 ->where('role.nama_role', 'Dokter')
                 ->update(['role_user.status' => 0]);
 
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('success', 'Profil dokter berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->route('admin.dokter.index')
+            return redirect()->route('data.dokter.index')
                 ->with('error', 'Gagal menonaktifkan profil dokter: ' . $e->getMessage());
         }
     }

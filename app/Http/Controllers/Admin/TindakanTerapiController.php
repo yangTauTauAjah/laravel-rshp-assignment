@@ -19,7 +19,7 @@ class TindakanTerapiController extends Controller
             ->orderBy('kode')
             ->get();
         
-        return view('admin.tindakan-terapi.index', compact('kategoris', 'kategoriKlinises', 'kodeTindakanTerapis'));
+        return view('data.tindakan-terapi.index', compact('kategoris', 'kategoriKlinises', 'kodeTindakanTerapis'));
     }
 
     // ===== KATEGORI METHODS =====
@@ -29,11 +29,19 @@ class TindakanTerapiController extends Controller
             'nama_kategori' => 'required|string|max:255|unique:kategori,nama_kategori'
         ]);
 
-        Kategori::create([
+        $lastId = DB::table('kategori')->max('idkategori');
+        $newId = $lastId ? $lastId + 1 : 1;
+
+        DB::table('kategori')->insert([
+            'idkategori' => $newId,
             'nama_kategori' => $request->nama_kategori
         ]);
+        /* Kategori::create([
+            'idkategori' => $newId,
+            'nama_kategori' => $request->nama_kategori
+        ]); */
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kategori berhasil ditambahkan');
     }
 
@@ -49,7 +57,7 @@ class TindakanTerapiController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kategori berhasil diperbarui');
     }
 
@@ -59,13 +67,13 @@ class TindakanTerapiController extends Controller
 
         // Check if kategori has related kode tindakan terapi
         if ($kategori->kodeTindakanTerapi()->count() > 0) {
-            return redirect()->route('admin.tindakan-terapi.index')
+            return redirect()->route('data.tindakan-terapi.index')
                 ->with('error', 'Kategori tidak dapat dihapus karena masih memiliki kode tindakan terapi terkait');
         }
 
         $kategori->delete();
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kategori berhasil dihapus');
     }
 
@@ -76,11 +84,19 @@ class TindakanTerapiController extends Controller
             'nama_kategori_klinis' => 'required|string|max:255|unique:kategori_klinis,nama_kategori_klinis'
         ]);
 
-        KategoriKlinis::create([
+        $lastId = DB::table('kategori_klinis')->max('idkategori_klinis');
+        $newId = $lastId ? $lastId + 1 : 1;
+
+        DB::table('kategori_klinis')->insert([
+            'idkategori_klinis' => $newId,
             'nama_kategori_klinis' => $request->nama_kategori_klinis
         ]);
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        /* KategoriKlinis::create([
+            'nama_kategori_klinis' => $request->nama_kategori_klinis
+        ]); */
+
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kategori Klinis berhasil ditambahkan');
     }
 
@@ -96,7 +112,7 @@ class TindakanTerapiController extends Controller
             'nama_kategori_klinis' => $request->nama_kategori_klinis
         ]);
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kategori Klinis berhasil diperbarui');
     }
 
@@ -106,13 +122,13 @@ class TindakanTerapiController extends Controller
 
         // Check if kategori klinis has related kode tindakan terapi
         if ($kategoriKlinis->kodeTindakanTerapi()->count() > 0) {
-            return redirect()->route('admin.tindakan-terapi.index')
+            return redirect()->route('data.tindakan-terapi.index')
                 ->with('error', 'Kategori Klinis tidak dapat dihapus karena masih memiliki kode tindakan terapi terkait');
         }
 
         $kategoriKlinis->delete();
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kategori Klinis berhasil dihapus');
     }
 
@@ -136,10 +152,10 @@ class TindakanTerapiController extends Controller
                 'idkategori_klinis' => $request->idkategori_klinis
             ]);
 
-            return redirect()->route('admin.tindakan-terapi.index')
+            return redirect()->route('data.tindakan-terapi.index')
                 ->with('success', 'Kode Tindakan Terapi berhasil ditambahkan');
         } catch (\Exception $e) {
-            return redirect()->route('admin.tindakan-terapi.index')
+            return redirect()->route('data.tindakan-terapi.index')
                 ->with('error', 'Gagal menambahkan data: ' . $e->getMessage());
         }
     }
@@ -168,7 +184,7 @@ class TindakanTerapiController extends Controller
             'idkategori_klinis' => $request->idkategori_klinis
         ]);
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kode Tindakan Terapi berhasil diperbarui');
     }
 
@@ -178,13 +194,13 @@ class TindakanTerapiController extends Controller
 
         // Check if kode tindakan has related detail rekam medis
         if ($kodeTindakan->detailRekamMedis()->count() > 0) {
-            return redirect()->route('admin.tindakan-terapi.index')
+            return redirect()->route('data.tindakan-terapi.index')
                 ->with('error', 'Kode Tindakan Terapi tidak dapat dihapus karena sudah digunakan dalam rekam medis');
         }
 
         $kodeTindakan->delete();
 
-        return redirect()->route('admin.tindakan-terapi.index')
+        return redirect()->route('data.tindakan-terapi.index')
             ->with('success', 'Kode Tindakan Terapi berhasil dihapus');
     }
 }

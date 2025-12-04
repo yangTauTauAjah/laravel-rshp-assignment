@@ -24,7 +24,10 @@ class RekamMedisController extends Controller
             ->leftJoin('user as dokter_user', 'role_user.iduser', '=', 'dokter_user.iduser');
 
         // Apply role-based filtering
-        if (Auth::user()->hasRole('Dokter')) {
+        if (Auth::user()->hasRole('Administrator')) {
+            // Administrator: Full access to all medical records
+            // No filtering needed
+        } elseif (Auth::user()->hasRole('Dokter')) {
             // Dokter users: only show their own medical records
             $doctorRoleUser = DB::table('role_user')
                 ->join('role', 'role_user.idrole', '=', 'role.idrole')
@@ -52,7 +55,7 @@ class RekamMedisController extends Controller
                 return view('data.rekam-medis.index', ['rekamMedisList' => collect()]);
             }
         }
-        // For Perawat: show all medical records
+        // For Perawat and Administrator: show all medical records
 
         $rekamMedisList = $query->select(
                 'rekam_medis.*',
@@ -212,11 +215,11 @@ class RekamMedisController extends Controller
                 return redirect()->route('data.rekam-medis.index')
                     ->with('error', 'Anda hanya dapat mengedit rekam medis yang Anda buat.');
             }
-        } elseif (!Auth::user()->hasRole('Perawat')) {
+        }/*  elseif (!Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Perawat')) {
             // Only Dokter and Perawat can edit
             return redirect()->route('data.rekam-medis.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit rekam medis.');
-        }
+        } */
 
         // Get detail records (for Dokter only)
         $detailRekamMedis = collect();
@@ -226,7 +229,7 @@ class RekamMedisController extends Controller
             $detailRekamMedis = DB::table('detail_rekam_medis')
                 ->join('kode_tindakan_terapi', 'detail_rekam_medis.idkode_tindakan_terapi', '=', 'kode_tindakan_terapi.idkode_tindakan_terapi')
                 ->where('detail_rekam_medis.idrekam_medis', $id)
-                ->select('detail_rekam_medis.*', 'kode_tindakan_terapi.nama_tindakan')
+                ->select('detail_rekam_medis.*', 'kode_tindakan_terapi.deskripsi_tindakan_terapi')
                 ->get();
             
             $kodeTindakanList = DB::table('kode_tindakan_terapi')
@@ -273,11 +276,11 @@ class RekamMedisController extends Controller
                 return redirect()->route('data.rekam-medis.index')
                     ->with('error', 'Anda hanya dapat mengedit rekam medis yang Anda buat.');
             }
-        } elseif (!Auth::user()->hasRole('Perawat')) {
+        }/*  elseif (!Auth::user()->hasRole('Perawat')) {
             // Only Dokter and Perawat can edit
             return redirect()->route('data.rekam-medis.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit rekam medis.');
-        }
+        } */
 
         $request->validate([
             'anamnesa' => 'required|string',
