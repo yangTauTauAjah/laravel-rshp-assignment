@@ -25,9 +25,12 @@ class RekamMedisController extends Controller
             ->join('ras_hewan', 'pet.idras_hewan', '=', 'ras_hewan.idras_hewan')
             ->join('jenis_hewan', 'ras_hewan.idjenis_hewan', '=', 'jenis_hewan.idjenis_hewan');
             
-        // Apply role-based filtering
-        if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
-            // Filter for dokter users: only show their own records
+        // Apply hierarchical role-based filtering
+        if (Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Perawat')) {
+            // Administrator, Perawat: no query modification, show all records
+            // No additional filtering needed
+        } elseif (Auth::user()->hasRole('Dokter')) {
+            // Dokter: filter query based on dokter id
             $dokterRoleUserId = DB::table('role_user')
                 ->join('role', 'role_user.idrole', '=', 'role.idrole')
                 ->where('role_user.iduser', Auth::user()->iduser)
@@ -45,11 +48,8 @@ class RekamMedisController extends Controller
                 $userRole = 'Dokter';
                 return view('data.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
             }
-        } elseif (Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
-            // Filter for perawat users: show records where they are involved (for now show all records)
-            // Perawat can assist with any medical record
-        } elseif (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
-            // Filter for pemilik users: only show their own pets' records
+        } elseif (Auth::user()->hasRole('Pemilik')) {
+            // Pemilik: filter query based on pemilik user id
             $pemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -65,7 +65,6 @@ class RekamMedisController extends Controller
                 return view('data.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
             }
         }
-        // For Administrator, Perawat, and Resepsionis: show all records (no additional filtering)
 
         $rekamMedisList = $query
             ->select(
@@ -104,115 +103,21 @@ class RekamMedisController extends Controller
             ->select('role_user.idrole_user', 'user.nama')
             ->get();
         
-        // Get current user role for the view
+        // Get current user role for the view - hierarchical determination
         $userRole = 'Administrator'; // default for Administrator
-        if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
-            $userRole = 'Dokter';
-        } elseif (Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        if (Auth::user()->hasRole('Administrator')) {
+            $userRole = 'Administrator';
+        } elseif (Auth::user()->hasRole('Perawat')) {
             $userRole = 'Perawat';
-        } elseif (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
+        } elseif (Auth::user()->hasRole('Dokter')) {
+            $userRole = 'Dokter';
+        } elseif (Auth::user()->hasRole('Pemilik')) {
             $userRole = 'Pemilik';
-        } elseif (Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Administrator')) {
+        } elseif (Auth::user()->hasRole('Resepsionis')) {
             $userRole = 'Resepsionis';
         }
         
         return view('data.rekam-medis.index', compact('rekamMedisList', 'pets', 'doctors', 'userRole'));
-    }
-
-    /**
-     * Show the form for creating a new medical record
-     */
-    /**
-     * Show the form for creating a new medical record (handled via modal in index view)
-     */
-    public function create()
-    {
-        // Since we use modals, redirect to index
-        return redirect()->route('data.rekam-medis.index');
-    }    
-    /**
-     * Store a newly created medical record
-     */
-    public function store(Request $request)
-    {
-        try {
-            $request->validate([
-                'anamnesa' => 'required|string',
-                'temuan_klinis' => 'required|string',
-                'diagnosa' => 'required|string',
-                'idpet' => 'required|exists:pet,idpet',
-                'dokter_pemeriksa' => 'required|exists:role_user,idrole_user',
-                'detail_tindakan' => 'array',
-                'detail_tindakan.*.idkode_tindakan_terapi' => 'required|exists:kode_tindakan_terapi,idkode_tindakan_terapi',
-                'detail_tindakan.*.detail' => 'nullable|string',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Return JSON response for AJAX requests on validation failure
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data tidak valid',
-                    'errors' => $e->errors()
-                ], 422);
-            }
-            throw $e; // Re-throw for non-AJAX requests
-        }
-
-        DB::beginTransaction();
-        try {
-            // Insert medical record
-            $rekamMedisId = DB::table('rekam_medis')->insertGetId([
-                'anamnesa' => $request->anamnesa,
-                'temuan_klinis' => $request->temuan_klinis,
-                'diagnosa' => $request->diagnosa,
-                'idpet' => $request->idpet,
-                'dokter_pemeriksa' => $request->dokter_pemeriksa,
-                'created_at' => now(),
-            ]);
-
-            // Insert detail records if provided
-            if ($request->has('detail_tindakan') && is_array($request->detail_tindakan)) {
-                foreach ($request->detail_tindakan as $detail) {
-                    if (!empty($detail['idkode_tindakan_terapi'])) {
-                        DB::table('detail_rekam_medis')->insert([
-                            'idrekam_medis' => $rekamMedisId,
-                            'idkode_tindakan_terapi' => $detail['idkode_tindakan_terapi'],
-                            'detail' => $detail['detail'] ?? null,
-                        ]);
-                    }
-                }
-            }
-
-            DB::commit();
-
-            // Return JSON response for AJAX requests
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Rekam medis berhasil ditambahkan',
-                    'data' => [
-                        'id' => $rekamMedisId
-                    ]
-                ]);
-            }
-
-            return redirect()->route('data.rekam-medis.index')
-                ->with('success', 'Rekam medis berhasil ditambahkan');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            // Return JSON response for AJAX requests
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal menambahkan rekam medis: ' . $e->getMessage()
-                ], 422);
-            }
-
-            return redirect()->back()
-                ->with('error', 'Gagal menambahkan rekam medis: ' . $e->getMessage())
-                ->withInput();
-        }
     }
 
     /**
@@ -302,15 +207,6 @@ class RekamMedisController extends Controller
         }
 
         return view('data.rekam-medis.show', compact('rekamMedis', 'detailRekamMedis', 'canEdit'));
-    }
-
-    /**
-     * Show the form for editing the specified medical record
-     */
-    public function edit($id)
-    {
-        // Since we use modals and have separate edit functions, redirect to index
-        return redirect()->route('data.rekam-medis.index');
     }
 
     /**
@@ -531,131 +427,6 @@ class RekamMedisController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui detail tindakan: ' . $e->getMessage())
                 ->withInput();
-        }
-    }
-
-    /**
-     * Update the specified medical record (legacy method - now redirects to appropriate edit)
-     */
-    public function update(Request $request, $id)
-    {
-        // Redirect based on user role to appropriate update method
-        if (Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator')) {
-            return $this->updateData($request, $id);
-        } elseif (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Administrator')) {
-            return $this->updateDetail($request, $id);
-        } else {
-            // For Administrator or users with multiple roles, default to data update
-            return $this->updateData($request, $id);
-        }
-    }
-
-    /**
-     * Remove the specified medical record
-     */
-    public function destroy($id)
-    {
-        $rekamMedis = DB::table('rekam_medis')->where('idrekam_medis', $id)->first();
-        if (!$rekamMedis) {
-            abort(404);
-        }
-
-        DB::beginTransaction();
-        try {
-            // Delete detail records first
-            DB::table('detail_rekam_medis')->where('idrekam_medis', $id)->delete();
-            
-            // Delete medical record
-            DB::table('rekam_medis')->where('idrekam_medis', $id)->delete();
-
-            DB::commit();
-
-            return redirect()->route('data.rekam-medis.index')
-                ->with('success', 'Rekam medis berhasil dihapus');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('data.rekam-medis.index')
-                ->with('error', 'Gagal menghapus rekam medis: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Get treatment codes for AJAX
-     */
-    public function getKodeTindakan()
-    {
-        $kodeTindakan = DB::table('kode_tindakan_terapi')
-            ->join('kategori', 'kode_tindakan_terapi.idkategori', '=', 'kategori.idkategori')
-            ->join('kategori_klinis', 'kode_tindakan_terapi.idkategori_klinis', '=', 'kategori_klinis.idkategori_klinis')
-            ->select(
-                'kode_tindakan_terapi.idkode_tindakan_terapi',
-                'kode_tindakan_terapi.kode',
-                'kode_tindakan_terapi.deskripsi_tindakan_terapi',
-                'kategori.nama_kategori',
-                'kategori_klinis.nama_kategori_klinis'
-            )
-            ->get();
-
-        return response()->json($kodeTindakan);
-    }
-
-    /**
-     * Delete a specific detail tindakan from rekam medis
-     */    
-    public function deleteDetail($detailId)
-    {
-        // Authorization check - only dokter and administrator can manage details
-        if (!Auth::user()->hasRole('Administrator') && 
-            !(Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Perawat'))) {
-            return redirect()->back()
-                ->with('error', 'Anda tidak memiliki akses untuk menghapus detail tindakan.');
-        }
-
-        try {
-            // Get the detail record first to check if it exists and get the rekam_medis ID
-            $detail = DB::table('detail_rekam_medis')
-                ->where('iddetail_rekam_medis', $detailId)
-                ->first();
-
-            if (!$detail) {
-                return redirect()->back()
-                    ->with('error', 'Detail tindakan tidak ditemukan.');
-            }
-
-            // If user is dokter (not admin), check if they are the examining doctor
-            if (Auth::user()->hasRole('Dokter') && !Auth::user()->hasRole('Administrator')) {
-                $rekamMedis = DB::table('rekam_medis')
-                    ->where('idrekam_medis', $detail->idrekam_medis)
-                    ->first();
-                
-                $dokterRoleUserId = DB::table('role_user')
-                    ->join('role', 'role_user.idrole', '=', 'role.idrole')
-                    ->where('role_user.iduser', Auth::user()->iduser)
-                    ->where('role.nama_role', 'Dokter')
-                    ->where('role_user.status', 1)
-                    ->value('role_user.idrole_user');
-                
-                if (!$dokterRoleUserId || $rekamMedis->dokter_pemeriksa != $dokterRoleUserId) {
-                    return redirect()->back()
-                        ->with('error', 'Anda hanya dapat menghapus detail tindakan dari rekam medis yang Anda periksa sendiri.');
-                }
-            }
-
-            // Delete the detail record
-            $affected = DB::table('detail_rekam_medis')
-                ->where('iddetail_rekam_medis', $detailId)
-                ->delete();
-
-            if ($affected > 0) {
-                return redirect()->back()
-                    ->with('success', 'Detail tindakan berhasil dihapus.');
-            } else {
-                return redirect()->back()
-                    ->with('error', 'Gagal menghapus detail tindakan.');
-            }
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

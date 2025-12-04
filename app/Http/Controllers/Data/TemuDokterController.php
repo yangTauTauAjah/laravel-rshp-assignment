@@ -14,18 +14,34 @@ class TemuDokterController extends Controller
      */
     public function index()
     {
+        // Base query for temu dokter
         $query = DB::table('temu_dokter')
             ->join('role_user', 'temu_dokter.idrole_user', '=', 'role_user.idrole_user')
             ->join('user', 'role_user.iduser', '=', 'user.iduser')
             ->join('role', 'role_user.idrole', '=', 'role.idrole')
             ->where('role.nama_role', 'Dokter');
 
-        // Apply role-based filtering
-        if (Auth::user()->hasRole('Administrator')) {
-            // Administrator: Full access to all appointments
-            // No filtering needed
+        // Apply hierarchical role-based filtering
+        if (Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Resepsionis') || Auth::user()->hasRole('Perawat')) {
+            // Administrator, Resepsionis, Perawat: no query modification, show all appointments
+            // No additional filtering needed
+        } elseif (Auth::user()->hasRole('Dokter')) {
+            // Dokter: filter query based on dokter id
+            $dokterRoleUserId = DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', Auth::user()->iduser)
+                ->where('role.nama_role', 'Dokter')
+                ->where('role_user.status', 1)
+                ->value('role_user.idrole_user');
+            
+            if ($dokterRoleUserId) {
+                $query->where('temu_dokter.idrole_user', $dokterRoleUserId);
+            } else {
+                // If no active dokter role found, show no appointments
+                return view('data.temu-dokter.index', ['temuDokterList' => collect(), 'doctors' => collect()]);
+            }
         } elseif (Auth::user()->hasRole('Pemilik')) {
-            // Pemilik can only see appointments related to their pets
+            // Pemilik: filter query based on pemilik user id
             $pemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -39,7 +55,6 @@ class TemuDokterController extends Controller
                 return view('data.temu-dokter.index', ['temuDokterList' => collect(), 'doctors' => collect()]);
             }
         }
-        // For Dokter, Resepsionis: show all appointments
 
         $temuDokterList = $query->select(
                 'temu_dokter.*',

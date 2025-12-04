@@ -21,9 +21,12 @@ class PetController extends Controller
         // Base query for pets - exclude soft-deleted pets
         $query = Pet::with(['rasHewan.jenisHewan', 'pemilik.user'])->whereNull('deleted_at');
         
-        // Apply role-based filtering
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
-            // Pemilik users: only show their own pets
+        // Apply hierarchical role-based filtering
+        if (Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Resepsionis')) {
+            // Administrator and Resepsionis: no query modification, show all pets
+            // No additional filtering needed
+        } elseif (Auth::user()->hasRole('Pemilik')) {
+            // Pemilik: filter query based on pemilik user id
             $pemilikId = DB::table('pemilik')
                 ->where('iduser', Auth::user()->iduser)
                 ->value('idpemilik');
@@ -39,7 +42,6 @@ class PetController extends Controller
                 return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
             }
         }
-        // For Administrator and Resepsionis: show all non-deleted pets
 
         $pets = $query->get();
         
@@ -47,26 +49,31 @@ class PetController extends Controller
         $rasHewanList = RasHewan::with('jenisHewan')->get();
         
         // Get owners list based on role - exclude deleted owners
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
-            // Pemilik can only see themselves in the dropdown
-            $pemilikList = Pemilik::with(['user' => function($query) {
-                $query->whereNull('deleted_at');
-            }])->where('iduser', Auth::user()->iduser)->get();
-        } else {
+        if (Auth::user()->hasRole('Administrator') || Auth::user()->hasRole('Resepsionis')) {
             // Administrator and Resepsionis can see all non-deleted owners
             $pemilikList = Pemilik::with(['user' => function($query) {
                 $query->whereNull('deleted_at');
             }])->whereHas('user', function($query) {
                 $query->whereNull('deleted_at');
             })->get();
+        } elseif (Auth::user()->hasRole('Pemilik')) {
+            // Pemilik can only see themselves in the dropdown
+            $pemilikList = Pemilik::with(['user' => function($query) {
+                $query->whereNull('deleted_at');
+            }])->where('iduser', Auth::user()->iduser)->get();
+        } else {
+            // Other roles get empty list
+            $pemilikList = collect();
         }
         
-        // Get current user role for the view
+        // Get current user role for the view - hierarchical determination
         $userRole = 'Administrator'; // default for Administrator
-        if (Auth::user()->hasRole('Pemilik') && !Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Resepsionis')) {
-            $userRole = 'Pemilik';
-        } elseif (Auth::user()->hasRole('Resepsionis') && !Auth::user()->hasRole('Administrator')) {
+        if (Auth::user()->hasRole('Administrator')) {
+            $userRole = 'Administrator';
+        } elseif (Auth::user()->hasRole('Resepsionis')) {
             $userRole = 'Resepsionis';
+        } elseif (Auth::user()->hasRole('Pemilik')) {
+            $userRole = 'Pemilik';
         }
         
         return view('data.pet.index', compact('pets', 'rasHewanList', 'pemilikList', 'userRole'));
@@ -131,7 +138,8 @@ class PetController extends Controller
 
     /**
      * Update the specified pet
-     */    public function update(Request $request, $id)
+     */
+    public function update(Request $request, $id)
     {
         // Only update non-deleted pets
         $pet = Pet::whereNull('deleted_at')->findOrFail($id);
