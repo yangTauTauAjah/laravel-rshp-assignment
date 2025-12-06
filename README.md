@@ -8,7 +8,6 @@
 4. [Manajemen Data](#manajemen-data)
 5. [Alur Kerja Klinik](#alur-kerja-klinik)
 6. [Panduan Per Peran](#panduan-per-peran)
-7. [FAQ dan Troubleshooting](#faq-dan-troubleshooting)
 
 ---
 
@@ -423,22 +422,3 @@ A:
 - **Verification:** Double-check data penting sebelum save
 
 ---
-
-## 📞 Kontak dan Dukungan
-
-**📧 Email Support:** support@rshp-clinic.com  
-**📱 Hotline:** (021) 555-RSHP  
-**🕐 Operational Hours:** Senin-Jumat 08:00-17:00 WIB  
-**🚨 Emergency Support:** Available 24/7 untuk critical issues
-
-**Administrator Sistem:**  
-- **Primary Admin:** Dr. [Nama] - ext. 101
-- **Backup Admin:** [Nama] - ext. 102
-
----
-
-*Dokumentasi ini diperbaharui secara berkala. Versi terbaru selalu tersedia di sistem internal.*
-
-**Last Updated:** Desember 2024  
-**Version:** 2.0  
-**System:** Laravel RSHP Management v2.0
