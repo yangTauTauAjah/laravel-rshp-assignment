@@ -1,61 +1,444 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dokumentasi Sistem Manajemen Klinik Hewan RSHP
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📋 Daftar Isi
 
-## About Laravel
+1. [Pengenalan Sistem](#pengenalan-sistem)
+2. [Peran Pengguna dan Hak Akses](#peran-pengguna-dan-hak-akses)
+3. [Panduan Masuk Sistem](#panduan-masuk-sistem)
+4. [Manajemen Data](#manajemen-data)
+5. [Alur Kerja Klinik](#alur-kerja-klinik)
+6. [Panduan Per Peran](#panduan-per-peran)
+7. [FAQ dan Troubleshooting](#faq-dan-troubleshooting)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📖 Pengenalan Sistem
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Sistem Manajemen Klinik Hewan RSHP adalah aplikasi web yang dirancang untuk mengelola operasional klinik hewan secara digital. Sistem ini mengganti proses manual dengan sistem terintegrasi yang memungkinkan:
 
-## Learning Laravel
+- ✅ Manajemen data hewan peliharaan dan pemilik
+- ✅ Penjadwalan dan pengelolaan reservasi dokter  
+- ✅ Pencatatan rekam medis digital
+- ✅ Manajemen pengguna dan peran akses
+- ✅ Kategori tindakan medis dan terapi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 👥 Peran Pengguna dan Hak Akses
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🔑 **1. Administrator**
+**Akses Penuh ke Seluruh Sistem**
 
-## Laravel Sponsors
+| Fitur | Hak Akses |
+|-------|-----------|
+| **Manajemen Pengguna** | ✅ Create, Read, Update, Delete |
+| **Manajemen Peran** | ✅ Assign, Remove, Toggle Status |
+| **Data Hewan** | ✅ View All, Edit All, Delete All |
+| **Data Pemilik** | ✅ View All, Create, Edit, Delete |
+| **Temu Dokter** | ✅ View All, Create, Edit, Delete, Update Status |
+| **Rekam Medis** | ✅ View All, Edit Data & Detail, Delete |
+| **Master Data** | ✅ Jenis Hewan, Ras, Kategori Tindakan |
+| **Manajemen Dokter/Perawat** | ✅ Create, Edit, Delete Profiles |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 👩‍⚕️ **2. Resepsionis**  
+**Manajemen Front Office dan Administrasi**
 
-### Premium Partners
+| Fitur | Hak Akses |
+|-------|-----------|
+| **Data Hewan** | ✅ View All, Create, Edit, Delete |
+| **Data Pemilik** | ✅ View All, Create, Edit, Delete |
+| **Temu Dokter** | ✅ View All, Create, Edit, Update Status |
+| **Rekam Medis** | ✅ View All (Read Only) |
+| **Master Data** | ✅ Jenis Hewan, Ras (Create, Edit, Delete) |
+| **Dashboard** | ✅ Statistics Overview |
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 👩‍⚕️ **3. Perawat**
+**Manajemen Data Medis dan Assistance**
 
-## Contributing
+| Fitur | Hak Akses |
+|-------|-----------|
+| **Data Hewan** | ✅ View All (Read Only) |
+| **Temu Dokter** | ✅ View All |
+| **Rekam Medis** | ✅ View All, Edit Data Utama (Anamnesa, Diagnosa, dll) |
+| **Dashboard** | ✅ Medical Overview |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**❌ Tidak Dapat:** Edit detail tindakan/terapi (khusus dokter)
 
-## Code of Conduct
+### 👨‍⚕️ **4. Dokter**
+**Manajemen Medis dan Diagnosa**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Fitur | Hak Akses |
+|-------|-----------|
+| **Temu Dokter** | ✅ View Jadwal Sendiri |
+| **Rekam Medis** | ✅ View Pasien Sendiri, Edit Detail Tindakan/Terapi |
+| **Dashboard** | ✅ Personal Practice Overview |
 
-## Security Vulnerabilities
+**❌ Tidak Dapat:** Edit data utama rekam medis (anamnesa, diagnosa - khusus perawat)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 👤 **5. Pemilik**
+**Akses Data Hewan Pribadi**
 
-## License
+| Fitur | Hak Akses |
+|-------|-----------|
+| **Data Hewan** | ✅ View Hewan Sendiri |
+| **Temu Dokter** | ✅ View Reservasi Hewan Sendiri |
+| **Rekam Medis** | ✅ View Rekam Medis Hewan Sendiri |
+| **Profile** | ✅ Edit Profile Sendiri |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🚪 Panduan Masuk Sistem
+
+### **1. Akses Login**
+1. Buka browser dan kunjungi URL sistem klinik
+2. Masukkan **Email** dan **Password** yang telah diberikan
+3. Klik tombol **"Masuk"**
+4. Sistem akan mengarahkan ke dashboard sesuai peran
+
+### **2. Dashboard Overview**
+Setelah login berhasil, pengguna akan melihat:
+- **Header Navigation** - Menu sesuai hak akses peran
+- **Main Dashboard** - Statistik dan ringkasan data
+- **Quick Actions** - Tombol aksi cepat untuk fitur utama
+- **Recent Activities** - Aktivitas terbaru sistem
+
+### **3. Profile Management**
+- Klik nama pengguna di pojok kanan atas
+- Pilih **"Profile"** untuk mengedit data personal
+- Opsi **"Logout"** untuk keluar sistem
+
+---
+
+## 📊 Manajemen Data
+
+### 🐕 **1. Manajemen Data Hewan**
+
+#### **Input Data Hewan Baru** *(Administrator/Resepsionis)*
+1. **Navigasi:** Data → Kelola Hewan Peliharaan
+2. **Aksi:** Klik tombol **"+ Tambah Hewan Peliharaan"**
+3. **Form Input:**
+   - **Nama Hewan*** *(wajib)*
+   - **Jenis Kelamin*** *(Jantan/Betina)*
+   - **Ras Hewan*** *(pilih dari dropdown)*
+   - **Pemilik*** *(pilih dari dropdown)*
+   - **Tanggal Lahir** *(opsional)*
+   - **Warna/Tanda Khusus** *(opsional)*
+4. **Simpan:** Klik **"Simpan"**
+
+#### **Edit Data Hewan** *(Administrator/Resepsionis)*
+1. Di halaman daftar hewan, klik ikon **Edit (✏️)** 
+2. Ubah data yang diperlukan
+3. Klik **"Simpan Perubahan"**
+
+#### **Soft Delete Hewan** *(Administrator/Resepsionis)*
+1. Klik ikon **Delete (🗑️)** pada data hewan
+2. Konfirmasi penghapusan
+3. **Catatan:** Data tidak dihapus permanen, hanya disembunyikan
+
+### 👤 **2. Manajemen Data Pemilik**
+
+#### **Registrasi Pemilik Baru** *(Administrator/Resepsionis)*
+1. **Navigasi:** Data → Kelola Pemilik
+2. **Aksi:** Klik **"+ Tambah Pemilik"**
+3. **Form Input:**
+   - **Nama Lengkap*** 
+   - **Email*** *(unique)*
+   - **Password*** *(auto-generated atau manual)*
+   - **Alamat**
+   - **No. Telepon**
+4. **Sistem otomatis:**
+   - Membuat akun User
+   - Assign role "Pemilik" 
+   - Generate password (jika auto)
+
+### 🏥 **3. Master Data Klinik**
+
+#### **Jenis Hewan & Ras** *(Administrator/Resepsionis)*
+1. **Navigasi:** Data → Jenis & Ras Hewan
+2. **Tambah Jenis:** 
+   - Klik **"+ Tambah Jenis Hewan"**
+   - Input nama jenis (contoh: "Anjing", "Kucing")
+3. **Tambah Ras:**
+   - Pilih jenis hewan terlebih dahulu
+   - Klik **"+ Tambah Ras"**
+   - Input nama ras (contoh: "Golden Retriever", "Persian")
+
+#### **Kategori Tindakan** *(Administrator)*
+1. **Navigasi:** Data → Tindakan Terapi
+2. **Setup Hierarki:**
+   - **Kategori** (contoh: "Pemeriksaan", "Operasi")
+   - **Kategori Klinis** (contoh: "Diagnosa", "Terapi")
+   - **Kode Tindakan** (detail tindakan medis)
+
+---
+
+## ⚕️ Alur Kerja Klinik
+
+### 📅 **1. Proses Reservasi Dokter**
+
+#### **Membuat Reservasi** *(Administrator/Resepsionis)*
+1. **Navigasi:** Data → Temu Dokter
+2. **Aksi:** Klik **"+ Buat Reservasi"**
+3. **Form Reservasi:**
+   - **Pilih Dokter*** *(dari dropdown dokter aktif)*
+   - **Tanggal & Waktu***
+   - **Catatan** *(opsional)*
+4. **Sistem otomatis:**
+   - Generate nomor antrian
+   - Set status "Menunggu"
+   - Kirim notifikasi
+
+#### **Update Status Reservasi** *(Administrator/Resepsionis)*
+- **Menunggu** → **Selesai** *(setelah pemeriksaan)*
+- **Menunggu** → **Batal** *(jika dibatalkan)*
+- **Batal** → **Menunggu** *(reaktivasi)*
+
+### 📋 **2. Proses Rekam Medis**
+
+#### **Tahap 1: Input Data Utama** *(Perawat)*
+1. **Akses:** Data → Rekam Medis → Edit Data 
+2. **Form Data Utama:**
+   - **Hewan Pasien*** *(pilih dari dropdown)*
+   - **Dokter Pemeriksa*** 
+   - **Anamnesa*** *(keluhan pemilik)*
+   - **Temuan Klinis*** *(hasil pemeriksaan fisik)*
+   - **Diagnosa*** *(kesimpulan diagnosa)*
+
+#### **Tahap 2: Input Detail Tindakan** *(Dokter)*
+1. **Akses:** Data → Rekam Medis → Edit Detail
+2. **Tambah Tindakan:**
+   - Klik **"+ Tambah Tindakan"**
+   - **Pilih Kode Tindakan*** *(dari master data)*
+   - **Detail Spesifik** *(catatan tambahan)*
+3. **Multiple Tindakan:** Bisa menambah beberapa tindakan sekaligus
+4. **Hapus Tindakan:** Klik ikon delete pada tindakan yang tidak diperlukan
+
+### 🔄 **3. Workflow Integration**
+
+```
+Pemilik Datang → Resepsionis Buat Reservasi → Dokter Periksa 
+     ↓
+Perawat Input Data Medis → Dokter Input Detail Tindakan → Selesai
+```
+
+---
+
+## 📖 Panduan Per Peran
+
+### 👑 **Administrator - Panduan Lengkap**
+
+#### **Setup Awal Sistem:**
+1. **Manajemen User:**
+   - Create akun untuk Dokter, Perawat, Resepsionis
+   - Assign role yang sesuai
+   - Monitor aktivitas user
+   
+2. **Setup Master Data:**
+   - Input jenis dan ras hewan populer
+   - Setup kategori tindakan medis
+   - Konfigurasi kode tindakan terapi
+
+3. **Operational Management:**
+   - Monitor semua aktivitas sistem
+   - Backup dan maintenance data
+   - Generate reports dan statistik
+
+#### **Tugas Harian:**
+- Review dan approve registrasi baru
+- Monitor performa sistem  
+- Handle escalated issues
+- Manage user access dan permissions
+
+### 👩‍⚕️ **Resepsionis - Front Office Management**
+
+#### **Tugas Utama:**
+1. **Customer Service:**
+   - Registrasi pemilik dan hewan baru
+   - Buat reservasi dokter
+   - Update status appointment
+   - Handle pembatalan dan reschedule
+
+2. **Data Management:**
+   - Maintain data hewan dan pemilik
+   - Update contact information
+   - Manage appointment calendar
+
+#### **Daily Workflow:**
+```
+Pagi: Review appointment hari ini
+ ↓
+Registrasi walk-in customers
+ ↓  
+Coordinate dengan dokter untuk scheduling
+ ↓
+Update status appointment real-time
+ ↓
+End of day: Reconcile data dan prepare next day
+```
+
+### 👩‍⚕️ **Perawat - Medical Data Assistant**
+
+#### **Tanggung Jawab:**
+1. **Pre-Examination:**
+   - Prepare rekam medis template
+   - Input vital signs dan basic assessment
+   - Coordinate patient flow dengan dokter
+
+2. **Post-Examination:**
+   - Input/update data medis dari hasil pemeriksaan
+   - Pastikan diagnosa dan anamnesa tercatat lengkap
+   - Coordinate dengan pemilik untuk follow-up
+
+#### **Workflow dengan Dokter:**
+```
+Persiapan Pasien → Input Data Awal → Dokter Examine 
+     ↓
+Input Diagnosa → Dokter Review → Input Detail Treatment
+```
+
+### 👨‍⚕️ **Dokter - Medical Professional**
+
+#### **Fokus Utama:**
+1. **Patient Examination:**
+   - Review appointment schedule  
+   - Examine patients sesuai jadwal
+   - Coordinate dengan perawat untuk data support
+
+2. **Medical Documentation:**
+   - Input detail tindakan dan terapi
+   - Specify treatment procedures
+   - Add medical notes dan recommendations
+
+#### **Best Practices:**
+- Selalu review data yang sudah diinput perawat
+- Input detail treatment sesegera mungkin
+- Coordinate dengan tim untuk patient care
+
+### 👤 **Pemilik - Pet Owner Access**
+
+#### **Akses Yang Tersedia:**
+1. **Monitor Pet Health:**
+   - Lihat semua data hewan peliharaan
+   - Review riwayat medical appointments
+   - Track medical history dan progress
+
+2. **Appointment Tracking:**
+   - Monitor upcoming appointments
+   - View appointment history
+   - Access medical reports
+
+#### **Tips Penggunaan:**
+- Regularly check untuk appointment updates
+- Keep contact information updated
+- Review medical history untuk better pet care
+
+---
+
+## ❓ FAQ dan Troubleshooting
+
+### **🔐 Akses dan Login**
+
+**Q: Lupa password, bagaimana reset?**  
+A: Hubungi Administrator untuk reset password. Administrator bisa generate password baru melalui menu User Management.
+
+**Q: Tidak bisa login padahal email/password benar?**  
+A: Pastikan:
+- Email ditulis dengan benar (case sensitive)
+- Akun tidak dalam status non-aktif
+- Browser mendukung JavaScript
+- Clear cache dan cookies browser
+
+### **📊 Data Management**
+
+**Q: Data hewan tidak muncul di daftar?**  
+A: Kemungkinan:
+- Data telah di-soft delete (hubungi admin untuk restore)
+- User tidak memiliki akses untuk melihat data tersebut
+- Filter atau search masih aktif
+
+**Q: Tidak bisa edit rekam medis?**  
+A: Periksa:
+- **Perawat:** Hanya bisa edit data utama (anamnesa, diagnosa)
+- **Dokter:** Hanya bisa edit detail tindakan untuk pasien sendiri
+- **Pemilik:** Hanya bisa view, tidak bisa edit
+
+### **⚕️ Medical Workflow**
+
+**Q: Dokter tidak bisa input detail tindakan?**  
+A: Pastikan:
+- Data utama sudah diinput oleh Perawat terlebih dahulu
+- Dokter adalah pemeriksa yang tercatat di rekam medis
+- Rekam medis belum di-lock atau archive
+
+**Q: Appointment status tidak bisa diupdate?**  
+A: Hanya Administrator dan Resepsionis yang bisa update status. Dokter hanya bisa view.
+
+### **🔧 Technical Issues**
+
+**Q: Halaman loading terus/error 500?**  
+A: 
+- Refresh halaman
+- Clear browser cache
+- Try di browser berbeda
+- Report ke Administrator jika masih error
+
+**Q: Data tidak tersimpan/hilang setelah input?**  
+A:
+- Pastikan click "Simpan" sebelum navigasi
+- Check koneksi internet stabil  
+- Validate semua field yang required sudah diisi
+
+### **📞 Support dan Bantuan**
+
+**Technical Support:**
+- Level 1: Resepsionis (basic troubleshooting)
+- Level 2: Administrator (system issues)
+- Level 3: IT Support (critical system problems)
+
+**Training dan Onboarding:**
+- New user orientation dengan Administrator
+- Role-specific training dengan supervisor
+- Regular refresher sessions
+
+---
+
+## 📈 Tips Optimalisasi Penggunaan
+
+### **⚡ Performance Tips**
+- **Regular Logout:** Jangan biarkan session terbuka terlalu lama
+- **Browser Cache:** Clear cache secara berkala untuk performa optimal  
+- **Stable Connection:** Gunakan koneksi internet yang stabil
+- **Modern Browser:** Gunakan browser versi terbaru (Chrome, Firefox, Edge)
+
+### **🔒 Security Best Practices**
+- **Strong Password:** Gunakan password yang kuat dan unik
+- **Logout Proper:** Selalu logout ketika selesai menggunakan
+- **No Sharing:** Jangan share akun dengan orang lain
+- **Report Suspicious:** Laporkan aktivitas mencurigakan ke Administrator
+
+### **📋 Data Quality**
+- **Complete Information:** Input data selengkap mungkin
+- **Regular Updates:** Update data secara berkala
+- **Consistent Format:** Gunakan format yang konsisten untuk data entry
+- **Verification:** Double-check data penting sebelum save
+
+---
+
+## 📞 Kontak dan Dukungan
+
+**📧 Email Support:** support@rshp-clinic.com  
+**📱 Hotline:** (021) 555-RSHP  
+**🕐 Operational Hours:** Senin-Jumat 08:00-17:00 WIB  
+**🚨 Emergency Support:** Available 24/7 untuk critical issues
+
+**Administrator Sistem:**  
+- **Primary Admin:** Dr. [Nama] - ext. 101
+- **Backup Admin:** [Nama] - ext. 102
+
+---
+
+*Dokumentasi ini diperbaharui secara berkala. Versi terbaru selalu tersedia di sistem internal.*
+
+**Last Updated:** Desember 2024  
+**Version:** 2.0  
+**System:** Laravel RSHP Management v2.0
