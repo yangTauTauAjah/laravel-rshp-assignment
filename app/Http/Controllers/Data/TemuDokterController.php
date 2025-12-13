@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Data;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -318,6 +318,29 @@ class TemuDokterController extends Controller
     }
 
     /**
+     * Remove the specified appointment
+     */
+    public function destroy($id)
+    {
+        try {
+            $affected = DB::table('temu_dokter')
+                ->where('idreservasi_dokter', $id)
+                ->delete();
+
+            if ($affected === 0) {
+                return redirect()->route('data.temu-dokter.index')
+                    ->with('error', 'Data reservasi tidak ditemukan');
+            }
+
+            return redirect()->route('data.temu-dokter.index')
+                ->with('success', 'Data reservasi berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('data.temu-dokter.index')
+                ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Update appointment status
      */
     public function updateStatus(Request $request, $id)
@@ -364,5 +387,128 @@ class TemuDokterController extends Controller
                 'message' => 'Gagal mengubah status: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Store rekam medis for specific temu dokter
+     */
+    public function storeRekamMedis(Request $request, $temuDokterId)
+    {
+        $request->validate([
+            'anamnesa' => 'required|string',
+            'temuan_klinis' => 'required|string',
+            'diagnosa' => 'required|string',
+            'idpet' => 'required|exists:pet,idpet',
+            'detail_tindakan' => 'array',
+            'detail_tindakan.*.idkode_tindakan_terapi' => 'required|exists:kode_tindakan_terapi,idkode_tindakan_terapi',
+            'detail_tindakan.*.detail' => 'nullable|string',
+        ]);
+
+        // Verify temu dokter exists
+        $temuDokter = DB::table('temu_dokter')->where('idreservasi_dokter', $temuDokterId)->first();
+        if (!$temuDokter) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data reservasi dokter tidak ditemukan'
+            ], 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Insert medical record with temu dokter relationship
+            $rekamMedisId = DB::table('rekam_medis')->insertGetId([
+                'anamnesa' => $request->anamnesa,
+                'temuan_klinis' => $request->temuan_klinis,
+                'diagnosa' => $request->diagnosa,
+                'idpet' => $request->idpet,
+                'dokter_pemeriksa' => $temuDokter->idrole_user,
+                'idreservasi_dokter' => $temuDokterId,
+                'created_at' => now(),
+            ]);
+
+            // Insert detail records if provided
+            if ($request->has('detail_tindakan') && is_array($request->detail_tindakan)) {
+                foreach ($request->detail_tindakan as $detail) {
+                    if (!empty($detail['idkode_tindakan_terapi'])) {
+                        DB::table('detail_rekam_medis')->insert([
+                            'idrekam_medis' => $rekamMedisId,
+                            'idkode_tindakan_terapi' => $detail['idkode_tindakan_terapi'],
+                            'detail' => $detail['detail'] ?? null,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekam medis berhasil ditambahkan',
+                'data' => ['id' => $rekamMedisId]
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menambahkan rekam medis: ' . $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /**
+     * Remove rekam medis from temu dokter
+     */
+    public function destroyRekamMedis($temuDokterId, $rekamMedisId)
+    {
+        try {
+            // Verify the rekam medis belongs to this temu dokter
+            $rekamMedis = DB::table('rekam_medis')
+                ->where('idrekam_medis', $rekamMedisId)
+                ->where('idreservasi_dokter', $temuDokterId)
+                ->first();
+
+            if (!$rekamMedis) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rekam medis tidak ditemukan atau tidak terkait dengan reservasi ini'
+                ], 404);
+            }
+
+            // Delete detail records first (due to foreign key)
+            DB::table('detail_rekam_medis')->where('idrekam_medis', $rekamMedisId)->delete();
+            
+            // Delete rekam medis
+            DB::table('rekam_medis')->where('idrekam_medis', $rekamMedisId)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekam medis berhasil dihapus'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus rekam medis: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get treatment codes for AJAX
+     */
+    public function getKodeTindakan()
+    {
+        $kodeTindakan = DB::table('kode_tindakan_terapi')
+            ->join('kategori', 'kode_tindakan_terapi.idkategori', '=', 'kategori.idkategori')
+            ->join('kategori_klinis', 'kode_tindakan_terapi.idkategori_klinis', '=', 'kategori_klinis.idkategori_klinis')
+            ->select(
+                'kode_tindakan_terapi.*',
+                'kategori.nama_kategori',
+                'kategori_klinis.nama_kategori_klinis'
+            )
+            ->orderBy('kode_tindakan_terapi.kode')
+            ->get();
+
+        return response()->json($kodeTindakan);
     }
 }

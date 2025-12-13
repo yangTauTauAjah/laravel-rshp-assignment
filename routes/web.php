@@ -1,17 +1,17 @@
 <?php
 
 use App\Http\Controllers\Site\SiteController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\JenisHewanController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\PetController;
-use App\Http\Controllers\Admin\DokterController;
-use App\Http\Controllers\Admin\PerawatController;
-use App\Http\Controllers\Admin\PemilikController;
-use App\Http\Controllers\Admin\TindakanTerapiController;
-use App\Http\Controllers\Admin\TemuDokterController;
-use App\Http\Controllers\Admin\RekamMedisController;
+use App\Http\Controllers\Data\DashboardController;
+use App\Http\Controllers\Data\JenisHewanController;
+use App\Http\Controllers\Data\UserController;
+use App\Http\Controllers\Data\RoleController;
+use App\Http\Controllers\Data\PetController;
+use App\Http\Controllers\Data\DokterController;
+use App\Http\Controllers\Data\PerawatController;
+use App\Http\Controllers\Data\PemilikController;
+use App\Http\Controllers\Data\TindakanTerapiController;
+use App\Http\Controllers\Data\TemuDokterController;
+use App\Http\Controllers\Data\RekamMedisController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
