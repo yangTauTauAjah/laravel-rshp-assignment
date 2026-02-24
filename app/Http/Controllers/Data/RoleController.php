@@ -16,12 +16,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        // Get all users with their role relationships
         $users = User::with(['roleUsers.role'])->get();
         
-        // Get only manually assignable roles (exclude profile-based roles)
-        // Profile-based roles (Dokter, Perawat, Pemilik) should only be assigned
-        // through their respective profile management pages
         $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
         $allRoles = Role::whereNotIn('nama_role', $profileBasedRoleNames)->get();
         
@@ -39,7 +35,6 @@ class RoleController extends Controller
             'role_id' => 'required|exists:role,idrole',
         ]);
 
-        // Prevent assignment of profile-based roles through role management
         $profileBasedRoleNames = ['Dokter', 'Perawat', 'Pemilik'];
         $role = Role::findOrFail($request->role_id);
         

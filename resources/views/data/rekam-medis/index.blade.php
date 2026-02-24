@@ -174,7 +174,7 @@
                                             <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
-                                            #{{ str_pad($rekamMedis->no_urut ?? 0, 3, '0', STR_PAD_LEFT) }}
+                                            #{{ str_pad($rekamMedis->idreservasi_dokter ?? 0, 3, '0', STR_PAD_LEFT) }}
                                         </a>
                                     @else
                                         <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
@@ -197,7 +197,7 @@
                                         
                                         {{-- Role-based Edit Buttons --}}
                                         @if(Auth::user()->hasRole('Administrator'))
-                                            {{-- Administrator can edit both data and details --}}
+                                            {{-- Administrator can edit and delete both data and details --}}
                                             <a href="{{ route('data.rekam-medis.edit-data', $rekamMedis->idrekam_medis) }}"
                                                 class="text-rshp-blue hover:text-blue-900" title="Edit Data Rekam Medis">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,8 +214,16 @@
                                                     </path>
                                                 </svg>
                                             </a>
-                                        @elseif(Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Dokter'))
-                                            {{-- Perawat can only edit main data --}}
+                                            <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
+                                                class="text-red-600 hover:text-red-900" title="Hapus">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        @elseif(Auth::user()->hasRole('Perawat'))
+                                            {{-- Perawat can only edit and delete main data --}}
                                             <a href="{{ route('data.rekam-medis.edit-data', $rekamMedis->idrekam_medis) }}"
                                                 class="text-rshp-blue hover:text-blue-900" title="Edit Data Rekam Medis">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,6 +232,14 @@
                                                     </path>
                                                 </svg>
                                             </a>
+                                            <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
+                                                class="text-red-600 hover:text-red-900" title="Hapus">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
                                         @elseif(Auth::user()->hasRole('Dokter'))
                                             {{-- Check if this is the examining doctor --}}
                                             @php
@@ -247,16 +263,8 @@
                                                 </a>
                                             @endif
                                         @endif
-                                        {{-- @if(Auth::user()->isAdministrator())
-                                        <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
-                                            class="text-red-600 hover:text-red-900" title="Hapus">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                        @endif --}}
+                                        @if(Auth::user()->hasRole('Administrator'))
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -309,10 +317,10 @@
                             class="font-semibold"></span> pada tanggal <span id="deleteDate"
                             class="font-semibold"></span>?
                     </p>
-                    <p class="text-sm text-red-500 mt-2">
+                    {{-- <p class="text-sm text-red-500 mt-2">
                         <strong>Perhatian:</strong> Tindakan ini akan menghapus semua detail tindakan yang terkait dan
                         tidak dapat dibatalkan!
-                    </p>
+                    </p> --}}
                 </div>
                 <div class="items-center px-4 py-3">
                     <button id="confirmDelete"

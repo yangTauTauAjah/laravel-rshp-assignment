@@ -30,11 +30,6 @@ class JenisHewanController extends Controller
     public function destroyJenis($id)
     {
         $jenis = JenisHewan::findOrFail($id);
-        
-        // Check if there are related breeds
-        /* if ($jenis->rasHewan()->count() > 0) {
-            return redirect()->route('data.jenis-hewan.index')->with('error', 'Tidak dapat menghapus jenis hewan yang masih memiliki ras');
-        } */
 
         $jenis->delete();
 

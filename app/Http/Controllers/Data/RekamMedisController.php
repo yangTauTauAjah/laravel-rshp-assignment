@@ -16,6 +16,7 @@ class RekamMedisController extends Controller
     {
         // Build base query for medical records
         $query = DB::table('rekam_medis')
+            ->whereNull('rekam_medis.deleted_at')
             ->join('temu_dokter', 'rekam_medis.idreservasi_dokter', '=', 'temu_dokter.idreservasi_dokter')
             ->join('pet', 'rekam_medis.idpet', '=', 'pet.idpet')
             ->join('pemilik', 'pet.idpemilik', '=', 'pemilik.idpemilik')
@@ -127,6 +128,7 @@ class RekamMedisController extends Controller
     {
         // Get medical record with related data
         $rekamMedis = DB::table('rekam_medis')
+            ->whereNull('rekam_medis.deleted_at')
             ->join('pet', 'rekam_medis.idpet', '=', 'pet.idpet')
             ->join('pemilik', 'pet.idpemilik', '=', 'pemilik.idpemilik')
             ->join('user as pemilik_user', 'pemilik.iduser', '=', 'pemilik_user.iduser')
@@ -174,6 +176,7 @@ class RekamMedisController extends Controller
 
         // Get detail medical records
         $detailRekamMedis = DB::table('detail_rekam_medis')
+            ->whereNull('detail_rekam_medis.deleted_at')
             ->join('kode_tindakan_terapi', 'detail_rekam_medis.idkode_tindakan_terapi', '=', 'kode_tindakan_terapi.idkode_tindakan_terapi')
             ->join('kategori', 'kode_tindakan_terapi.idkategori', '=', 'kategori.idkategori')
             ->join('kategori_klinis', 'kode_tindakan_terapi.idkategori_klinis', '=', 'kategori_klinis.idkategori_klinis')
@@ -292,6 +295,7 @@ class RekamMedisController extends Controller
 
         // Get existing detail records
         $detailRekamMedis = DB::table('detail_rekam_medis')
+            ->whereNull('deleted_at')
             ->where('idrekam_medis', $id)
             ->get();
 
@@ -402,8 +406,10 @@ class RekamMedisController extends Controller
 
         DB::beginTransaction();
         try {
-            // Delete existing detail records
-            DB::table('detail_rekam_medis')->where('idrekam_medis', $id)->delete();
+            // Soft delete existing detail records
+            DB::table('detail_rekam_medis')->where('idrekam_medis', $id)->update([
+                'deleted_at' => now(),
+            ]);
             
             // Insert new detail records if provided
             if ($request->has('detail_tindakan') && is_array($request->detail_tindakan)) {
@@ -427,6 +433,92 @@ class RekamMedisController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui detail tindakan: ' . $e->getMessage())
                 ->withInput();
+        }
+    }
+
+    /**
+     * Soft delete a medical record
+     */
+    public function destroy($id)
+    {
+        // Authorization check - only Administrator can delete records
+        /* if (!Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Perawat')) {
+            return redirect()->route('data.rekam-medis.index')
+                ->with('error', 'Anda tidak memiliki akses untuk menghapus rekam medis.');
+        } */
+
+        $rekamMedis = DB::table('rekam_medis')->where('idrekam_medis', $id)->first();
+        if (!$rekamMedis) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Soft delete the medical record
+            DB::table('rekam_medis')->where('idrekam_medis', $id)->update([
+                'deleted_at' => now(),
+                'deleted_by' => Auth::user()->iduser
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('data.rekam-medis.index')
+                ->with('success', 'Rekam medis berhasil dihapus');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus rekam medis: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Soft delete a medical record detail
+     */
+    public function deleteDetail($detailId)
+    {
+        // Authorization check - only Dokter and Administrator can delete details
+        /* if (!Auth::user()->hasRole('Administrator') && !Auth::user()->hasRole('Dokter')) {
+            return redirect()->route('data.rekam-medis.index')
+                ->with('error', 'Anda tidak memiliki akses untuk menghapus detail tindakan.');
+        } */
+
+        $detailRekamMedis = DB::table('detail_rekam_medis')->where('iddetail_rekam_medis', $detailId)->first();
+        if (!$detailRekamMedis) {
+            abort(404);
+        }
+
+        // Additional check for Dokter - must be the examining doctor (unless Administrator)
+        if (!Auth::user()->hasRole('Administrator')) {
+            $rekamMedis = DB::table('rekam_medis')->where('idrekam_medis', $detailRekamMedis->idrekam_medis)->first();
+            $dokterRoleUserId = DB::table('role_user')
+                ->join('role', 'role_user.idrole', '=', 'role.idrole')
+                ->where('role_user.iduser', Auth::user()->iduser)
+                ->where('role.nama_role', 'Dokter')
+                ->where('role_user.status', 1)
+                ->value('role_user.idrole_user');
+            
+            if (!$dokterRoleUserId || $rekamMedis->dokter_pemeriksa != $dokterRoleUserId) {
+                return redirect()->route('data.rekam-medis.index')
+                    ->with('error', 'Anda hanya dapat menghapus detail tindakan dari rekam medis yang Anda periksa sendiri.');
+            }
+        }
+
+        DB::beginTransaction();
+        try {
+            // Soft delete the medical record detail
+            DB::table('detail_rekam_medis')->where('iddetail_rekam_medis', $detailId)->update([
+                'deleted_at' => now(),
+                'deleted_by' => Auth::user()->iduser
+            ]);
+
+            DB::commit();
+
+            return redirect()->back()
+                ->with('success', 'Detail tindakan berhasil dihapus');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus detail tindakan: ' . $e->getMessage());
         }
     }
 }

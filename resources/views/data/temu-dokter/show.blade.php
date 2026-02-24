@@ -4,17 +4,6 @@
     <!-- Page Header -->
     <x-admin-header title="Detail Reservasi Dokter" subtitle="Kembali ke index Temu Dokter"
         :backRoute="route('data.temu-dokter.index')" backText="Kembali ke Temu Dokter">
-        @if(Auth::user()->isAdministrator() || Auth::user()->isResepsionis())
-        <x-slot:actionButton>
-            <button onclick="openAddTemuDokterModal()"
-                class="bg-rshp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Buat Reservasi
-            </button>
-        </x-slot:actionButton>
-        @endif
     </x-admin-header>
         
     <div class="mx-auto my-6 max-w-4xl w-full flex-1">
@@ -203,7 +192,7 @@
                             </svg>
                             Rekam Medis ({{ $rekamMedisList->count() }})
                         </h3>
-                        @if((Auth::user()->isAdministrator() || Auth::user()->isDokter() || Auth::user()->isPerawat()) && $temuDokter->status == '0')
+                        @if((Auth::user()->isAdministrator() || Auth::user()->isPerawat()) && $temuDokter->status == '0')
                         <button onclick="openAddRekamMedisModal()"
                             class="bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -270,7 +259,15 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                    @elseif(Auth::user()->hasRole('Perawat') && !Auth::user()->hasRole('Dokter'))
+                                        <button onclick="openDeleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
+                                            class="text-red-600 hover:text-red-900" title="Hapus">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    @elseif(Auth::user()->hasRole('Perawat'))
                                         {{-- Perawat can only edit main data --}}
                                         <a href="{{ route('data.rekam-medis.edit-data', $rekamMedis->idrekam_medis) }}"
                                             class="text-rshp-blue hover:text-blue-900" title="Edit Data Rekam Medis">
@@ -280,6 +277,14 @@
                                                 </path>
                                             </svg>
                                         </a>
+                                        <button onclick="openDeleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}', '{{ \Carbon\Carbon::parse($rekamMedis->created_at)->format('d M Y') }}')"
+                                            class="text-red-600 hover:text-red-900" title="Hapus">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
                                     @elseif(Auth::user()->hasRole('Dokter'))
                                         {{-- Check if this is the examining doctor --}}
                                         @php
@@ -303,16 +308,6 @@
                                             </a>
                                         @endif
                                     @endif
-                                    {{-- @if(Auth::user()->isAdministrator())
-                                    <button onclick="deleteRekamMedis({{ $rekamMedis->idrekam_medis }}, '{{ $rekamMedis->pet_nama }}')"
-                                        class="text-red-600 hover:text-red-900" title="Hapus">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    @endif --}}
                                 </div>
                             </div>
                         </div>
@@ -324,7 +319,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         <p class="text-gray-500">Belum ada rekam medis untuk reservasi ini</p>
-                        @if((Auth::user()->isAdministrator() || Auth::user()->isResepsionis()) && $temuDokter->status == '0')
+                        @if((Auth::user()->isAdministrator() || Auth::user()->isPerawat()) && $temuDokter->status == '0')
                         <button onclick="openAddRekamMedisModal()"
                             class="mt-4 bg-rshp-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                             Tambah Rekam Medis Pertama
@@ -338,7 +333,7 @@
     </div>
 
     <!-- Add Rekam Medis Modal -->
-    @if(Auth::user()->isAdministrator() || Auth::user()->isDokter())
+    @if(Auth::user()->isAdministrator() || Auth::user()->isPerawat())
     <div id="addRekamMedisModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
         <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
             <div class="flex items-center justify-between mb-4">
@@ -442,6 +437,43 @@
     </div>
     @endif
 
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-5">Hapus Rekam Medis</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">
+                        Apakah Anda yakin ingin menghapus rekam medis untuk <span id="deletePetName"
+                            class="font-semibold"></span> pada tanggal <span id="deleteDate"
+                            class="font-semibold"></span>?
+                    </p>
+                    {{-- <p class="text-sm text-red-500 mt-2">
+                        <strong>Perhatian:</strong> Tindakan ini akan menghapus semua detail tindakan yang terkait dan
+                        tidak dapat dibatalkan!
+                    </p> --}}
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmDelete"
+                        class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-24 mr-2 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                        Hapus
+                    </button>
+                    <button onclick="closeDeleteRekamMedisModal()"
+                        class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let modalTindakanCounter = 0;
         let kodeTindakanData = [];
@@ -480,6 +512,50 @@
 
         function closeAddRekamMedisModal() {
             document.getElementById('addRekamMedisModal').classList.add('hidden');
+        }
+
+        function openDeleteRekamMedis(id, petName, date) {
+            document.getElementById('deletePetName').textContent = petName;
+            document.getElementById('deleteDate').textContent = date;
+            document.getElementById('deleteModal').classList.remove('hidden');
+
+            // Create form for deletion
+            if (deleteForm) {
+                deleteForm.remove();
+            }
+            deleteForm = document.createElement('form');
+            deleteForm.method = 'POST';
+            deleteForm.action = `/data/rekam-medis/${id}`;
+            deleteForm.style.display = 'none';
+
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            deleteForm.appendChild(csrfInput);
+
+            // Add method override for DELETE
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'DELETE';
+            deleteForm.appendChild(methodInput);
+
+            document.body.appendChild(deleteForm);
+
+            // Set up confirm button
+            document.getElementById('confirmDelete').onclick = function() {
+                deleteForm.submit();
+            };
+        }
+
+        function closeDeleteRekamMedisModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            if (deleteForm) {
+                deleteForm.remove();
+                deleteForm = null;
+            }
         }
 
         function clearModalErrors() {
